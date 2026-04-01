@@ -2,8 +2,8 @@ name: Gallery Auto-Update Scraper
 
 on:
   push:
-    branches: [ main ]
-  workflow_dispatch: 
+    branches: [main]
+  workflow_dispatch:
 
 jobs:
   scrape-and-commit:
@@ -12,38 +12,32 @@ jobs:
       contents: write
 
     steps:
-      # 1. Pull the Gallery repo
       - name: Checkout Gallery
         uses: actions/checkout@v4
         with:
           path: gallery-dir
 
-      # 2. Pull the Scraper repo
       - name: Checkout Scraper
         uses: actions/checkout@v4
         with:
           repository: csuporj/scraper
           path: scraper-dir
 
-      # 3. Install .NET 10
       - name: Setup .NET 10
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '10.0.x'
+          dotnet-version: "10.0.x"
 
-      # 4. Run Scraper from the Gallery's public directory
-      # Your C# app will treat './public' as the root for relative paths
       - name: Run Scraper
         working-directory: ./gallery-dir/public
         run: |
           dotnet run --project ../../scraper-dir/scraper/scraper.csproj
 
-      # 5. Commit and Push the new files
       - name: Commit and Push
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           repository: gallery-dir
-          commit_message: "Auto-update: New gallery assets and data.json"
+          commit_message: "Auto-update: New thumbnails and albums.json"
           # 'public/*.json' matches the root file
           # 'public/**/*.jpg' matches JPGs in any subfolder
-          file_pattern: 'public/*.json public/**/*.jpg'
+          file_pattern: "public/*.json public/**/*.jpg"
