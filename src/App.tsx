@@ -110,7 +110,7 @@ const AlbumCard = memo(({ album }: { album: Album }) => {
     !album.ThumbnailFileName || album.ThumbnailFileName.trim() === "";
 
   return (
-    <Col xs="auto" className="p-0 mb-4 me-4">
+    <Col xs="auto" className="p-0 mb-4 px-3">
       <a
         href={album.AlbumUrl}
         target="_blank"
@@ -118,8 +118,12 @@ const AlbumCard = memo(({ album }: { album: Album }) => {
         className="text-decoration-none"
       >
         <Card
-          className="border-0 overflow-hidden shadow-lg"
-          style={{ width: "600px", borderRadius: "12px" }}
+          className="border-0 overflow-hidden shadow-lg mx-auto"
+          style={{
+            width: "600px",
+            maxWidth: "calc(100vw - 32px)",
+            borderRadius: "12px",
+          }}
         >
           <Card.Img
             variant="top"
@@ -128,7 +132,12 @@ const AlbumCard = memo(({ album }: { album: Album }) => {
                 ? thumbnailPlaceholderUrl
                 : `${base}thumbnails/${album.ThumbnailFileName}`
             }
-            style={{ width: "600px", height: "315px", objectFit: "cover" }}
+            style={{
+              width: "100%",
+              height: "auto",
+              aspectRatio: "600/315",
+              objectFit: "cover",
+            }}
           />
           <Card.Body className="p-4 bg-white">
             <Card.Title className="d-flex justify-content-between align-items-baseline mb-0">
@@ -203,8 +212,6 @@ function App() {
       if (!matchesText) return false;
 
       const { m: albM, d: albD, y: albY } = parseDate(album.AlbumDate);
-
-      // Hide albums without valid dates
       if (!albM || !albD || !albY) return false;
 
       return (
@@ -223,8 +230,8 @@ function App() {
     );
 
   return (
-    <Container fluid className="px-4 py-4 bg-light min-vh-100">
-      <div className="mb-5 mx-auto" style={{ maxWidth: "800px" }}>
+    <Container fluid className="px-0 py-4 bg-light min-vh-100 overflow-hidden">
+      <div className="mb-5 mx-auto px-3" style={{ maxWidth: "800px" }}>
         <InputGroup className="shadow-sm mb-3">
           <Form.Control
             placeholder="Search albums..."
@@ -241,7 +248,7 @@ function App() {
         />
       </div>
 
-      <Row className="g-5 justify-content-start w-100 m-0">
+      <Row className="justify-content-center m-0">
         {filteredAlbums.map((album, index) => (
           <AlbumCard key={index} album={album} />
         ))}
