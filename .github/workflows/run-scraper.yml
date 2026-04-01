@@ -45,6 +45,12 @@ jobs:
           # 'public/**/*.jpg' matches JPGs in any subfolder
           file_pattern: "public/*.json public/**/*.jpg"
 
+      - name: Build React App
+        working-directory: ./gallery-dir
+        run: |
+          npm install
+          npm run build
+
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
