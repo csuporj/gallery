@@ -1,121 +1,115 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
+import { useState, useEffect, useDeferredValue, useMemo, memo } from "react";
+import {
+  Container,
+  Row,
+  Col,
+  Card,
+  Spinner,
+  Form,
+  InputGroup,
+} from "react-bootstrap";
+import "bootstrap/dist/css/bootstrap.min.css";
 
-function App() {
-  const [count, setCount] = useState(0)
-
-  return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.tsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
-
-      <div className="ticks"></div>
-
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+interface Album {
+  LinkText: string;
+  AlbumUrl: string;
+  AlbumDate: string;
+  ThumbnailFileName: string;
 }
 
-export default App
+const AlbumCard = memo(({ album }: { album: Album }) => {
+  const base = import.meta.env.BASE_URL;
+
+  // Most robust check: if it's null, undefined, "", or just whitespace
+  const hasNoImage =
+    !album.ThumbnailFileName || album.ThumbnailFileName.trim() === "";
+
+  return (
+    <Col xs="auto" className="p-0 mb-4 me-4">
+      <a
+        href={album.AlbumUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="text-decoration-none"
+      >
+        <Card
+          className="border-0 overflow-hidden shadow-lg"
+          style={{ width: "600px", borderRadius: "12px" }}
+        >
+          <Card.Img
+            variant="top"
+            src={
+              hasNoImage
+                ? "https://placehold.co/600x400?text=Image+Unavailable"
+                : `${base}thumbnails/${album.ThumbnailFileName}`
+            }
+            style={{ width: "600px", height: "375px", objectFit: "cover" }}
+          />
+          <Card.Body className="p-4 bg-white">
+            <Card.Title className="d-flex justify-content-between align-items-baseline mb-0">
+              <span className="text-dark fw-bold fs-4 text-truncate me-2">
+                {album.LinkText}
+              </span>
+              <small className="text-secondary fs-6 flex-shrink-0">
+                {album.AlbumDate}
+              </small>
+            </Card.Title>
+          </Card.Body>
+        </Card>
+      </a>
+    </Col>
+  );
+});
+
+function App() {
+  const [albums, setAlbums] = useState<Album[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [query, setQuery] = useState("");
+  const deferredQuery = useDeferredValue(query);
+  const base = import.meta.env.BASE_URL;
+
+  useEffect(() => {
+    fetch(`${base}albums.json`)
+      .then((res) => res.json())
+      .then((data: Album[]) => {
+        setAlbums(data);
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
+  }, [base]);
+
+  const filteredAlbums = useMemo(() => {
+    return albums.filter((album) =>
+      album.LinkText.toLowerCase().includes(deferredQuery.toLowerCase()),
+    );
+  }, [albums, deferredQuery]);
+
+  if (loading)
+    return (
+      <Container className="text-center mt-5">
+        <Spinner animation="border" />
+      </Container>
+    );
+
+  return (
+    <Container fluid className="px-4 py-4 bg-light min-vh-100">
+      <div className="mb-5 d-flex justify-content-center">
+        <InputGroup style={{ maxWidth: "600px" }} className="shadow-sm">
+          <Form.Control
+            placeholder="Search albums..."
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            className="py-2 px-3 border-0"
+          />
+        </InputGroup>
+      </div>
+      <Row className="g-5 justify-content-start w-100 m-0">
+        {filteredAlbums.map((album, index) => (
+          <AlbumCard key={index} album={album} />
+        ))}
+      </Row>
+    </Container>
+  );
+}
+
+export default App;
