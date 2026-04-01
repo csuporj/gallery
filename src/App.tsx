@@ -18,7 +18,19 @@ interface Album {
   ThumbnailFileName: string;
 }
 
-// Move constants and static helpers outside to avoid hook dependency issues
+interface DateState {
+  y: string;
+  m: string;
+  d: string;
+}
+
+interface DateOptions {
+  years: string[];
+  months: string[];
+  days: string[];
+}
+
+// Move constants and static helpers outside
 const monthOrder = [
   "Jan",
   "Feb",
@@ -46,9 +58,9 @@ const DateSelectors = ({
   setState,
   options,
 }: {
-  state: any;
-  setState: any;
-  options: any;
+  state: DateState;
+  setState: React.Dispatch<React.SetStateAction<DateState>>;
+  options: DateOptions;
 }) => (
   <Row className="g-2 mb-2">
     <Col md={4}>
@@ -57,7 +69,7 @@ const DateSelectors = ({
         onChange={(e) => setState({ ...state, y: e.target.value })}
       >
         <option value="*">Year: *</option>
-        {options.years.map((y: string) => (
+        {options.years.map((y) => (
           <option key={y} value={y}>
             {y}
           </option>
@@ -70,7 +82,7 @@ const DateSelectors = ({
         onChange={(e) => setState({ ...state, m: e.target.value })}
       >
         <option value="*">Month: *</option>
-        {options.months.map((m: string) => (
+        {options.months.map((m) => (
           <option key={m} value={m}>
             {m}
           </option>
@@ -83,7 +95,7 @@ const DateSelectors = ({
         onChange={(e) => setState({ ...state, d: e.target.value })}
       >
         <option value="*">Day: *</option>
-        {options.days.map((d: string) => (
+        {options.days.map((d) => (
           <option key={d} value={d}>
             {d}
           </option>
@@ -140,8 +152,8 @@ function App() {
   const [loading, setLoading] = useState<boolean>(true);
   const [query, setQuery] = useState("");
   const [isInterval, setIsInterval] = useState(false);
-  const [start, setStart] = useState({ y: "*", m: "*", d: "*" });
-  const [end, setEnd] = useState({ y: "*", m: "*", d: "*" });
+  const [start, setStart] = useState<DateState>({ y: "*", m: "*", d: "*" });
+  const [end, setEnd] = useState<DateState>({ y: "*", m: "*", d: "*" });
 
   const deferredQuery = useDeferredValue(query);
   const base = import.meta.env.BASE_URL;
