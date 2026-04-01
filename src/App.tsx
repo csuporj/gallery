@@ -128,7 +128,7 @@ const AlbumCard = memo(({ album }: { album: Album }) => {
                 ? thumbnailPlaceholderUrl
                 : `${base}thumbnails/${album.ThumbnailFileName}`
             }
-            style={{ width: "600px", height: "375px", objectFit: "cover" }}
+            style={{ width: "600px", height: "315px", objectFit: "cover" }}
           />
           <Card.Body className="p-4 bg-white">
             <Card.Title className="d-flex justify-content-between align-items-baseline mb-0">
@@ -166,7 +166,7 @@ function App() {
           const dateA = new Date(a.AlbumDate).getTime();
           const dateB = new Date(b.AlbumDate).getTime();
           if (isNaN(dateA) || isNaN(dateB)) return 0;
-          return dateB - dateA; // Descending
+          return dateB - dateA;
         });
         setAlbums(sortedData);
         setLoading(false);
@@ -202,24 +202,8 @@ function App() {
 
       const { m: albM, d: albD, y: albY } = parseDate(album.AlbumDate);
 
-      const checkInRange = (
-        val: string,
-        sStr: string,
-        eStr: string,
-        isMonth = false,
-      ) => {
-        if (isMonth) {
-          const v = monthOrder.indexOf(val);
-          const s = sStr === "*" ? -Infinity : monthOrder.indexOf(sStr);
-          const e = eStr === "*" ? Infinity : monthOrder.indexOf(eStr);
-          return v >= s && v <= e;
-        } else {
-          const v = parseInt(val);
-          const s = sStr === "*" ? -Infinity : parseInt(sStr);
-          const e = eStr === "*" ? Infinity : parseInt(eStr);
-          return v >= s && v <= e;
-        }
-      };
+      // SKIP albums that don't have a valid date part
+      if (!albM || !albD || !albY) return false;
 
       if (!isInterval) {
         return (
@@ -229,11 +213,31 @@ function App() {
         );
       }
 
-      return (
-        checkInRange(albY, start.y, end.y) &&
-        checkInRange(albM, start.m, end.m, true) &&
-        checkInRange(albD, start.d, end.d)
-      );
+      const yVal = parseInt(albY);
+      const mIdx = monthOrder.indexOf(albM);
+      const dVal = parseInt(albD);
+      const mmddVal = (mIdx + 1) * 100 + dVal;
+
+      const startMMDD =
+        (start.m === "*" ? 1 : monthOrder.indexOf(start.m) + 1) * 100 +
+        (start.d === "*" ? 1 : parseInt(start.d));
+      const endMMDD =
+        (end.m === "*" ? 12 : monthOrder.indexOf(end.m) + 1) * 100 +
+        (end.d === "*" ? 31 : parseInt(end.d));
+
+      const sY = start.y === "*" ? -Infinity : parseInt(start.y);
+      const eY = end.y === "*" ? Infinity : parseInt(end.y);
+
+      const yearMatch = yVal >= sY && yVal <= eY;
+
+      let seasonalMatch = false;
+      if (startMMDD <= endMMDD) {
+        seasonalMatch = mmddVal >= startMMDD && mmddVal <= endMMDD;
+      } else {
+        seasonalMatch = mmddVal >= startMMDD || mmddVal <= endMMDD;
+      }
+
+      return yearMatch && seasonalMatch;
     });
   }, [albums, deferredQuery, isInterval, start, end]);
 
