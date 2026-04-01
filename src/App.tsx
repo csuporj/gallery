@@ -30,7 +30,6 @@ interface DateOptions {
   days: string[];
 }
 
-// Move constants and static helpers outside
 const monthOrder = [
   "Jan",
   "Feb",
@@ -162,7 +161,14 @@ function App() {
     fetch(`${base}albums.json`)
       .then((res) => res.json())
       .then((data: Album[]) => {
-        setAlbums(data);
+        const sortedData = [...data].sort((a, b) => {
+          if (!a.AlbumDate || !b.AlbumDate) return 0;
+          const dateA = new Date(a.AlbumDate).getTime();
+          const dateB = new Date(b.AlbumDate).getTime();
+          if (isNaN(dateA) || isNaN(dateB)) return 0;
+          return dateB - dateA; // Descending
+        });
+        setAlbums(sortedData);
         setLoading(false);
       })
       .catch(() => setLoading(false));
