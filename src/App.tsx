@@ -18,6 +18,81 @@ interface Album {
   ThumbnailFileName: string;
 }
 
+// Move constants and static helpers outside to avoid hook dependency issues
+const monthOrder = [
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec",
+];
+
+const parseDate = (dateStr: string) => {
+  const match = dateStr.match(/([a-zA-Z]+)\s+(\d+),\s+(\d+)/);
+  return match
+    ? { m: match[1], d: match[2], y: match[3] }
+    : { m: "", d: "", y: "" };
+};
+
+const DateSelectors = ({
+  state,
+  setState,
+  options,
+}: {
+  state: any;
+  setState: any;
+  options: any;
+}) => (
+  <Row className="g-2 mb-2">
+    <Col md={4}>
+      <Form.Select
+        value={state.y}
+        onChange={(e) => setState({ ...state, y: e.target.value })}
+      >
+        <option value="*">Year: *</option>
+        {options.years.map((y: string) => (
+          <option key={y} value={y}>
+            {y}
+          </option>
+        ))}
+      </Form.Select>
+    </Col>
+    <Col md={4}>
+      <Form.Select
+        value={state.m}
+        onChange={(e) => setState({ ...state, m: e.target.value })}
+      >
+        <option value="*">Month: *</option>
+        {options.months.map((m: string) => (
+          <option key={m} value={m}>
+            {m}
+          </option>
+        ))}
+      </Form.Select>
+    </Col>
+    <Col md={4}>
+      <Form.Select
+        value={state.d}
+        onChange={(e) => setState({ ...state, d: e.target.value })}
+      >
+        <option value="*">Day: *</option>
+        {options.days.map((d: string) => (
+          <option key={d} value={d}>
+            {d}
+          </option>
+        ))}
+      </Form.Select>
+    </Col>
+  </Row>
+);
+
 const AlbumCard = memo(({ album }: { album: Album }) => {
   const base = import.meta.env.BASE_URL;
   const hasNoImage =
@@ -64,9 +139,9 @@ function App() {
   const [albums, setAlbums] = useState<Album[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [query, setQuery] = useState("");
-  const [year, setYear] = useState("*");
-  const [month, setMonth] = useState("*");
-  const [day, setDay] = useState("*");
+  const [isInterval, setIsInterval] = useState(false);
+  const [start, setStart] = useState({ y: "*", m: "*", d: "*" });
+  const [end, setEnd] = useState({ y: "*", m: "*", d: "*" });
 
   const deferredQuery = useDeferredValue(query);
   const base = import.meta.env.BASE_URL;
@@ -81,39 +156,16 @@ function App() {
       .catch(() => setLoading(false));
   }, [base]);
 
-  const parseDate = (dateStr: string) => {
-    const match = dateStr.match(/([a-zA-Z]+)\s+(\d+),\s+(\d+)/);
-    return match
-      ? { m: match[1], d: match[2], y: match[3] }
-      : { m: "", d: "", y: "" };
-  };
-
   const dateOptions = useMemo(() => {
-    const years = new Set<string>();
-    const months = new Set<string>();
-    const days = new Set<string>();
-    const monthOrder = [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "May",
-      "Jun",
-      "Jul",
-      "Aug",
-      "Sep",
-      "Oct",
-      "Nov",
-      "Dec",
-    ];
-
+    const years = new Set<string>(),
+      months = new Set<string>(),
+      days = new Set<string>();
     albums.forEach((album) => {
       const { m, d, y } = parseDate(album.AlbumDate);
       if (y) years.add(y);
       if (m) months.add(m);
       if (d) days.add(d);
     });
-
     return {
       years: Array.from(years).sort((a, b) => b.localeCompare(a)),
       months: Array.from(months).sort(
@@ -125,15 +177,47 @@ function App() {
 
   const filteredAlbums = useMemo(() => {
     return albums.filter((album) => {
-      const { m, d, y } = parseDate(album.AlbumDate);
+      const matchesText = album.LinkText.toLowerCase().includes(
+        deferredQuery.toLowerCase(),
+      );
+      if (!matchesText) return false;
+
+      const { m: albM, d: albD, y: albY } = parseDate(album.AlbumDate);
+
+      const checkInRange = (
+        val: string,
+        sStr: string,
+        eStr: string,
+        isMonth = false,
+      ) => {
+        if (isMonth) {
+          const v = monthOrder.indexOf(val);
+          const s = sStr === "*" ? -Infinity : monthOrder.indexOf(sStr);
+          const e = eStr === "*" ? Infinity : monthOrder.indexOf(eStr);
+          return v >= s && v <= e;
+        } else {
+          const v = parseInt(val);
+          const s = sStr === "*" ? -Infinity : parseInt(sStr);
+          const e = eStr === "*" ? Infinity : parseInt(eStr);
+          return v >= s && v <= e;
+        }
+      };
+
+      if (!isInterval) {
+        return (
+          (start.y === "*" || albY === start.y) &&
+          (start.m === "*" || albM === start.m) &&
+          (start.d === "*" || albD === start.d)
+        );
+      }
+
       return (
-        album.LinkText.toLowerCase().includes(deferredQuery.toLowerCase()) &&
-        (year === "*" || y === year) &&
-        (month === "*" || m === month) &&
-        (day === "*" || d === day)
+        checkInRange(albY, start.y, end.y) &&
+        checkInRange(albM, start.m, end.m, true) &&
+        checkInRange(albD, start.d, end.d)
       );
     });
-  }, [albums, deferredQuery, year, month, day]);
+  }, [albums, deferredQuery, isInterval, start, end]);
 
   if (loading)
     return (
@@ -153,42 +237,33 @@ function App() {
             className="py-2 px-3 border-0"
           />
         </InputGroup>
-        <Row className="g-2">
-          <Col md={4}>
-            <Form.Select value={year} onChange={(e) => setYear(e.target.value)}>
-              <option value="*">Year: *</option>
-              {dateOptions.years.map((y) => (
-                <option key={y} value={y}>
-                  {y}
-                </option>
-              ))}
-            </Form.Select>
-          </Col>
-          <Col md={4}>
-            <Form.Select
-              value={month}
-              onChange={(e) => setMonth(e.target.value)}
-            >
-              <option value="*">Month: *</option>
-              {dateOptions.months.map((m) => (
-                <option key={m} value={m}>
-                  {m}
-                </option>
-              ))}
-            </Form.Select>
-          </Col>
-          <Col md={4}>
-            <Form.Select value={day} onChange={(e) => setDay(e.target.value)}>
-              <option value="*">Day: *</option>
-              {dateOptions.days.map((d) => (
-                <option key={d} value={d}>
-                  {d}
-                </option>
-              ))}
-            </Form.Select>
-          </Col>
-        </Row>
+
+        <Form.Check
+          type="checkbox"
+          label="Interval Search"
+          className="mb-3"
+          checked={isInterval}
+          onChange={(e) => setIsInterval(e.target.checked)}
+        />
+
+        <DateSelectors
+          state={start}
+          setState={setStart}
+          options={dateOptions}
+        />
+
+        {isInterval && (
+          <>
+            <div className="text-center my-2 fw-bold text-secondary">to</div>
+            <DateSelectors
+              state={end}
+              setState={setEnd}
+              options={dateOptions}
+            />
+          </>
+        )}
       </div>
+
       <Row className="g-5 justify-content-start w-100 m-0">
         {filteredAlbums.map((album, index) => (
           <AlbumCard key={index} album={album} />
