@@ -44,3 +44,10 @@ jobs:
           # 'public/*.json' matches the root file
           # 'public/**/*.jpg' matches JPGs in any subfolder
           file_pattern: "public/*.json public/**/*.jpg"
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          # Vite puts the final website in 'dist'
+          publish_dir: ./gallery-dir/dist
