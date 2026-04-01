@@ -17,6 +17,7 @@ interface Album {
   ThumbnailFileName: string;
 }
 
+// todo add search by date
 const AlbumCard = memo(({ album }: { album: Album }) => {
   const base = import.meta.env.BASE_URL;
 
