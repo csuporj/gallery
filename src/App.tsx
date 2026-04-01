@@ -9,6 +9,7 @@ import {
   InputGroup,
 } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
+import { thumbnailPlaceholderUrl } from "./Constants";
 
 interface Album {
   LinkText: string;
@@ -38,7 +39,7 @@ const AlbumCard = memo(({ album }: { album: Album }) => {
             variant="top"
             src={
               hasNoImage
-                ? "https://placehold.co"
+                ? thumbnailPlaceholderUrl
                 : `${base}thumbnails/${album.ThumbnailFileName}`
             }
             style={{ width: "600px", height: "375px", objectFit: "cover" }}
