@@ -150,9 +150,11 @@ function App() {
   const [albums, setAlbums] = useState<Album[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [query, setQuery] = useState("");
-  const [isInterval, setIsInterval] = useState(false);
-  const [start, setStart] = useState<DateState>({ y: "*", m: "*", d: "*" });
-  const [end, setEnd] = useState<DateState>({ y: "*", m: "*", d: "*" });
+  const [dateFilter, setDateFilter] = useState<DateState>({
+    y: "*",
+    m: "*",
+    d: "*",
+  });
 
   const deferredQuery = useDeferredValue(query);
   const base = import.meta.env.BASE_URL;
@@ -202,44 +204,16 @@ function App() {
 
       const { m: albM, d: albD, y: albY } = parseDate(album.AlbumDate);
 
-      // SKIP albums that don't have a valid date part
+      // Hide albums without valid dates
       if (!albM || !albD || !albY) return false;
 
-      if (!isInterval) {
-        return (
-          (start.y === "*" || albY === start.y) &&
-          (start.m === "*" || albM === start.m) &&
-          (start.d === "*" || albD === start.d)
-        );
-      }
-
-      const yVal = parseInt(albY);
-      const mIdx = monthOrder.indexOf(albM);
-      const dVal = parseInt(albD);
-      const mmddVal = (mIdx + 1) * 100 + dVal;
-
-      const startMMDD =
-        (start.m === "*" ? 1 : monthOrder.indexOf(start.m) + 1) * 100 +
-        (start.d === "*" ? 1 : parseInt(start.d));
-      const endMMDD =
-        (end.m === "*" ? 12 : monthOrder.indexOf(end.m) + 1) * 100 +
-        (end.d === "*" ? 31 : parseInt(end.d));
-
-      const sY = start.y === "*" ? -Infinity : parseInt(start.y);
-      const eY = end.y === "*" ? Infinity : parseInt(end.y);
-
-      const yearMatch = yVal >= sY && yVal <= eY;
-
-      let seasonalMatch = false;
-      if (startMMDD <= endMMDD) {
-        seasonalMatch = mmddVal >= startMMDD && mmddVal <= endMMDD;
-      } else {
-        seasonalMatch = mmddVal >= startMMDD || mmddVal <= endMMDD;
-      }
-
-      return yearMatch && seasonalMatch;
+      return (
+        (dateFilter.y === "*" || albY === dateFilter.y) &&
+        (dateFilter.m === "*" || albM === dateFilter.m) &&
+        (dateFilter.d === "*" || albD === dateFilter.d)
+      );
     });
-  }, [albums, deferredQuery, isInterval, start, end]);
+  }, [albums, deferredQuery, dateFilter]);
 
   if (loading)
     return (
@@ -260,30 +234,11 @@ function App() {
           />
         </InputGroup>
 
-        <Form.Check
-          type="checkbox"
-          label="Interval Search"
-          className="mb-3"
-          checked={isInterval}
-          onChange={(e) => setIsInterval(e.target.checked)}
-        />
-
         <DateSelectors
-          state={start}
-          setState={setStart}
+          state={dateFilter}
+          setState={setDateFilter}
           options={dateOptions}
         />
-
-        {isInterval && (
-          <>
-            <div className="text-center my-2 fw-bold text-secondary">to</div>
-            <DateSelectors
-              state={end}
-              setState={setEnd}
-              options={dateOptions}
-            />
-          </>
-        )}
       </div>
 
       <Row className="g-5 justify-content-start w-100 m-0">
