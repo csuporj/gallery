@@ -75,8 +75,6 @@ const AlbumCard = memo(({ album }: { album: Album }) => {
           <div
             className="position-absolute bottom-0 start-0 w-100 p-4 d-flex justify-content-between align-items-end"
             style={{
-              background:
-                "linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 100%)",
               color: "white",
               textShadow: "1px 1px 4px rgba(0,0,0,0.8)",
             }}
@@ -84,9 +82,7 @@ const AlbumCard = memo(({ album }: { album: Album }) => {
             <span className="fw-bold fs-4 text-truncate me-2">
               {album.LinkText}
             </span>
-            <small className="fs-6 flex-shrink-0 opacity-75">
-              {album.AlbumDate}
-            </small>
+            <small className="fs-6 flex-shrink-0">{album.AlbumDate}</small>
           </div>
         </Card>
       </a>
