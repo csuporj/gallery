@@ -113,7 +113,7 @@ const AlbumCard = memo(({ album }: { album: Album }) => {
         className="text-decoration-none"
       >
         <Card
-          className="border-0 overflow-hidden shadow-lg mx-auto rounded-0"
+          className="border-0 overflow-hidden shadow-lg mx-auto rounded-0 position-relative"
           style={{
             width: "600px",
             maxWidth: "calc(100vw - 32px)",
@@ -132,18 +132,25 @@ const AlbumCard = memo(({ album }: { album: Album }) => {
               height: "auto",
               aspectRatio: "600/400",
               objectFit: "cover",
+              display: "block",
             }}
           />
-          <Card.Body className="p-4 bg-white">
-            <Card.Title className="d-flex justify-content-between align-items-baseline mb-0">
-              <span className="text-dark fw-bold fs-4 text-truncate me-2">
-                {album.LinkText}
-              </span>
-              <small className="text-secondary fs-6 flex-shrink-0">
-                {album.AlbumDate}
-              </small>
-            </Card.Title>
-          </Card.Body>
+          {/* Overlay for Title and Date */}
+          <div
+            className="position-absolute bottom-0 start-0 w-100 p-4 d-flex justify-content-between align-items-end"
+            style={{
+              background: "linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0) 100%)",
+              color: "white",
+              textShadow: "1px 1px 4px rgba(0,0,0,0.8)",
+            }}
+          >
+            <span className="fw-bold fs-4 text-truncate me-2">
+              {album.LinkText}
+            </span>
+            <small className="fs-6 flex-shrink-0 opacity-75">
+              {album.AlbumDate}
+            </small>
+          </div>
         </Card>
       </a>
     </Col>
