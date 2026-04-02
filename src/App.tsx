@@ -52,7 +52,7 @@ const AlbumCard = memo(({ album }: { album: Album }) => {
         className="text-decoration-none"
       >
         <Card
-          className="overflow-hidden mx-auto shadow-lg"
+          className="overflow-hidden mx-auto shadow-lg rounded-0 border-0"
           style={{ width: "600px", maxWidth: "calc(100vw - 32px)" }}
         >
           <Card.Img
@@ -156,7 +156,7 @@ function App() {
     );
 
   return (
-    <Container fluid className="px-0 bg-white min-vh-100">
+    <Container fluid className="px-0 bg-light min-vh-100">
       <div
         className="mx-auto px-3"
         style={{
