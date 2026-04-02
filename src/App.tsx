@@ -33,6 +33,7 @@ const monthOrder = [
 
 const parseDate = (dateStr: string) => {
   const match = dateStr.match(/([a-zA-Z]+)\s+(\d+),\s+(\d+)/);
+  // Correctly mapping regex groups to strings
   return match
     ? { m: match[1], d: match[2], y: match[3] }
     : { m: "", d: "", y: "" };
@@ -163,13 +164,13 @@ function App() {
     );
 
   return (
-    <Container fluid className="px-0 pb-4 bg-white min-vh-100">
+    <Container fluid className="px-0 bg-white min-vh-100">
       <div
         className="mx-auto px-3"
         style={{
           maxWidth: "850px",
-          marginTop: "1.5rem",
-          marginBottom: "1.5rem",
+          paddingTop: "1.5rem",
+          paddingBottom: "0", // Removed bottom padding to let the card's internal g-4 padding do the work
         }}
       >
         <Row className="g-2 justify-content-center flex-lg-nowrap">
@@ -233,7 +234,7 @@ function App() {
         </Row>
       </div>
 
-      <Row className="justify-content-center g-4 m-0">
+      <Row className="justify-content-center g-4 m-0 pb-4">
         {filteredAlbums.map((album, index) => (
           <AlbumCard key={index} album={album} />
         ))}
