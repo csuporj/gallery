@@ -135,7 +135,7 @@ const AlbumCard = memo(({ album }: { album: Album }) => {
             style={{
               width: "100%",
               height: "auto",
-              aspectRatio: "600/315",
+              aspectRatio: "600/400", // Updated to 600x400
               objectFit: "cover",
             }}
           />
