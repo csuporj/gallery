@@ -25,35 +25,11 @@ const parseDate = (dateStr: string) => {
   return match ? { m: match[1], d: match[2], y: match[3] } : { m: "", d: "", y: "" };
 };
 
-const DateSelectors = ({ state, setState, options }: { state: DateState; setState: React.Dispatch<React.SetStateAction<DateState>>; options: DateOptions; }) => (
-  <Row className="g-2 mb-2">
-    <Col md={4}>
-      <Form.Select className="rounded-0" value={state.y} onChange={(e) => setState({ ...state, y: e.target.value })}>
-        <option value="*">Year: *</option>
-        {options.years.map((y) => <option key={y} value={y}>{y}</option>)}
-      </Form.Select>
-    </Col>
-    <Col md={4}>
-      <Form.Select className="rounded-0" value={state.m} onChange={(e) => setState({ ...state, m: e.target.value })}>
-        <option value="*">Month: *</option>
-        {options.months.map((m) => <option key={m} value={m}>{m}</option>)}
-      </Form.Select>
-    </Col>
-    <Col md={4}>
-      <Form.Select className="rounded-0" value={state.d} onChange={(e) => setState({ ...state, d: e.target.value })}>
-        <option value="*">Day: *</option>
-        {options.days.map((d) => <option key={d} value={d}>{d}</option>)}
-      </Form.Select>
-    </Col>
-  </Row>
-);
-
 const AlbumCard = memo(({ album }: { album: Album }) => {
   const base = import.meta.env.BASE_URL;
   const hasNoImage = !album.ThumbnailFileName || album.ThumbnailFileName.trim() === "";
 
   return (
-    /* Col now has NO custom margins or padding. It relies entirely on the Row's g-4 */
     <Col xs="auto">
       <a href={album.AlbumUrl} target="_blank" rel="noopener noreferrer" className="text-decoration-none">
         <Card
@@ -135,18 +111,52 @@ function App() {
 
   return (
     <Container fluid className="px-0 py-4 bg-white min-vh-100">
-      <div className="mb-5 mx-auto px-3" style={{ maxWidth: "800px" }}>
-        <Form.Control
-          placeholder="Search albums..."
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          className="mb-3 border-1 rounded-0"
-          style={{ height: "calc(2.25rem + 2px)" }}
-        />
-        <DateSelectors state={dateFilter} setState={setDateFilter} options={dateOptions} />
+      <div className="mb-5 mx-auto px-3" style={{ maxWidth: "850px" }}>
+        <Row className="g-2 justify-content-center flex-lg-nowrap">
+          {/* Search bar takes the most space */}
+          <Col lg={6} xs={12} className="mb-2 mb-lg-0">
+            <Form.Control
+              placeholder="Search..."
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              className="border-1 rounded-0"
+              style={{ height: "calc(2.25rem + 2px)" }}
+            />
+          </Col>
+          {/* All date selectors set to identical widths */}
+          <Col lg={2} xs={4}>
+            <Form.Select 
+              className="rounded-0" 
+              value={dateFilter.y} 
+              onChange={(e) => setDateFilter({ ...dateFilter, y: e.target.value })}
+            >
+              <option value="*">Year</option>
+              {dateOptions.years.map((y) => <option key={y} value={y}>{y}</option>)}
+            </Form.Select>
+          </Col>
+          <Col lg={2} xs={4}>
+            <Form.Select 
+              className="rounded-0" 
+              value={dateFilter.m} 
+              onChange={(e) => setDateFilter({ ...dateFilter, m: e.target.value })}
+            >
+              <option value="*">Month</option>
+              {dateOptions.months.map((m) => <option key={m} value={m}>{m}</option>)}
+            </Form.Select>
+          </Col>
+          <Col lg={2} xs={4}>
+            <Form.Select 
+              className="rounded-0" 
+              value={dateFilter.d} 
+              onChange={(e) => setDateFilter({ ...dateFilter, d: e.target.value })}
+            >
+              <option value="*">Day</option>
+              {dateOptions.days.map((d) => <option key={d} value={d}>{d}</option>)}
+            </Form.Select>
+          </Col>
+        </Row>
       </div>
 
-      {/* g-4 applies exactly the same spacing horizontally and vertically between columns */}
       <Row className="justify-content-center g-4 m-0">
         {filteredAlbums.map((album, index) => (
           <AlbumCard key={index} album={album} />
