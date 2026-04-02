@@ -56,6 +56,7 @@ const DateSelectors = ({
   <Row className="g-2 mb-2">
     <Col md={4}>
       <Form.Select
+        className="rounded-0"
         value={state.y}
         onChange={(e) => setState({ ...state, y: e.target.value })}
       >
@@ -69,6 +70,7 @@ const DateSelectors = ({
     </Col>
     <Col md={4}>
       <Form.Select
+        className="rounded-0"
         value={state.m}
         onChange={(e) => setState({ ...state, m: e.target.value })}
       >
@@ -82,6 +84,7 @@ const DateSelectors = ({
     </Col>
     <Col md={4}>
       <Form.Select
+        className="rounded-0"
         value={state.d}
         onChange={(e) => setState({ ...state, d: e.target.value })}
       >
@@ -110,15 +113,15 @@ const AlbumCard = memo(({ album }: { album: Album }) => {
         className="text-decoration-none"
       >
         <Card
-          className="border-0 overflow-hidden shadow-lg mx-auto"
+          className="border-0 overflow-hidden shadow-lg mx-auto rounded-0"
           style={{
             width: "600px",
             maxWidth: "calc(100vw - 32px)",
-            borderRadius: "12px",
           }}
         >
           <Card.Img
             variant="top"
+            className="rounded-0"
             src={
               hasNoImage
                 ? thumbnailPlaceholderUrl
@@ -224,12 +227,11 @@ function App() {
   return (
     <Container fluid className="px-0 py-4 bg-light min-vh-100 overflow-hidden">
       <div className="mb-5 mx-auto px-3" style={{ maxWidth: "800px" }}>
-        {/* Search box now matches dropdown styling exactly */}
         <Form.Control
           placeholder="Search albums..."
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          className="mb-3 border-1"
+          className="mb-3 border-1 rounded-0"
           style={{ height: "calc(2.25rem + 2px)" }}
         />
 
