@@ -53,7 +53,7 @@ const AlbumCard = memo(({ album }: { album: Album }) => {
         className="text-decoration-none"
       >
         <Card
-          className="border-0 overflow-hidden shadow-lg mx-auto rounded-0 position-relative"
+          className="overflow-hidden mx-auto position-relative"
           style={{ width: "600px", maxWidth: "calc(100vw - 32px)" }}
         >
           <Card.Img
@@ -76,13 +76,14 @@ const AlbumCard = memo(({ album }: { album: Album }) => {
             className="position-absolute bottom-0 start-0 w-100 p-4 d-flex justify-content-between align-items-end"
             style={{
               color: "white",
-              textShadow: "1px 1px 4px rgba(0,0,0,0.8)",
+              background:
+                "linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0) 100%)",
             }}
           >
             <span className="fw-bold fs-4 text-truncate me-2">
               {album.LinkText}
             </span>
-            <small className="fs-6 flex-shrink-0">{album.AlbumDate}</small>
+            <small className="fs-5 flex-shrink-0">{album.AlbumDate}</small>
           </div>
         </Card>
       </a>
