@@ -1,90 +1,11 @@
-import { useState, useEffect, useDeferredValue, useMemo, memo } from "react";
-import { Container, Row, Col, Card, Spinner, Form } from "react-bootstrap";
+import { useState, useEffect, useDeferredValue, useMemo } from "react";
+import { Container, Row, Col, Spinner, Form } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { thumbnailPlaceholderUrl } from "./Constants";
-
-interface Album {
-  LinkText: string;
-  AlbumUrl: string;
-  AlbumDate: string;
-  ThumbnailFileName: string;
-}
-
-interface DateState {
-  y: string;
-  m: string;
-  d: string;
-}
-
-const monthOrder = [
-  "Jan",
-  "Feb",
-  "Mar",
-  "Apr",
-  "May",
-  "Jun",
-  "Jul",
-  "Aug",
-  "Sep",
-  "Oct",
-  "Nov",
-  "Dec",
-];
-
-const parseDate = (dateStr: string) => {
-  const match = dateStr.match(/([a-zA-Z]+)\s+(\d+),\s+(\d+)/);
-  return match
-    ? { m: match[1], d: match[2], y: match[3] }
-    : { m: "", d: "", y: "" };
-};
-
-const AlbumCard = memo(({ album }: { album: Album }) => {
-  const base = import.meta.env.BASE_URL;
-  const hasNoImage =
-    !album.ThumbnailFileName || album.ThumbnailFileName.trim() === "";
-
-  return (
-    <Col xs="auto">
-      <a
-        href={album.AlbumUrl}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="text-decoration-none"
-      >
-        <Card
-          className="overflow-hidden mx-auto shadow-lg rounded-0 border-0"
-          style={{ width: "600px", maxWidth: "calc(100vw - 32px)" }}
-        >
-          <Card.Img
-            variant="top"
-            className="rounded-0"
-            src={
-              hasNoImage
-                ? thumbnailPlaceholderUrl
-                : `${base}thumbnails/${album.ThumbnailFileName}`
-            }
-            style={{
-              width: "100%",
-              height: "auto",
-              aspectRatio: "600/400",
-              objectFit: "cover",
-              display: "block",
-            }}
-          />
-          {/* Title and Date now below the photo */}
-          <Card.Body className="bg-white d-flex justify-content-between align-items-center px-4 py-3">
-            <span className="fw-bold fs-4 text-dark text-truncate me-3">
-              {album.LinkText}
-            </span>
-            <small className="fs-5 text-muted flex-shrink-0">
-              {album.AlbumDate}
-            </small>
-          </Card.Body>
-        </Card>
-      </a>
-    </Col>
-  );
-});
+import type { Album } from "./Album";
+import type { DateState } from "./DateState";
+import monthOrder from "./monthOrder";
+import AlbumCard from "./AlbumCard";
+import parseDate from "./parseDate";
 
 function App() {
   const [albums, setAlbums] = useState<Album[]>([]);
