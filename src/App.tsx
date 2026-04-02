@@ -1,13 +1,5 @@
 import { useState, useEffect, useDeferredValue, useMemo, memo } from "react";
-import {
-  Container,
-  Row,
-  Col,
-  Card,
-  Spinner,
-  Form,
-  InputGroup,
-} from "react-bootstrap";
+import { Container, Row, Col, Card, Spinner, Form } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { thumbnailPlaceholderUrl } from "./Constants";
 
@@ -135,7 +127,7 @@ const AlbumCard = memo(({ album }: { album: Album }) => {
             style={{
               width: "100%",
               height: "auto",
-              aspectRatio: "600/400", // Updated to 600x400
+              aspectRatio: "600/400",
               objectFit: "cover",
             }}
           />
@@ -232,14 +224,14 @@ function App() {
   return (
     <Container fluid className="px-0 py-4 bg-light min-vh-100 overflow-hidden">
       <div className="mb-5 mx-auto px-3" style={{ maxWidth: "800px" }}>
-        <InputGroup className="shadow-sm mb-3">
-          <Form.Control
-            placeholder="Search albums..."
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            className="py-2 px-3 border-0"
-          />
-        </InputGroup>
+        {/* Search box now matches dropdown styling exactly */}
+        <Form.Control
+          placeholder="Search albums..."
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          className="mb-3 border-1"
+          style={{ height: "calc(2.25rem + 2px)" }}
+        />
 
         <DateSelectors
           state={dateFilter}
