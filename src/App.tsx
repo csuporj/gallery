@@ -135,11 +135,10 @@ const AlbumCard = memo(({ album }: { album: Album }) => {
               display: "block",
             }}
           />
-          {/* Overlay for Title and Date */}
           <div
             className="position-absolute bottom-0 start-0 w-100 p-4 d-flex justify-content-between align-items-end"
             style={{
-              background: "linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0) 100%)",
+              background: "linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 100%)",
               color: "white",
               textShadow: "1px 1px 4px rgba(0,0,0,0.8)",
             }}
@@ -232,7 +231,7 @@ function App() {
     );
 
   return (
-    <Container fluid className="px-0 py-4 bg-light min-vh-100 overflow-hidden">
+    <Container fluid className="px-0 py-4 bg-white min-vh-100 overflow-hidden">
       <div className="mb-5 mx-auto px-3" style={{ maxWidth: "800px" }}>
         <Form.Control
           placeholder="Search albums..."
