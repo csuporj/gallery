@@ -1,5 +1,11 @@
-import { useState } from "react";
-import { Container, Row, Spinner } from "react-bootstrap";
+import {
+  useState,
+  forwardRef,
+  type CSSProperties,
+  type ReactNode,
+} from "react";
+import { Container, Spinner } from "react-bootstrap";
+import { VirtuosoGrid } from "react-virtuoso";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 import type { DateState } from "./DateState";
@@ -8,36 +14,88 @@ import FilterForm from "./FilterForm";
 import { useAlbums } from "./useAlbums";
 import { useAlbumFilters } from "./useAlbumFilters";
 
+const gridComponents = {
+  List: forwardRef<
+    HTMLDivElement,
+    { style?: CSSProperties; children?: ReactNode }
+  >(({ style, children, ...props }, ref) => (
+    <div
+      ref={ref}
+      {...props}
+      style={{
+        ...style,
+        display: "flex",
+        flexWrap: "wrap",
+        justifyContent: "center",
+        paddingBottom: "2rem",
+      }}
+    >
+      {children}
+    </div>
+  )),
+  Item: ({ children, ...props }: { children?: ReactNode }) => (
+    <div {...props} style={{ display: "flex" }}>
+      {children}
+    </div>
+  ),
+};
+
 function App() {
-  // State for filters
   const [query, setQuery] = useState("");
-  const [dateFilter, setDateFilter] = useState<DateState>({ y: "*", m: "*", d: "*" });
+  const [dateFilter, setDateFilter] = useState<DateState>({
+    y: "*",
+    m: "*",
+    d: "*",
+  });
 
-  // Custom Hooks
   const { albums, loading } = useAlbums();
-  const { filteredAlbums, dateOptions } = useAlbumFilters(albums, query, dateFilter);
-
-  if (loading) return (
-    <Container className="text-center mt-5"><Spinner animation="border" /></Container>
+  const { filteredAlbums, dateOptions } = useAlbumFilters(
+    albums,
+    query,
+    dateFilter,
   );
+
+  if (loading) {
+    return (
+      <Container className="text-center mt-5">
+        <Spinner animation="border" />
+      </Container>
+    );
+  }
 
   return (
     <Container fluid className="px-0 bg-light min-vh-100">
-      <div className="mx-auto px-3" style={{ maxWidth: "850px", paddingTop: "1.5rem" }}>
-        <FilterForm 
-          query={query} 
-          setQuery={setQuery} 
-          dateFilter={dateFilter} 
-          setDateFilter={setDateFilter} 
-          dateOptions={dateOptions} 
+      <div
+        className="mx-auto px-3"
+        style={{
+          maxWidth: "850px",
+          paddingTop: "1.5rem",
+          marginBottom: "1rem",
+        }}
+      >
+        <FilterForm
+          query={query}
+          setQuery={setQuery}
+          dateFilter={dateFilter}
+          setDateFilter={setDateFilter}
+          dateOptions={dateOptions}
         />
       </div>
 
-      <Row className="justify-content-center g-4 m-0 pb-4">
-        {filteredAlbums.map((album, index) => (
-          <AlbumCard key={index} album={album} />
-        ))}
-      </Row>
+      <VirtuosoGrid
+        useWindowScroll
+        data={filteredAlbums}
+        components={gridComponents}
+        /**
+         * overscan: Renders 1200px of content ahead of the current scroll position.
+         * On a 4K screen, this ensures the next 2-3 rows are already in the DOM
+         * and downloading images before you scroll to them.
+         */
+        overscan={1200}
+        itemContent={(index, album) => (
+          <AlbumCard album={album} priority={index < 24} />
+        )}
+      />
     </Container>
   );
 }
