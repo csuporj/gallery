@@ -33,7 +33,6 @@ const monthOrder = [
 
 const parseDate = (dateStr: string) => {
   const match = dateStr.match(/([a-zA-Z]+)\s+(\d+),\s+(\d+)/);
-  // Correctly mapping regex groups to strings
   return match
     ? { m: match[1], d: match[2], y: match[3] }
     : { m: "", d: "", y: "" };
@@ -53,7 +52,7 @@ const AlbumCard = memo(({ album }: { album: Album }) => {
         className="text-decoration-none"
       >
         <Card
-          className="overflow-hidden mx-auto position-relative"
+          className="overflow-hidden mx-auto shadow-lg"
           style={{ width: "600px", maxWidth: "calc(100vw - 32px)" }}
         >
           <Card.Img
@@ -72,19 +71,15 @@ const AlbumCard = memo(({ album }: { album: Album }) => {
               display: "block",
             }}
           />
-          <div
-            className="position-absolute bottom-0 start-0 w-100 p-4 d-flex justify-content-between align-items-end"
-            style={{
-              color: "white",
-              background:
-                "linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0) 100%)",
-            }}
-          >
-            <span className="fw-bold fs-4 text-truncate me-2">
+          {/* Title and Date now below the photo */}
+          <Card.Body className="bg-white d-flex justify-content-between align-items-center px-4 py-3">
+            <span className="fw-bold fs-4 text-dark text-truncate me-3">
               {album.LinkText}
             </span>
-            <small className="fs-5 flex-shrink-0">{album.AlbumDate}</small>
-          </div>
+            <small className="fs-5 text-muted flex-shrink-0">
+              {album.AlbumDate}
+            </small>
+          </Card.Body>
         </Card>
       </a>
     </Col>
@@ -167,7 +162,7 @@ function App() {
         style={{
           maxWidth: "850px",
           paddingTop: "1.5rem",
-          paddingBottom: "0", // Removed bottom padding to let the card's internal g-4 padding do the work
+          paddingBottom: "0",
         }}
       >
         <Row className="g-2 justify-content-center flex-lg-nowrap">
