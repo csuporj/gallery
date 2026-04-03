@@ -86,15 +86,7 @@ function App() {
         useWindowScroll
         data={filteredAlbums}
         components={gridComponents}
-        /**
-         * overscan: Renders 1200px of content ahead of the current scroll position.
-         * On a 4K screen, this ensures the next 2-3 rows are already in the DOM
-         * and downloading images before you scroll to them.
-         */
-        overscan={1200}
-        itemContent={(index, album) => (
-          <AlbumCard album={album} priority={index < 24} />
-        )}
+        itemContent={(_index, album) => <AlbumCard album={album} />}
       />
     </Container>
   );

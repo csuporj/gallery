@@ -62,11 +62,11 @@ const AlbumCard = memo(({ album, priority }: AlbumCardProps) => {
 
           {/* Strictly fixed height body to prevent browser "measuring" lag */}
           <Card.Body
-            className="bg-white d-flex justify-content-between align-items-center px-4"
-            style={{ height: "64px", borderTop: "1px solid #f8f9fa" }}
+            className="d-flex justify-content-between align-items-center px-4"
+            style={{ height: "64px"  }}
           >
             <span
-              className="fw-bold fs-4 text-dark text-truncate me-3"
+              className="fs-4 text-dark text-truncate me-3"
               style={{ flex: 1 }}
               title={album.LinkText}
             >
