@@ -64,7 +64,7 @@ function App() {
   }
 
   return (
-    <Container fluid className="px-0 bg-light min-vh-100">
+    <Container fluid className="px-0 min-vh-100">
       <div
         className="mx-auto px-3"
         style={{
