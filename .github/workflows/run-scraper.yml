@@ -37,6 +37,7 @@ jobs:
           dotnet run --project ../../scraper-dir/scraper/scraper.csproj
 
       - name: Commit and Push
+        id: auto-commit
         uses: stefanzweifel/git-auto-commit-action@v7
         with:
           repository: gallery-dir
@@ -46,12 +47,14 @@ jobs:
           file_pattern: "public/*.json public/**/*.jpg"
 
       - name: Build React App
+        if: steps.auto-commit.outputs.changes_detected == 'true'
         working-directory: ./gallery-dir
         run: |
           npm install
           npm run build
 
       - name: Deploy to GitHub Pages
+        if: steps.auto-commit.outputs.changes_detected == 'true'
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
