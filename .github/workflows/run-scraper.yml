@@ -49,7 +49,7 @@ jobs:
         if: steps.auto-commit.outputs.changes_detected == 'true'
         working-directory: ./gallery-dir
         run: |
-          npm install
+          npm ci
           npm run build
 
       - name: Deploy to GitHub Pages
