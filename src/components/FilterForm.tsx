@@ -9,8 +9,8 @@ export default function FilterForm({
   dateOptions,
 }: FilterFormProps) {
   return (
-    <Row className="g-2 justify-content-center flex-lg-nowrap">
-      <Col lg={6} xs={12} className="mb-2 mb-lg-0">
+    <Row className="g-2 justify-content-center">
+      <Col md={6} xs={12} className="mb-2 mb-md-0">
         <Form.Control
           placeholder="Search..."
           value={query}
@@ -19,7 +19,7 @@ export default function FilterForm({
           style={{ height: "calc(2.25rem + 2px)" }}
         />
       </Col>
-      <Col lg={2} xs={4}>
+      <Col md={2} xs={4}>
         <Form.Select
           className="rounded-0"
           value={dateFilter.y}
@@ -33,7 +33,7 @@ export default function FilterForm({
           ))}
         </Form.Select>
       </Col>
-      <Col lg={2} xs={4}>
+      <Col md={2} xs={4}>
         <Form.Select
           className="rounded-0"
           value={dateFilter.m}
@@ -47,7 +47,7 @@ export default function FilterForm({
           ))}
         </Form.Select>
       </Col>
-      <Col lg={2} xs={4}>
+      <Col md={2} xs={4}>
         <Form.Select
           className="rounded-0"
           value={dateFilter.d}

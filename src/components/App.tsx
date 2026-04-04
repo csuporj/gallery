@@ -13,6 +13,7 @@ import AlbumCard from "./AlbumCard";
 import FilterForm from "./FilterForm";
 import { useAlbums } from "./useAlbums";
 import { useAlbumFilters } from "./useAlbumFilters";
+import "../styles/App.css"
 
 const gridComponents = {
   List: forwardRef<
@@ -66,12 +67,7 @@ function App() {
   return (
     <Container fluid className="px-0 min-vh-100">
       <div
-        className="mx-auto px-3"
-        style={{
-          maxWidth: "850px",
-          paddingTop: "1.5rem",
-          marginBottom: "1rem",
-        }}
+        className="mx-auto pt-3 custom-panel-width"
       >
         <FilterForm
           query={query}
