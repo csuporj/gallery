@@ -12,6 +12,7 @@ export default function FilterForm({
     <Row className="g-2 justify-content-center">
       <Col md={6} xs={12} className="mb-2 mb-md-0">
         <Form.Control
+          name="s"
           placeholder="Search..."
           value={query}
           onChange={(e) => setQuery(e.target.value)}
@@ -21,6 +22,7 @@ export default function FilterForm({
       </Col>
       <Col md={2} xs={4}>
         <Form.Select
+          name="y"
           className="rounded-0"
           value={dateFilter.y}
           onChange={(e) => setDateFilter({ ...dateFilter, y: e.target.value })}
@@ -35,6 +37,7 @@ export default function FilterForm({
       </Col>
       <Col md={2} xs={4}>
         <Form.Select
+          name="m"
           className="rounded-0"
           value={dateFilter.m}
           onChange={(e) => setDateFilter({ ...dateFilter, m: e.target.value })}
@@ -49,6 +52,7 @@ export default function FilterForm({
       </Col>
       <Col md={2} xs={4}>
         <Form.Select
+          name="d"
           className="rounded-0"
           value={dateFilter.d}
           onChange={(e) => setDateFilter({ ...dateFilter, d: e.target.value })}
