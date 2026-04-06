@@ -14,6 +14,7 @@ export default function FilterForm({
         <Form.Control
           name="s"
           placeholder="Search..."
+          spellCheck="false"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           className="border-1 rounded-0"
