@@ -53,7 +53,7 @@ const AlbumCard = memo(({ album }: AlbumCardProps) => {
 
           <Card.Body
             className="d-flex justify-content-between align-items-center px-3"
-            style={{ height: "64px", overflow: "hidden" }}
+            style={{ height: "48px", overflow: "hidden" }}
           >
             <span
               className="fs-4 text-dark text-truncate me-3"
