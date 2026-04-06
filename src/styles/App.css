@@ -1,10 +1,12 @@
-/* Base width for xs and sm */
+html {
+  scrollbar-gutter: stable;
+}
+
 .custom-panel-width {
   width: 600px;
   max-width: calc(100vw - 32px);
 }
 
-/* Update for md and lg (768px and up) */
 @media (min-width: 768px) {
   .custom-panel-width {
     width: 700px;

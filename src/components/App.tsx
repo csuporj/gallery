@@ -74,6 +74,7 @@ function App() {
       ) : (
         <VirtuosoGrid
           useWindowScroll
+          initialItemCount={12}
           data={filteredAlbums}
           components={gridComponents}
           itemContent={(_index, album) => <AlbumCard album={album} />}
