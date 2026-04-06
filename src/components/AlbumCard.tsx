@@ -15,6 +15,8 @@ interface AlbumCardProps {
 
 const AlbumCard = memo(({ album }: AlbumCardProps) => {
   const base = import.meta.env.BASE_URL;
+  if (!album) return null;
+
   const hasNoImage =
     !album.ThumbnailFileName || album.ThumbnailFileName.trim() === "";
 
