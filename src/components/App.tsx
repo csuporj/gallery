@@ -75,6 +75,9 @@ function App() {
         <VirtuosoGrid
           useWindowScroll
           initialItemCount={24}
+          scrollSeekConfiguration={false}
+          overscan={{ main: 500, reverse: 500 }}
+          increaseViewportBy={{ top: 1000, bottom: 1000 }}
           data={filteredAlbums}
           components={gridComponents}
           itemContent={(_index, album) => <AlbumCard album={album} />}
