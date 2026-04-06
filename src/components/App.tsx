@@ -13,7 +13,7 @@ import AlbumCard from "./AlbumCard";
 import FilterForm from "./FilterForm";
 import { useAlbums } from "./useAlbums";
 import { useAlbumFilters } from "./useAlbumFilters";
-import "../styles/App.css"
+import "../styles/App.css";
 
 const gridComponents = {
   List: forwardRef<
@@ -56,19 +56,9 @@ function App() {
     dateFilter,
   );
 
-  if (loading) {
-    return (
-      <Container className="text-center mt-5">
-        <Spinner animation="border" />
-      </Container>
-    );
-  }
-
   return (
     <Container fluid className="px-0 min-vh-100">
-      <div
-        className="mx-auto pt-3 custom-panel-width"
-      >
+      <div className="mx-auto pt-3 custom-panel-width">
         <FilterForm
           query={query}
           setQuery={setQuery}
@@ -77,13 +67,18 @@ function App() {
           dateOptions={dateOptions}
         />
       </div>
-
-      <VirtuosoGrid
-        useWindowScroll
-        data={filteredAlbums}
-        components={gridComponents}
-        itemContent={(_index, album) => <AlbumCard album={album} />}
-      />
+      {loading ? (
+        <Container className="text-center mt-5">
+          <Spinner animation="border" />
+        </Container>
+      ) : (
+        <VirtuosoGrid
+          useWindowScroll
+          data={filteredAlbums}
+          components={gridComponents}
+          itemContent={(_index, album) => <AlbumCard album={album} />}
+        />
+      )}
     </Container>
   );
 }
