@@ -36,7 +36,7 @@ const AlbumCard = memo(({ album }: AlbumCardProps) => {
           maxWidth: "calc(100vw - 8px)",
         }}
       >
-        <Card className="rounded-0 border-0 shadow-sm">
+        <Card className="rounded-top-0 rounded-botton-5 border-0 shadow-sm">
           <Card.Img
             variant="top"
             className="rounded-0 w-100"
@@ -52,7 +52,7 @@ const AlbumCard = memo(({ album }: AlbumCardProps) => {
           />
 
           <Card.Body
-            className="d-flex justify-content-between align-items-center px-2"
+            className="d-flex justify-content-between align-items-center px-2 bg-white rounded-bottom-5"
             style={{ height: "48px", overflow: "hidden" }}
           >
             <span
