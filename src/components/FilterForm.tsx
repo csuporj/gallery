@@ -10,14 +10,13 @@ export default function FilterForm({
 }: FilterFormProps) {
   return (
     <Row className="g-2 justify-content-center">
-      <Col md={6} xs={12} className="mb-2 mb-md-0">
+      <Col md={6} xs={12}>
         <Form.Control
           name="s"
           placeholder="Search..."
           spellCheck="false"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          style={{ height: "calc(2.25rem + 2px)" }}
         />
       </Col>
       <Col md={2} xs={4}>

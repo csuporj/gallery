@@ -58,7 +58,7 @@ function App() {
 
   return (
     <Container fluid className="px-0 min-vh-100">
-      <div className="mx-auto pt-3 custom-panel-width">
+      <div className="mx-auto pt-2 pb-1 filter-form-width">
         <FilterForm
           query={query}
           setQuery={setQuery}

@@ -2,13 +2,13 @@ html {
   scrollbar-gutter: stable;
 }
 
-.custom-panel-width {
+.filter-form-width {
   width: 600px;
-  max-width: calc(100vw - 32px);
+  max-width: calc(100vw - 8px);
 }
 
 @media (min-width: 768px) {
-  .custom-panel-width {
+  .filter-form-width {
     width: 700px;
   }
 }

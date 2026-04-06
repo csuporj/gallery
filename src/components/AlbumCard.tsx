@@ -25,7 +25,7 @@ const AlbumCard = memo(({ album }: AlbumCardProps) => {
        Padding 'p-3' provides space for the shadow to spread.
        Without this, virtualization or 'overflow: hidden' would cut the shadow off.
     */
-    <div className="p-3">
+    <div className="p-1">
       <a
         href={album.AlbumUrl}
         target="_blank"
@@ -33,10 +33,10 @@ const AlbumCard = memo(({ album }: AlbumCardProps) => {
         className="text-decoration-none d-block"
         style={{
           width: "600px",
-          maxWidth: "calc(100vw - 32px)",
+          maxWidth: "calc(100vw - 8px)",
         }}
       >
-        <Card className="rounded-0 border-0 shadow-lg">
+        <Card className="rounded-0 border-0 shadow-sm">
           <Card.Img
             variant="top"
             className="rounded-0 w-100"
@@ -52,7 +52,7 @@ const AlbumCard = memo(({ album }: AlbumCardProps) => {
           />
 
           <Card.Body
-            className="d-flex justify-content-between align-items-center px-3"
+            className="d-flex justify-content-between align-items-center px-2"
             style={{ height: "48px", overflow: "hidden" }}
           >
             <span
