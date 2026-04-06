@@ -1,9 +1,4 @@
-import {
-  useState,
-  forwardRef,
-  type CSSProperties,
-  type ReactNode,
-} from "react";
+import { useState } from "react";
 import { Container, Spinner } from "react-bootstrap";
 import { VirtuosoGrid } from "react-virtuoso";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -14,32 +9,7 @@ import FilterForm from "./FilterForm";
 import { useAlbums } from "./useAlbums";
 import { useAlbumFilters } from "./useAlbumFilters";
 import "../styles/App.css";
-
-const gridComponents = {
-  List: forwardRef<
-    HTMLDivElement,
-    { style?: CSSProperties; children?: ReactNode }
-  >(({ style, children, ...props }, ref) => (
-    <div
-      ref={ref}
-      {...props}
-      style={{
-        ...style,
-        display: "flex",
-        flexWrap: "wrap",
-        justifyContent: "center",
-        paddingBottom: "2rem",
-      }}
-    >
-      {children}
-    </div>
-  )),
-  Item: ({ children, ...props }: { children?: ReactNode }) => (
-    <div {...props} style={{ display: "flex" }}>
-      {children}
-    </div>
-  ),
-};
+import { gridComponents } from "./gridComponents";
 
 function App() {
   const [query, setQuery] = useState("");
