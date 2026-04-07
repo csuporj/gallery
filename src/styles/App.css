@@ -3,13 +3,12 @@ html {
 }
 
 .filter-form-width {
-  /* Allow the form to fill space up to the limit */
-  width: 100%;
-  max-width: 600px;
+  width: 600px;
+  max-width: calc(100vw - 8px);
 }
 
 @media (min-width: 768px) {
   .filter-form-width {
-    max-width: 700px;
+    width: 700px;
   }
 }

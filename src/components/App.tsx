@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState } from "react";
 import { Container, Spinner } from "react-bootstrap";
 import { VirtuosoGrid } from "react-virtuoso";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -6,19 +6,13 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import type { DateState } from "./DateState";
 import AlbumCard from "./AlbumCard";
 import FilterForm from "./FilterForm";
-import MainLayout from "./MainLayout";
 import { useAlbums } from "./useAlbums";
 import { useAlbumFilters } from "./useAlbumFilters";
-import { useScrollToTop } from "./useScrollToTop";
-import { gridComponents } from "./gridComponents";
 import "../styles/App.css";
+import { gridComponents } from "./gridComponents";
 
 function App() {
   const [query, setQuery] = useState("");
-  const [visible, setVisible] = useState(true);
-  const [showButton, setShowButton] = useState(false);
-  const lastScrollY = useRef(0);
-
   const [dateFilter, setDateFilter] = useState<DateState>({
     y: "*",
     m: "*",
@@ -26,53 +20,23 @@ function App() {
   });
 
   const { albums, loading } = useAlbums();
-  const { scrollToTop } = useScrollToTop();
   const { filteredAlbums, dateOptions } = useAlbumFilters(
     albums,
     query,
     dateFilter,
   );
 
-  useEffect(() => {
-    const handleScroll = () => {
-      const currentScrollY = window.scrollY;
-
-      // Header Visibility
-      if (currentScrollY < 100) {
-        setVisible(true);
-      } else if (currentScrollY > lastScrollY.current) {
-        setVisible(false);
-      } else {
-        setVisible(true);
-      }
-
-      // Button Visibility
-      setShowButton(currentScrollY > 600);
-      lastScrollY.current = currentScrollY;
-    };
-
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
   return (
-    <MainLayout
-      visible={visible}
-      showButton={showButton}
-      onScrollToTop={scrollToTop}
-      headerContent={
+    <Container fluid className="px-0 min-vh-100 bg-light">
+      <div className="mx-auto pt-2 pb-1 filter-form-width">
         <FilterForm
           query={query}
-          setQuery={(q) => {
-            setQuery(q);
-            window.scrollTo(0, 0);
-          }}
+          setQuery={setQuery}
           dateFilter={dateFilter}
           setDateFilter={setDateFilter}
           dateOptions={dateOptions}
         />
-      }
-    >
+      </div>
       {loading ? (
         <Container className="text-center mt-5">
           <Spinner animation="border" />
@@ -81,12 +45,15 @@ function App() {
         <VirtuosoGrid
           useWindowScroll
           initialItemCount={24}
+          scrollSeekConfiguration={false}
+          overscan={{ main: 500, reverse: 500 }}
+          increaseViewportBy={{ top: 1000, bottom: 1000 }}
           data={filteredAlbums}
           components={gridComponents}
           itemContent={(_index, album) => <AlbumCard album={album} />}
         />
       )}
-    </MainLayout>
+    </Container>
   );
 }
 
