@@ -52,7 +52,7 @@ function App() {
           itemContent={(_index, album) => <AlbumCard album={album} />}
         />
       )}
-      <div style={{ height: "52px" }} />
+
       <BackToTop />
     </Container>
   );

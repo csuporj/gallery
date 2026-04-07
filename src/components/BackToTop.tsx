@@ -3,50 +3,53 @@ import { Button } from "react-bootstrap";
 
 const BackToTop = () => {
   const [visible, setVisible] = useState(false);
-  const lastScrollY = useRef(0);
+  const lastScrollY = useRef<number>(0);
 
   useEffect(() => {
-    const updateVisibility = () => {
+    const handleScroll = () => {
       const currentScrollY = window.scrollY;
       const windowHeight = window.innerHeight;
       const documentHeight = document.documentElement.scrollHeight;
 
-      const isAtBottom = currentScrollY + windowHeight >= documentHeight - 100;
+      // 1. Check if user is at the bottom (with a 20px buffer)
+      const isAtBottom = currentScrollY + windowHeight >= documentHeight - 20;
 
-      if (currentScrollY <= 400) {
+      // 2. Hide at the top
+      if (currentScrollY < 400) {
         setVisible(false);
-      } else if (isAtBottom) {
+      }
+      // 3. Show if at the bottom OR scrolling UP
+      else if (isAtBottom || currentScrollY < lastScrollY.current - 10) {
         setVisible(true);
-      } else if (currentScrollY < lastScrollY.current - 10) {
-        setVisible(true);
-      } else if (currentScrollY > lastScrollY.current + 10) {
+      }
+      // 4. Hide if scrolling DOWN (and not at the bottom yet)
+      else if (currentScrollY > lastScrollY.current + 10) {
         setVisible(false);
       }
 
       lastScrollY.current = currentScrollY;
     };
 
-    window.addEventListener("scroll", updateVisibility, { passive: true });
-    return () => window.removeEventListener("scroll", updateVisibility);
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
-
-  const scrollToTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
 
   return (
     <Button
-      onClick={scrollToTop}
+      onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
       className={`rounded-2 shadow-sm position-fixed border-0 d-flex align-items-center justify-content-center bg-white ${
         visible ? "opacity-100" : "opacity-0"
       }`}
       style={{
-        bottom: "4px",
-        right: "4px",
-        zIndex: 2000,
+        // Higher bottom value + safe area to clear mobile browser UI
+        bottom: "calc(env(safe-area-inset-bottom, 0px) + 24px)",
+        right: "24px",
+        zIndex: 9999,
         width: "48px",
         height: "48px",
         color: "#000",
-        transition: "all 0.3s ease-in-out",
-        transform: visible ? "translateY(0)" : "translateY(10px)",
+        transition: "all 0.25s ease-in-out",
+        transform: visible ? "translateY(0)" : "translateY(15px)",
         pointerEvents: visible ? "auto" : "none",
       }}
     >
