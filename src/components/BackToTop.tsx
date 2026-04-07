@@ -11,7 +11,7 @@ const BackToTop = () => {
       const windowHeight = window.innerHeight;
       const documentHeight = document.documentElement.scrollHeight;
 
-      const isAtBottom = currentScrollY + windowHeight >= documentHeight - 50;
+      const isAtBottom = currentScrollY + windowHeight >= documentHeight - 100;
 
       if (currentScrollY <= 400) {
         setVisible(false);
