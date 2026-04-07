@@ -28,7 +28,7 @@ function App() {
   );
 
   return (
-    <Container fluid className="px-0 min-vh-100 bg-light">
+    <Container fluid className="px-0 pb-1 min-vh-100 bg-light">
       <div className="mx-auto pt-2 pb-1 filter-form-width">
         <FilterForm
           query={query}
