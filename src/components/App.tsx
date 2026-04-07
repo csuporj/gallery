@@ -45,7 +45,8 @@ function App() {
       ) : (
         <VirtuosoGrid
           useWindowScroll
-          initialItemCount={24}
+          /* 25 cols 19 rows of photos are shown at start on full screen on 4k at 25% zoom */
+          initialItemCount={475}
           scrollSeekConfiguration={false}
           data={filteredAlbums}
           components={gridComponents}

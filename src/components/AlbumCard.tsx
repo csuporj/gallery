@@ -36,6 +36,7 @@ const AlbumCard = memo(({ album }: AlbumCardProps) => {
           <Card.Img
             variant="top"
             className="rounded-2 w-100"
+            loading="lazy"
             src={
               hasNoImage
                 ? thumbnailPlaceholderUrl
