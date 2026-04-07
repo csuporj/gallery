@@ -6,20 +6,32 @@ const BackToTop = () => {
   const lastScrollY = useRef(0);
 
   useEffect(() => {
-    const handleScroll = () => {
+    const updateVisibility = () => {
       const currentScrollY = window.scrollY;
       const windowHeight = window.innerHeight;
       const documentHeight = document.documentElement.scrollHeight;
 
       const isScrollingUp = currentScrollY < lastScrollY.current;
-      const isAtBottom = currentScrollY + windowHeight >= documentHeight - 10;
 
+      // Increased mobile buffer to 50px to catch fast momentum scrolls
+      const isAtBottom = currentScrollY + windowHeight >= documentHeight - 50;
+
+      // Show if moving up OR near bottom, provided we've scrolled a bit (> 400px)
       setVisible((isScrollingUp || isAtBottom) && currentScrollY > 400);
+
       lastScrollY.current = currentScrollY;
     };
 
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
+    // Use a listener for immediate response
+    window.addEventListener("scroll", updateVisibility, { passive: true });
+
+    // Check every 250ms to catch fast scrolls that might miss the event trigger
+    const interval = setInterval(updateVisibility, 250);
+
+    return () => {
+      window.removeEventListener("scroll", updateVisibility);
+      clearInterval(interval);
+    };
   }, []);
 
   const scrollToTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
