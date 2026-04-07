@@ -11,27 +11,23 @@ const BackToTop = () => {
       const windowHeight = window.innerHeight;
       const documentHeight = document.documentElement.scrollHeight;
 
-      const isScrollingUp = currentScrollY < lastScrollY.current;
-
-      // Increased mobile buffer to 50px to catch fast momentum scrolls
       const isAtBottom = currentScrollY + windowHeight >= documentHeight - 50;
 
-      // Show if moving up OR near bottom, provided we've scrolled a bit (> 400px)
-      setVisible((isScrollingUp || isAtBottom) && currentScrollY > 400);
+      if (currentScrollY <= 400) {
+        setVisible(false);
+      } else if (isAtBottom) {
+        setVisible(true);
+      } else if (currentScrollY < lastScrollY.current - 10) {
+        setVisible(true);
+      } else if (currentScrollY > lastScrollY.current + 10) {
+        setVisible(false);
+      }
 
       lastScrollY.current = currentScrollY;
     };
 
-    // Use a listener for immediate response
     window.addEventListener("scroll", updateVisibility, { passive: true });
-
-    // Check every 250ms to catch fast scrolls that might miss the event trigger
-    const interval = setInterval(updateVisibility, 250);
-
-    return () => {
-      window.removeEventListener("scroll", updateVisibility);
-      clearInterval(interval);
-    };
+    return () => window.removeEventListener("scroll", updateVisibility);
   }, []);
 
   const scrollToTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
