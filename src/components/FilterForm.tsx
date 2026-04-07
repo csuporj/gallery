@@ -12,6 +12,7 @@ export default function FilterForm({
     <Row className="g-2 justify-content-center">
       <Col md={6} xs={12}>
         <Form.Control
+          type="search"
           name="s"
           placeholder="Search..."
           spellCheck="false"

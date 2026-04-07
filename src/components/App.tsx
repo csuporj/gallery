@@ -43,7 +43,7 @@ function App() {
         <Container className="text-center mt-5">
           <Spinner animation="border" />
         </Container>
-      ) : (
+      ) : filteredAlbums.length > 0 ? (
         <VirtuosoGrid
           useWindowScroll
           initialItemCount={120}
@@ -52,6 +52,8 @@ function App() {
           components={gridComponents}
           itemContent={(_index, album) => <AlbumCard album={album} />}
         />
+      ) : (
+        <div className="text-center">No results.</div>
       )}
 
       <div id="end" style={{ height: "66px" }} />
