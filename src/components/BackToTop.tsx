@@ -3,71 +3,79 @@ import { Button } from "react-bootstrap";
 
 const BackToTop = () => {
   const [visible, setVisible] = useState(false);
+  const [isAtBottom, setIsAtBottom] = useState(false);
   const [log, setLog] = useState({});
   const lastScrollY = useRef<number>(0);
 
   useEffect(() => {
+    // 1. Intersection Observer for the #end div
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsAtBottom(entry.isIntersecting);
+      },
+      { threshold: 0.1, rootMargin: "0px 0px 20px 0px" }, // 20px buffer via margin
+    );
+
+    const endElement = document.getElementById("end");
+    if (endElement) observer.observe(endElement);
+
+    // 2. Scroll logic for direction and top-offset
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
-      const windowHeight = window.innerHeight;
-      const documentHeight = document.documentElement.scrollHeight;
 
-      // 1. Check if user is at the bottom (with a 20px buffer)
-      const isAtBottom = currentScrollY + windowHeight >= documentHeight - 20;
-
-      // 2. Hide at the top
+      // Logic: Show if (Scrolled down 400px AND (Scrolling Up OR At Bottom))
       if (currentScrollY < 400) {
         setVisible(false);
-      }
-      // 3. Show if at the bottom OR scrolling UP
-      else if (isAtBottom || currentScrollY < lastScrollY.current - 10) {
+      } else if (isAtBottom || currentScrollY < lastScrollY.current - 10) {
         setVisible(true);
-      }
-      // 4. Hide if scrolling DOWN (and not at the bottom yet)
-      else if (currentScrollY > lastScrollY.current + 10) {
+      } else if (currentScrollY > lastScrollY.current + 10) {
         setVisible(false);
       }
+
       setLog({
         isAtBottom,
         currentScrollY,
-        lastScrollY,
-        windowHeight,
-        documentHeight,
+        windowHeight: window.innerHeight,
+        documentHeight: document.documentElement.scrollHeight,
       });
 
       lastScrollY.current = currentScrollY;
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
+
     return () => {
       window.removeEventListener("scroll", handleScroll);
-      console.log("remove scroll");
+      observer.disconnect();
     };
-  }, []);
+  }, [isAtBottom]); // Re-run scroll logic when bottom state toggles
 
   return (
     <Button
       onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
       className={`rounded-2 shadow-sm position-fixed border-0 d-flex align-items-center justify-content-center bg-white ${
-        visible ? "opacity-100" : "opacity-75"
+        visible ? "opacity-100" : "opacity-0"
       }`}
       style={{
-        // Higher bottom value + safe area to clear mobile browser UI
         bottom: "calc(env(safe-area-inset-bottom, 0px) + 24px)",
         right: "24px",
         zIndex: 9999,
-        width: "348px",
-        height: "348px",
+        width: "60px", // Adjusted from 348px for a standard button look
+        height: "60px",
         color: "#000",
         transition: "all 0.25s ease-in-out",
         transform: visible ? "translateY(0)" : "translateY(15px)",
         pointerEvents: visible ? "auto" : "none",
       }}
     >
-      <pre className="text-start">{JSON.stringify(log, null, 2)}</pre>
+      {/* Debug Log - Optional */}
+      <pre style={{ position: "absolute", right: "70px", background: "#fff" }}>
+        {JSON.stringify(log, null, 2)}
+      </pre>
+
       <svg
-        width="20"
-        height="20"
+        width="24"
+        height="24"
         viewBox="0 0 24 24"
         fill="none"
         stroke="currentColor"
