@@ -8,8 +8,13 @@ const BackToTop = () => {
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
+      const windowHeight = window.innerHeight;
+      const documentHeight = document.documentElement.scrollHeight;
+
       const isScrollingUp = currentScrollY < lastScrollY.current;
-      setVisible(isScrollingUp && currentScrollY > 400);
+      const isAtBottom = currentScrollY + windowHeight >= documentHeight - 10;
+
+      setVisible((isScrollingUp || isAtBottom) && currentScrollY > 400);
       lastScrollY.current = currentScrollY;
     };
 
@@ -22,34 +27,28 @@ const BackToTop = () => {
   return (
     <Button
       onClick={scrollToTop}
-      className={`rounded-circle shadow-lg position-fixed border-0 d-flex align-items-center justify-content-center ${visible ? "opacity-100" : "opacity-0"}`}
+      className={`rounded-2 shadow-sm position-fixed border-0 d-flex align-items-center justify-content-center bg-white ${
+        visible ? "opacity-100" : "opacity-0"
+      }`}
       style={{
-        bottom: "30px",
-        right: "30px",
+        bottom: "4px",
+        right: "4px",
         zIndex: 2000,
-        width: "56px",
-        height: "56px",
-        // Glassmorphism Fixes
-        backgroundColor: "rgba(255, 255, 255, 0.3)", // Light transparent base
-        border: "1px solid rgba(255, 255, 255, 0.2) !important",
-        backdropFilter: "blur(12px)", // The actual glass effect
-        WebkitBackdropFilter: "blur(12px)", // Required for Safari support
+        width: "48px",
+        height: "48px",
         color: "#000",
-        // Smooth transitions
-        transition: "all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
-        transform: visible
-          ? "scale(1) translateY(0)"
-          : "scale(0.8) translateY(20px)",
+        transition: "all 0.3s ease-in-out",
+        transform: visible ? "translateY(0)" : "translateY(10px)",
         pointerEvents: visible ? "auto" : "none",
       }}
     >
       <svg
-        width="24"
-        height="24"
+        width="20"
+        height="20"
         viewBox="0 0 24 24"
         fill="none"
         stroke="currentColor"
-        strokeWidth="3"
+        strokeWidth="2.5"
         strokeLinecap="round"
         strokeLinejoin="round"
       >
