@@ -2,6 +2,7 @@ import React, { memo } from "react";
 import { Card } from "react-bootstrap";
 import type { Album } from "./Album";
 import { thumbnailPlaceholderUrl } from "./thumbnailPlaceholderUrl";
+import "../styles/AlbumCard.css";
 
 declare module "react" {
   interface ImgHTMLAttributes<T> extends React.HTMLAttributes<T> {
@@ -26,7 +27,7 @@ const AlbumCard = memo(({ album }: AlbumCardProps) => {
         href={album.AlbumUrl}
         target="_blank"
         rel="noopener noreferrer"
-        className="text-decoration-none d-block rounded-2"
+        className="text-decoration-none focus-ring d-block rounded-2"
         style={{
           width: "600px",
           maxWidth: "calc(100vw - 8px)",
