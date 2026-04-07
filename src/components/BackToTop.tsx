@@ -3,6 +3,7 @@ import { Button } from "react-bootstrap";
 
 const BackToTop = () => {
   const [visible, setVisible] = useState(false);
+  const [log, setLog] = useState({});
   const lastScrollY = useRef<number>(0);
 
   useEffect(() => {
@@ -26,33 +27,44 @@ const BackToTop = () => {
       else if (currentScrollY > lastScrollY.current + 10) {
         setVisible(false);
       }
+      setLog({
+        isAtBottom,
+        currentScrollY,
+        lastScrollY,
+        windowHeight,
+        documentHeight,
+      });
 
       lastScrollY.current = currentScrollY;
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      console.log("remove scroll");
+    };
   }, []);
 
   return (
     <Button
       onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
       className={`rounded-2 shadow-sm position-fixed border-0 d-flex align-items-center justify-content-center bg-white ${
-        visible ? "opacity-100" : "opacity-0"
+        visible ? "opacity-100" : "opacity-75"
       }`}
       style={{
         // Higher bottom value + safe area to clear mobile browser UI
         bottom: "calc(env(safe-area-inset-bottom, 0px) + 24px)",
         right: "24px",
         zIndex: 9999,
-        width: "48px",
-        height: "48px",
+        width: "348px",
+        height: "348px",
         color: "#000",
         transition: "all 0.25s ease-in-out",
         transform: visible ? "translateY(0)" : "translateY(15px)",
         pointerEvents: visible ? "auto" : "none",
       }}
     >
+      <pre className="text-start">{JSON.stringify(log, null, 2)}</pre>
       <svg
         width="20"
         height="20"
