@@ -52,7 +52,7 @@ function App() {
           itemContent={(_index, album) => <AlbumCard album={album} />}
         />
       )}
-      <div id="end" className="bg-warning" style={{ height: "52px" }} />
+      <div id="end" style={{ height: "84px" }} />
 
       <BackToTop />
     </Container>

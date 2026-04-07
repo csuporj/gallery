@@ -4,15 +4,13 @@ import { Button } from "react-bootstrap";
 const BackToTop = () => {
   const [visible, setVisible] = useState(false);
   const [isAtBottom, setIsAtBottom] = useState(false);
-  const [log, setLog] = useState({});
   const lastScrollY = useRef<number>(0);
 
   useEffect(() => {
-    // 1. Intersection Observer for the #end div
     const observer = new IntersectionObserver(
       ([entry]) => {
         setIsAtBottom(entry.isIntersecting);
-        if (entry.isIntersecting) setVisible(true);
+        if (entry.isIntersecting && window.scrollY > 400) setVisible(true);
       },
       { threshold: 0.1, rootMargin: "0px 0px 20px 0px" }, // 20px buffer via margin
     );
@@ -24,7 +22,6 @@ const BackToTop = () => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
 
-      // Logic: Show if (Scrolled down 400px AND (Scrolling Up OR At Bottom))
       if (currentScrollY < 400) {
         setVisible(false);
       } else if (isAtBottom || currentScrollY < lastScrollY.current - 10) {
@@ -32,13 +29,6 @@ const BackToTop = () => {
       } else if (currentScrollY > lastScrollY.current + 10) {
         setVisible(false);
       }
-
-      setLog({
-        isAtBottom,
-        currentScrollY,
-        windowHeight: window.innerHeight,
-        documentHeight: document.documentElement.scrollHeight,
-      });
 
       lastScrollY.current = currentScrollY;
     };
@@ -49,7 +39,7 @@ const BackToTop = () => {
       window.removeEventListener("scroll", handleScroll);
       observer.disconnect();
     };
-  }, [isAtBottom]); // Re-run scroll logic when bottom state toggles
+  }, [isAtBottom]);
 
   return (
     <Button
@@ -59,21 +49,16 @@ const BackToTop = () => {
       }`}
       style={{
         bottom: "calc(env(safe-area-inset-bottom, 0px) + 24px)",
-        right: "24px",
+        right: "4px",
         zIndex: 9999,
-        width: "360px", // Adjusted from 348px for a standard button look
-        height: "360px",
+        width: "60px",
+        height: "60px",
         color: "#000",
         transition: "all 0.25s ease-in-out",
         transform: visible ? "translateY(0)" : "translateY(15px)",
         pointerEvents: visible ? "auto" : "none",
       }}
     >
-      {/* Debug Log - Optional */}
-      <pre className="text-start fs-5" style={{ position: "absolute", right: "70px", background: "#fff" }}>
-        {JSON.stringify(log, null, 2)}
-      </pre>
-
       <svg
         width="24"
         height="24"
