@@ -53,7 +53,7 @@ function App() {
           itemContent={(_index, album) => <AlbumCard album={album} />}
         />
       ) : (
-        <div className="text-center">No results.</div>
+        <div className="pt-1 text-center">No results.</div>
       )}
 
       <div id="end" style={{ height: "66px" }} />
