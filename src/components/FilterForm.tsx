@@ -9,7 +9,7 @@ export default function FilterForm({
   dateOptions,
 }: FilterFormProps) {
   return (
-    <Row className="g-2 justify-content-center">
+    <Row className="g-1 justify-content-center">
       <Col md={6} xs={12}>
         <Form.Control
           type="search"
