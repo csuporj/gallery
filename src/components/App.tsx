@@ -10,6 +10,7 @@ import { useAlbums } from "./useAlbums";
 import { useAlbumFilters } from "./useAlbumFilters";
 import "../styles/App.css";
 import { gridComponents } from "./gridComponents";
+import BackToTop from "./BackToTop";
 
 function App() {
   const [query, setQuery] = useState("");
@@ -53,6 +54,7 @@ function App() {
           itemContent={(_index, album) => <AlbumCard album={album} />}
         />
       )}
+      <BackToTop />
     </Container>
   );
 }
