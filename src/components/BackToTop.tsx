@@ -12,6 +12,7 @@ const BackToTop = () => {
     const observer = new IntersectionObserver(
       ([entry]) => {
         setIsAtBottom(entry.isIntersecting);
+        if (entry.isIntersecting) setVisible(true);
       },
       { threshold: 0.1, rootMargin: "0px 0px 20px 0px" }, // 20px buffer via margin
     );
@@ -54,14 +55,14 @@ const BackToTop = () => {
     <Button
       onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
       className={`rounded-2 shadow-sm position-fixed border-0 d-flex align-items-center justify-content-center bg-white ${
-        visible ? "opacity-100" : "opacity-0"
+        visible ? "opacity-100" : "opacity-75"
       }`}
       style={{
         bottom: "calc(env(safe-area-inset-bottom, 0px) + 24px)",
         right: "24px",
         zIndex: 9999,
-        width: "60px", // Adjusted from 348px for a standard button look
-        height: "60px",
+        width: "360px", // Adjusted from 348px for a standard button look
+        height: "360px",
         color: "#000",
         transition: "all 0.25s ease-in-out",
         transform: visible ? "translateY(0)" : "translateY(15px)",
@@ -69,7 +70,7 @@ const BackToTop = () => {
       }}
     >
       {/* Debug Log - Optional */}
-      <pre style={{ position: "absolute", right: "70px", background: "#fff" }}>
+      <pre className="text-start fs-5" style={{ position: "absolute", right: "70px", background: "#fff" }}>
         {JSON.stringify(log, null, 2)}
       </pre>
 
