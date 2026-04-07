@@ -38,6 +38,7 @@ function App() {
           dateOptions={dateOptions}
         />
       </div>
+
       {loading ? (
         <Container className="text-center mt-5">
           <Spinner animation="border" />
@@ -52,7 +53,8 @@ function App() {
           itemContent={(_index, album) => <AlbumCard album={album} />}
         />
       )}
-      <div id="end" style={{ height: "84px" }} />
+
+      <div id="end" style={{ height: "66px" }} />
 
       <BackToTop />
     </Container>

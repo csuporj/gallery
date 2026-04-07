@@ -7,13 +7,10 @@ const BackToTop = () => {
   const lastScrollY = useRef<number>(0);
 
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        setIsAtBottom(entry.isIntersecting);
-        if (entry.isIntersecting && window.scrollY > 400) setVisible(true);
-      },
-      { threshold: 0.1, rootMargin: "0px 0px 20px 0px" }, // 20px buffer via margin
-    );
+    const observer = new IntersectionObserver(([entry]) => {
+      setIsAtBottom(entry.isIntersecting);
+      if (entry.isIntersecting && window.scrollY > 400) setVisible(true);
+    });
 
     const endElement = document.getElementById("end");
     if (endElement) observer.observe(endElement);
@@ -44,16 +41,15 @@ const BackToTop = () => {
   return (
     <Button
       onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-      className={`rounded-2 shadow-sm position-fixed border-0 d-flex align-items-center justify-content-center bg-white ${
-        visible ? "opacity-100" : "opacity-75"
+      className={`rounded-2 shadow-sm position-fixed border-0 d-flex align-items-center justify-content-center bg-white text-black ${
+        visible ? "opacity-100" : "opacity-0"
       }`}
       style={{
-        bottom: "calc(env(safe-area-inset-bottom, 0px) + 24px)",
+        bottom: "8px",
         right: "4px",
         zIndex: 9999,
         width: "60px",
         height: "60px",
-        color: "#000",
         transition: "all 0.25s ease-in-out",
         transform: visible ? "translateY(0)" : "translateY(15px)",
         pointerEvents: visible ? "auto" : "none",
