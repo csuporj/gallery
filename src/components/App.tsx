@@ -1,4 +1,5 @@
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
+import { useSearchParams } from "react-router-dom";
 import { Container, Spinner } from "react-bootstrap";
 import { VirtuosoGrid } from "react-virtuoso";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -13,12 +14,42 @@ import { gridComponents } from "./gridComponents";
 import BackToTop from "./BackToTop";
 
 function App() {
-  const [query, setQuery] = useState("");
-  const [dateFilter, setDateFilter] = useState<DateState>({
-    y: "*",
-    m: "*",
-    d: "*",
-  });
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  // 1. Read values directly from URL (or use defaults)
+  const query = searchParams.get("q") || "";
+  const dateFilter: DateState = {
+    y: searchParams.get("y") || "*",
+    m: searchParams.get("m") || "*",
+    d: searchParams.get("d") || "*",
+  };
+
+  // 2. Update functions that modify URL and replace history
+  const setQuery = (newQuery: string) => {
+    const params = new URLSearchParams(searchParams);
+    if (newQuery === "") {
+      params.delete("q");
+    } else {
+      params.set("q", newQuery);
+    }
+    setSearchParams(params, { replace: true });
+  };
+
+  const setDateFilter = (newDate: DateState) => {
+    const params = new URLSearchParams(searchParams);
+
+    // Process y, m, d: if value is "*", remove it from URL
+    (Object.keys(newDate) as Array<keyof DateState>).forEach((key) => {
+      const value = newDate[key];
+      if (value === "*") {
+        params.delete(key);
+      } else {
+        params.set(key, value);
+      }
+    });
+
+    setSearchParams(params, { replace: true });
+  };
 
   const { albums, loading } = useAlbums();
   const { filteredAlbums, dateOptions } = useAlbumFilters(
@@ -30,7 +61,7 @@ function App() {
   const safeInitialCount = useMemo(() => {
     const cols = Math.max(1, Math.floor(window.innerWidth / 608));
     const rows = Math.ceil(window.innerHeight / 456);
-    return cols * rows;
+    return Math.min(cols * rows);
   }, []);
 
   return (
@@ -52,12 +83,14 @@ function App() {
       ) : filteredAlbums.length > 0 ? (
         <VirtuosoGrid
           useWindowScroll
-          initialItemCount={safeInitialCount}
+          initialItemCount={Math.min(safeInitialCount, filteredAlbums.length)}
           increaseViewportBy={1000}
           scrollSeekConfiguration={false}
           data={filteredAlbums}
           components={gridComponents}
-          itemContent={(_index, album) => <AlbumCard album={album} />}
+          itemContent={(_index, album) => (
+            <AlbumCard album={album} key={album.AlbumUrl} />
+          )}
         />
       ) : (
         <div className="pt-1 text-center">No results.</div>
