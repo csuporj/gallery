@@ -40,15 +40,9 @@ const BackToTop = () => {
     };
   }, []);
 
-  const handleBackToTop = (e?: React.MouseEvent | React.TouchEvent) => {
-    if (e && e.cancelable) e.preventDefault();
-
+  const handleBackToTop = () => {
     const currentPos = window.scrollY;
-
-    // stop the inertial scroll,
-    // otherwise smooth scroll does not scroll at all
     window.scrollTo(0, currentPos);
-
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
@@ -69,6 +63,7 @@ const BackToTop = () => {
         transform: visible ? "translateY(0)" : "translateY(15px)",
         pointerEvents: visible ? "auto" : "none",
         touchAction: "manipulation",
+        cursor: "pointer",
       }}
     >
       <svg
