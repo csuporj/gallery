@@ -53,7 +53,7 @@ function App() {
         <VirtuosoGrid
           useWindowScroll
           initialItemCount={safeInitialCount}
-          increaseViewportBy={2000}
+          increaseViewportBy={1000}
           scrollSeekConfiguration={false}
           data={filteredAlbums}
           components={gridComponents}
