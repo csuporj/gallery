@@ -6,8 +6,11 @@ export function useDynamicTitle(query: string, dateFilter: DateState) {
     const { y, m, d } = dateFilter;
 
     let dateString = "";
-    if (m !== "*" && d !== "*" && y !== "*") {
-      dateString = `${m} ${d}, ${y}`;
+    if (d !== "*" && y !== "*") {
+      const monthPart = m !== "*" ? `${m} ` : "MMM ";
+      dateString = `${monthPart}${d}, ${y}`;
+    } else if (d !== "*" && m === "*") {
+      dateString = `MMM ${d}`;
     } else {
       dateString = [m, d, y].filter((v) => v !== "*").join(" ");
     }
