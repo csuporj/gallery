@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { Container, Spinner } from "react-bootstrap";
 import { VirtuosoGrid } from "react-virtuoso";
@@ -24,6 +24,29 @@ function App() {
     d: searchParams.get("d") || "*",
   };
 
+  // Update window title logic
+  useEffect(() => {
+    // Filter out defaults and join parts with a space
+    const dateParts = [dateFilter.y, dateFilter.m, dateFilter.d].filter(
+      (v) => v !== "*",
+    );
+    const dateString = dateParts.length > 0 ? dateParts.join(" ") : "";
+
+    const titleParts = [];
+    if (query) titleParts.push(query);
+    if (dateString) titleParts.push(dateString);
+
+    if (titleParts.length === 0) {
+      document.title = "Gallery";
+    } else if (query) {
+      // If there is a search query, show just the query and date (no "Gallery")
+      document.title = titleParts.join(" ");
+    } else {
+      // If only a date filter is present, show "Date | Gallery"
+      document.title = `${dateString} | Gallery`;
+    }
+  }, [query, dateFilter.y, dateFilter.m, dateFilter.d]);
+
   // 2. Update functions that modify URL and replace history
   const setQuery = (newQuery: string) => {
     const params = new URLSearchParams(searchParams);
@@ -38,7 +61,6 @@ function App() {
   const setDateFilter = (newDate: DateState) => {
     const params = new URLSearchParams(searchParams);
 
-    // Process y, m, d: if value is "*", remove it from URL
     (Object.keys(newDate) as Array<keyof DateState>).forEach((key) => {
       const value = newDate[key];
       if (value === "*") {
