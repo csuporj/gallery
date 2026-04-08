@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { Row, Col, Form } from "react-bootstrap";
 import type { FilterFormProps } from "./FilterFormProps";
 
@@ -8,6 +9,22 @@ export default function FilterForm({
   setDateFilter,
   dateOptions,
 }: FilterFormProps) {
+  const [localQuery, setLocalQuery] = useState(query);
+
+  useEffect(() => {
+    setLocalQuery(query);
+  }, [query]);
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      if (localQuery !== query) {
+        setQuery(localQuery);
+      }
+    }, 300);
+
+    return () => clearTimeout(handler);
+  }, [localQuery, setQuery, query]);
+
   return (
     <Row className="g-1 justify-content-center">
       <Col md={6} xs={12}>
@@ -16,8 +33,8 @@ export default function FilterForm({
           name="s"
           placeholder="Search..."
           spellCheck="false"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
+          value={localQuery}
+          onChange={(e) => setLocalQuery(e.target.value)}
         />
       </Col>
       <Col md={2} xs={4}>
