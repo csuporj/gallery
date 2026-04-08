@@ -15,7 +15,6 @@ const BackToTop = () => {
     const endElement = document.getElementById("end");
     if (endElement) observer.observe(endElement);
 
-    // 2. Scroll logic for direction and top-offset
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
 
