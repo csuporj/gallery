@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Container, Spinner } from "react-bootstrap";
 import { VirtuosoGrid } from "react-virtuoso";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -27,6 +27,12 @@ function App() {
     dateFilter,
   );
 
+  const safeInitialCount = useMemo(() => {
+    const cols = Math.max(1, Math.floor(window.innerWidth / 608));
+    const rows = Math.ceil(window.innerHeight / 456);
+    return cols * rows;
+  }, []);
+
   return (
     <Container fluid className="px-0 pb-1 min-vh-100 bg-light">
       <div className="mx-auto pt-1 pb-0 filter-form-width">
@@ -46,7 +52,8 @@ function App() {
       ) : filteredAlbums.length > 0 ? (
         <VirtuosoGrid
           useWindowScroll
-          initialItemCount={120}
+          initialItemCount={safeInitialCount}
+          increaseViewportBy={2000}
           scrollSeekConfiguration={false}
           data={filteredAlbums}
           components={gridComponents}

@@ -1,4 +1,4 @@
-import React, { memo } from "react";
+import React, { memo, useState } from "react";
 import { Card } from "react-bootstrap";
 import type { Album } from "./Album";
 import { thumbnailPlaceholderUrl } from "./thumbnailPlaceholderUrl";
@@ -15,6 +15,8 @@ interface AlbumCardProps {
 }
 
 const AlbumCard = memo(({ album }: AlbumCardProps) => {
+  const [isLoaded, setIsLoaded] = useState(false);
+
   const base = import.meta.env.BASE_URL;
   if (!album) return null;
 
@@ -37,7 +39,7 @@ const AlbumCard = memo(({ album }: AlbumCardProps) => {
           <Card.Img
             variant="top"
             className="rounded-2 w-100"
-            loading="lazy"
+            onLoad={() => setIsLoaded(true)}
             src={
               hasNoImage
                 ? thumbnailPlaceholderUrl
@@ -46,6 +48,7 @@ const AlbumCard = memo(({ album }: AlbumCardProps) => {
             style={{
               aspectRatio: "600 / 400",
               objectFit: "cover",
+              visibility: isLoaded ? "visible" : "hidden",
             }}
           />
 
