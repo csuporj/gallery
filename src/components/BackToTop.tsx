@@ -40,17 +40,21 @@ const BackToTop = () => {
     };
   }, []);
 
+  const handleBackToTop = (e?: React.MouseEvent | React.TouchEvent) => {
+    if (e) e.preventDefault();
+    const currentPos = window.scrollY;
+
+    // stop the inertial scroll,
+    // otherwise smooth scroll does not scroll at all
+    window.scrollTo(0, currentPos);
+
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   return (
     <Button
-      onClick={() => {
-        const currentPos = window.scrollY;
-
-        // stop the inertial scroll,
-        // otherwise smooth scroll does not scroll at all
-        window.scrollTo(0, currentPos);
-
-        window.scrollTo({ top: 0, behavior: "smooth" });
-      }}
+      onClick={handleBackToTop}
+      onTouchStart={handleBackToTop}
       className={`rounded-2 shadow-sm position-fixed border-0 d-flex align-items-center justify-content-center bg-white text-black ${
         visible ? "opacity-100" : "opacity-0"
       }`}
