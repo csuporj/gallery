@@ -1,78 +1,20 @@
-import { useMemo, useEffect } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useMemo } from "react";
 import { Container, Spinner } from "react-bootstrap";
 import { VirtuosoGrid } from "react-virtuoso";
 import "bootstrap/dist/css/bootstrap.min.css";
 
-import type { DateState } from "./DateState";
 import AlbumCard from "./AlbumCard";
 import FilterForm from "./FilterForm";
 import { useAlbums } from "./useAlbums";
 import { useAlbumFilters } from "./useAlbumFilters";
-import "../styles/App.css";
+import { useAlbumParams } from "./useAlbumParams";
+import { useDynamicTitle } from "./useDynamicTitle";
 import { gridComponents } from "./gridComponents";
 import BackToTop from "./BackToTop";
+import "../styles/App.css";
 
 function App() {
-  const [searchParams, setSearchParams] = useSearchParams();
-
-  // 1. Read values directly from URL (or use defaults)
-  const query = searchParams.get("q") || "";
-  const dateFilter: DateState = {
-    y: searchParams.get("y") || "*",
-    m: searchParams.get("m") || "*",
-    d: searchParams.get("d") || "*",
-  };
-
-  // Update window title logic
-  useEffect(() => {
-    // Filter out defaults and join parts with a space
-    const dateParts = [dateFilter.y, dateFilter.m, dateFilter.d].filter(
-      (v) => v !== "*",
-    );
-    const dateString = dateParts.length > 0 ? dateParts.join(" ") : "";
-
-    const titleParts = [];
-    if (query) titleParts.push(query);
-    if (dateString) titleParts.push(dateString);
-
-    if (titleParts.length === 0) {
-      document.title = "Gallery";
-    } else if (query) {
-      // If there is a search query, show just the query and date (no "Gallery")
-      document.title = titleParts.join(" ");
-    } else {
-      // If only a date filter is present, show "Date | Gallery"
-      document.title = `${dateString} | Gallery`;
-    }
-  }, [query, dateFilter.y, dateFilter.m, dateFilter.d]);
-
-  // 2. Update functions that modify URL and replace history
-  const setQuery = (newQuery: string) => {
-    const params = new URLSearchParams(searchParams);
-    if (newQuery === "") {
-      params.delete("q");
-    } else {
-      params.set("q", newQuery);
-    }
-    setSearchParams(params, { replace: true });
-  };
-
-  const setDateFilter = (newDate: DateState) => {
-    const params = new URLSearchParams(searchParams);
-
-    (Object.keys(newDate) as Array<keyof DateState>).forEach((key) => {
-      const value = newDate[key];
-      if (value === "*") {
-        params.delete(key);
-      } else {
-        params.set(key, value);
-      }
-    });
-
-    setSearchParams(params, { replace: true });
-  };
-
+  const { query, setQuery, dateFilter, setDateFilter } = useAlbumParams();
   const { albums, loading } = useAlbums();
   const { filteredAlbums, dateOptions } = useAlbumFilters(
     albums,
@@ -80,15 +22,17 @@ function App() {
     dateFilter,
   );
 
+  useDynamicTitle(query, dateFilter);
+
   const safeInitialCount = useMemo(() => {
     const cols = Math.max(1, Math.floor(window.innerWidth / 608));
     const rows = Math.ceil(window.innerHeight / 456);
-    return Math.min(cols * rows);
+    return cols * rows;
   }, []);
 
   return (
     <Container fluid className="px-0 pb-1 min-vh-100 bg-light">
-      <div className="mx-auto pt-1 pb-0 filter-form-width">
+      <header className="mx-auto pt-1 pb-0 filter-form-width">
         <FilterForm
           query={query}
           setQuery={setQuery}
@@ -96,7 +40,7 @@ function App() {
           setDateFilter={setDateFilter}
           dateOptions={dateOptions}
         />
-      </div>
+      </header>
 
       {loading ? (
         <Container className="text-center mt-5">
@@ -107,19 +51,19 @@ function App() {
           useWindowScroll
           initialItemCount={Math.min(safeInitialCount, filteredAlbums.length)}
           increaseViewportBy={1000}
-          scrollSeekConfiguration={false}
           data={filteredAlbums}
           components={gridComponents}
-          itemContent={(_index, album) => (
+          itemContent={(_, album) => (
             <AlbumCard album={album} key={album.AlbumUrl} />
           )}
         />
       ) : (
-        <div className="pt-1 text-center">No results.</div>
+        <div className="pt-1 text-center" role="status">
+          No results found.
+        </div>
       )}
 
       <div id="end" style={{ height: "66px" }} />
-
       <BackToTop />
     </Container>
   );
