@@ -37,16 +37,14 @@ const BackToTop = () => {
     };
   }, []);
 
-  // Using React.UIEvent covers Mouse, Touch, and Pointer events safely
   const handleBackToTop = (e: React.UIEvent) => {
-    if (e.cancelable) {
-      e.preventDefault();
-    }
+    // 1. Prevents the "finger lift" from cancelling the smooth scroll
+    if (e.cancelable) e.preventDefault();
 
-    // Kill momentum instantly
+    // 2. Stop inertial glide by jumping to current spot (no desktop layout jump)
     window.scrollTo(0, window.scrollY);
 
-    // Start smooth scroll
+    // 3. Initiate the climb to the top
     window.scrollTo({
       top: 0,
       behavior: "smooth",
@@ -55,7 +53,7 @@ const BackToTop = () => {
 
   return (
     <Button
-      // onPointerDown triggers before the 'release' can cancel the scroll
+      // onPointerDown is the most responsive event for mobile & desktop
       onPointerDown={handleBackToTop}
       className={`rounded-2 shadow-sm position-fixed border-0 d-flex align-items-center justify-content-center bg-white text-black ${
         visible ? "opacity-100" : "opacity-0"
@@ -69,6 +67,7 @@ const BackToTop = () => {
         transition: "all 0.25s ease-in-out",
         transform: visible ? "translateY(0)" : "translateY(15px)",
         pointerEvents: visible ? "auto" : "none",
+        // Prevents browser from treating the button as a starting point for pan gestures
         touchAction: "none",
         cursor: "pointer",
       }}
