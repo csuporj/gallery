@@ -11,31 +11,24 @@ export function useAlbumParams() {
     d: searchParams.get("d") || "*",
   };
 
+  const updateParams = (newQuery: string, newDate: DateState) => {
+    const params = new URLSearchParams();
+
+    if (newQuery) params.set("q", newQuery);
+
+    if (newDate.y !== "*") params.set("y", newDate.y);
+    if (newDate.m !== "*") params.set("m", newDate.m);
+    if (newDate.d !== "*") params.set("d", newDate.d);
+
+    setSearchParams(params, { replace: true });
+  };
+
   const setQuery = (newQuery: string) => {
-    setSearchParams(
-      (prev) => {
-        const params = new URLSearchParams(prev);
-        if (!newQuery) params.delete("q");
-        else params.set("q", newQuery);
-        return params;
-      },
-      { replace: true },
-    );
+    updateParams(newQuery, dateFilter);
   };
 
   const setDateFilter = (newDate: DateState) => {
-    setSearchParams(
-      (prev) => {
-        const params = new URLSearchParams(prev);
-        (Object.keys(newDate) as Array<keyof DateState>).forEach((key) => {
-          const value = newDate[key];
-          if (value === "*") params.delete(key);
-          else params.set(key, value);
-        });
-        return params;
-      },
-      { replace: true },
-    );
+    updateParams(query, newDate);
   };
 
   return { query, setQuery, dateFilter, setDateFilter };
