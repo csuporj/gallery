@@ -3,12 +3,12 @@ import { Button } from "react-bootstrap";
 
 const BackToTop = () => {
   const [visible, setVisible] = useState(false);
-  const [isAtBottom, setIsAtBottom] = useState(false);
   const lastScrollY = useRef<number>(0);
+  const isAtBottomRef = useRef<boolean>(false);
 
   useEffect(() => {
     const observer = new IntersectionObserver(([entry]) => {
-      setIsAtBottom(entry.isIntersecting);
+      isAtBottomRef.current = entry.isIntersecting;
       if (entry.isIntersecting && window.scrollY > 400) setVisible(true);
     });
 
@@ -20,7 +20,10 @@ const BackToTop = () => {
 
       if (currentScrollY < 400) {
         setVisible(false);
-      } else if (isAtBottom || currentScrollY < lastScrollY.current - 10) {
+      } else if (
+        isAtBottomRef.current ||
+        currentScrollY < lastScrollY.current - 10
+      ) {
         setVisible(true);
       } else if (currentScrollY > lastScrollY.current + 10) {
         setVisible(false);
@@ -35,7 +38,7 @@ const BackToTop = () => {
       window.removeEventListener("scroll", handleScroll);
       observer.disconnect();
     };
-  }, [isAtBottom]);
+  }, []);
 
   return (
     <Button
