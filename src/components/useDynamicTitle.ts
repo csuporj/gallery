@@ -3,19 +3,23 @@ import type { DateState } from "./DateState";
 
 export function useDynamicTitle(query: string, dateFilter: DateState) {
   useEffect(() => {
-    const dateParts = [dateFilter.y, dateFilter.m, dateFilter.d].filter(
-      (v) => v !== "*",
-    );
-    const dateString = dateParts.join(" ");
-    const titleParts = [];
+    const { y, m, d } = dateFilter;
 
+    let dateString = "";
+    if (m !== "*" && d !== "*" && y !== "*") {
+      dateString = `${m} ${d}, ${y}`;
+    } else {
+      dateString = [m, d, y].filter((v) => v !== "*").join(" ");
+    }
+
+    const titleParts = [];
     if (query) titleParts.push(query);
     if (dateString) titleParts.push(dateString);
 
     if (titleParts.length === 0) {
       document.title = "Gallery";
     } else if (query) {
-      document.title = titleParts.join(" ");
+      document.title = titleParts.join(" | ");
     } else {
       document.title = `${dateString} | Gallery`;
     }
