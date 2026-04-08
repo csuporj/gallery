@@ -30,7 +30,7 @@ export const useBackToTop = () => {
         setIsMoving(false);
         if (isAtBottomRef.current && window.scrollY > MIN_SCROLL_DEPTH)
           setVisible(true);
-      }, 150);
+      }, 300);
 
       const currentScrollY = window.scrollY;
 
