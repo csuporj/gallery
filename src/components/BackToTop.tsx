@@ -1,13 +1,26 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Button } from "react-bootstrap";
 
 const BackToTop = () => {
   const [visible, setVisible] = useState(false);
+  const [isMoving, setIsMoving] = useState(false);
   const lastScrollY = useRef<number>(0);
+  const scrollTimeout = useRef<number | null>(null);
 
   useEffect(() => {
     const handleScroll = () => {
+      // Hide button immediately when any scroll movement starts
+      setIsMoving(true);
+
+      // Reset timer: button reappears only after 150ms of absolute stillness
+      if (scrollTimeout.current) window.clearTimeout(scrollTimeout.current);
+      scrollTimeout.current = window.setTimeout(() => {
+        setIsMoving(false);
+      }, 150);
+
       const currentScrollY = window.scrollY;
+
+      // Logic: Show if scrolled down > 400px AND scrolling up
       if (currentScrollY < 400) {
         setVisible(false);
       } else if (currentScrollY < lastScrollY.current - 10) {
@@ -15,29 +28,34 @@ const BackToTop = () => {
       } else if (currentScrollY > lastScrollY.current + 10) {
         setVisible(false);
       }
+
       lastScrollY.current = currentScrollY;
     };
 
+    // Modern browsers fire 'scrollend' when momentum/inertia stops
+    const handleScrollEnd = () => {
+      setIsMoving(false);
+      if (scrollTimeout.current) window.clearTimeout(scrollTimeout.current);
+    };
+
     window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
+    window.addEventListener("scrollend", handleScrollEnd);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("scrollend", handleScrollEnd);
+      if (scrollTimeout.current) window.clearTimeout(scrollTimeout.current);
+    };
   }, []);
 
-  const handleBackToTop = (e: React.PointerEvent<HTMLButtonElement>) => {
-    // This stops the browser from eating the event during momentum
-    // AND stops the "release" from cancelling the smooth scroll.
-    if (e.cancelable) e.preventDefault();
-
-    // Kill inertia and scroll to top
-    window.scrollTo(0, window.scrollY);
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
+  // The button is only interactive when deep enough AND the page is not gliding
+  const active = visible && !isMoving;
 
   return (
     <Button
-      // Unified event for Mouse, Touch, and Emulator
-      onPointerDown={handleBackToTop}
+      onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
       className={`rounded-2 shadow-sm position-fixed border-0 d-flex align-items-center justify-content-center bg-white text-black ${
-        visible ? "opacity-100" : "opacity-0"
+        active ? "opacity-100" : "opacity-0"
       }`}
       style={{
         bottom: "8px",
@@ -45,12 +63,9 @@ const BackToTop = () => {
         zIndex: 9999,
         width: "60px",
         height: "60px",
-        transition: "all 0.25s ease-in-out",
-        transform: visible ? "translateY(0)" : "translateY(15px)",
-        pointerEvents: visible ? "auto" : "none",
-        // Critical: prevents the browser from taking over the gesture
-        touchAction: "none",
-        cursor: "pointer",
+        transition: "all 0.2s ease-in-out",
+        transform: active ? "translateY(0)" : "translateY(20px)",
+        pointerEvents: active ? "auto" : "none",
       }}
     >
       <svg
