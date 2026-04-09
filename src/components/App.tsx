@@ -1,4 +1,3 @@
-import { useMemo } from "react";
 import { Container, Spinner } from "react-bootstrap";
 import { VirtuosoGrid } from "react-virtuoso";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -13,6 +12,12 @@ import { gridComponents } from "./gridComponents";
 import { BackToTop } from "./BackToTop";
 import "../styles/App.css";
 
+function getInitialGridCount(totalItems: number) {
+  const cols = Math.max(1, Math.floor(window.innerWidth / 608));
+  const rows = Math.ceil(window.innerHeight / 456);
+  return Math.min(cols * rows, totalItems);
+}
+
 export function App() {
   const { query, setQuery, dateFilter, setDateFilter } = useAlbumParams();
   const { albums, loading } = useAlbums();
@@ -24,13 +29,7 @@ export function App() {
 
   useDynamicTitle(query, dateFilter);
 
-  const safeInitialCount = useMemo(() => {
-    const cols = Math.max(1, Math.floor(window.innerWidth / 608));
-    const rows = Math.ceil(window.innerHeight / 456);
-    return cols * rows;
-  }, []);
-
-  const initialItemCount = Math.min(safeInitialCount, filteredAlbums.length);
+  const initialItemCount = getInitialGridCount(filteredAlbums.length);
 
   return (
     <Container fluid className="px-0 pb-1 min-vh-100 bg-light">
