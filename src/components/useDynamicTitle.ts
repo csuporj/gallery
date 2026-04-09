@@ -1,30 +1,38 @@
 import { useEffect } from "react";
 import type { DateState } from "./DateState";
 
+function formatDate(dateFilter: DateState): string {
+  const { y, m, d } = dateFilter;
+
+  const hasY = y !== "*";
+  const hasM = m !== "*";
+  const hasD = d !== "*";
+
+  if (hasY && hasM && hasD) return `${m} ${d}, ${y}`;
+  if (hasY && !hasM && hasD) return `MMM ${d}, ${y}`;
+  if (hasY && hasM && !hasD) return `${m} ${y}`;
+  if (!hasY && hasM && hasD) return `${m} ${d}`;
+  if (!hasY && !hasM && hasD) return `MMM ${d}`;
+  if (hasY && !hasM && !hasD) return `${y}`;
+  if (!hasY && hasM && !hasD) return `${m}`;
+
+  return "";
+}
+
+function formatTitle(query: string, dateString: string): string {
+  const hasQuery = query !== "";
+  const hasDate = dateString !== "";
+
+  if (hasQuery && hasDate) return `${query} | ${dateString}`;
+  if (hasQuery && !hasDate) return query;
+  if (!hasQuery && hasDate) return `${dateString} | Gallery`;
+
+  return "Gallery";
+}
+
 export function useDynamicTitle(query: string, dateFilter: DateState) {
   useEffect(() => {
-    const { y, m, d } = dateFilter;
-
-    let dateString = "";
-    if (d !== "*" && y !== "*") {
-      const monthPart = m !== "*" ? `${m} ` : "MMM ";
-      dateString = `${monthPart}${d}, ${y}`;
-    } else if (d !== "*" && m === "*") {
-      dateString = `MMM ${d}`;
-    } else {
-      dateString = [m, d, y].filter((v) => v !== "*").join(" ");
-    }
-
-    const titleParts = [];
-    if (query) titleParts.push(query);
-    if (dateString) titleParts.push(dateString);
-
-    if (titleParts.length === 0) {
-      document.title = "Gallery";
-    } else if (query) {
-      document.title = titleParts.join(" | ");
-    } else {
-      document.title = `${dateString} | Gallery`;
-    }
+    const dateString = formatDate(dateFilter);
+    document.title = formatTitle(query, dateString);
   }, [query, dateFilter]);
 }
