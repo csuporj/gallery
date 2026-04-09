@@ -1,58 +1,41 @@
 import { useState, useEffect, useRef } from "react";
-
-const MIN_SCROLL_DEPTH = 400;
+import { runScrollLogic, runIntersectionLogic } from "./useBackToTop.logic";
 
 export const useBackToTop = () => {
   const [visible, setVisible] = useState(false);
   const [isMoving, setIsMoving] = useState(false);
-  const lastScrollY = useRef<number>(0);
+
+  const lastScrollY = useRef(0);
   const scrollTimeout = useRef<number | null>(null);
-  const isAtBottomRef = useRef<boolean>(false);
+  const isAtBottomRef = useRef(false);
 
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        isAtBottomRef.current = entry.isIntersecting;
-        if (entry.isIntersecting && window.scrollY > MIN_SCROLL_DEPTH)
-          setVisible(true);
-      },
-      { threshold: 0.1 },
-    );
+    const onScroll = () =>
+      runScrollLogic(
+        lastScrollY,
+        isAtBottomRef,
+        scrollTimeout,
+        setVisible,
+        setIsMoving,
+      );
 
+    const onIntersect = ([entry]: IntersectionObserverEntry[]) =>
+      runIntersectionLogic(entry, isAtBottomRef, setVisible);
+
+    const onScrollEnd = () => setIsMoving(false);
+
+    const observer = new IntersectionObserver(onIntersect, { threshold: 0.1 });
     const endElement = document.getElementById("end");
     if (endElement) observer.observe(endElement);
 
-    const handleScroll = () => {
-      setIsMoving(true);
-
-      if (scrollTimeout.current) window.clearTimeout(scrollTimeout.current);
-      scrollTimeout.current = window.setTimeout(() => {
-        setIsMoving(false);
-        if (isAtBottomRef.current && window.scrollY > MIN_SCROLL_DEPTH)
-          setVisible(true);
-      }, 300);
-
-      const currentScrollY = window.scrollY;
-
-      if (currentScrollY < MIN_SCROLL_DEPTH) {
-        setVisible(false);
-      } else if (isAtBottomRef.current) {
-        setVisible(true);
-      } else if (currentScrollY < lastScrollY.current - 10) {
-        setVisible(true);
-      } else if (currentScrollY > lastScrollY.current + 10) {
-        setVisible(false);
-      }
-
-      lastScrollY.current = currentScrollY;
-    };
-
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    window.addEventListener("scrollend", () => setIsMoving(false));
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("scrollend", onScrollEnd);
 
     return () => {
-      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("scrollend", onScrollEnd);
       observer.disconnect();
+      // eslint-disable-next-line react-hooks/exhaustive-deps
       if (scrollTimeout.current) window.clearTimeout(scrollTimeout.current);
     };
   }, []);
