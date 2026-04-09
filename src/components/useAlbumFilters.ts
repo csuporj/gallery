@@ -4,6 +4,51 @@ import type { DateState } from "./DateState";
 import { monthOrder } from "./monthOrder";
 import { parseDate } from "./parseDate";
 
+function sortYears(a: string, b: string) {
+  return b.localeCompare(a);
+}
+
+function sortMonths(a: string, b: string) {
+  return monthOrder.indexOf(a) - monthOrder.indexOf(b);
+}
+
+function sortDays(a: string, b: string) {
+  return parseInt(a) - parseInt(b);
+}
+
+function getUniqueDateParts(albums: Album[]) {
+  const years = new Set<string>();
+  const months = new Set<string>();
+  const days = new Set<string>();
+
+  albums.forEach((album) => {
+    const { m, d, y } = parseDate(album.AlbumDate);
+    if (y) years.add(y);
+    if (m) months.add(m);
+    if (d) days.add(d);
+  });
+
+  return {
+    years: Array.from(years).sort(sortYears),
+    months: Array.from(months).sort(sortMonths),
+    days: Array.from(days).sort(sortDays),
+  };
+}
+
+function isAlbumMatch(album: Album, query: string, filter: DateState) {
+  const matchesText = album.LinkText.toLowerCase().includes(
+    query.toLowerCase(),
+  );
+  if (!matchesText) return false;
+
+  const { m: albM, d: albD, y: albY } = parseDate(album.AlbumDate);
+  return (
+    (filter.y === "*" || albY === filter.y) &&
+    (filter.m === "*" || albM === filter.m) &&
+    (filter.d === "*" || albD === filter.d)
+  );
+}
+
 export function useAlbumFilters(
   albums: Album[],
   query: string,
@@ -11,42 +56,13 @@ export function useAlbumFilters(
 ) {
   const deferredQuery = useDeferredValue(query);
 
-  const dateOptions = useMemo(() => {
-    const years = new Set<string>(),
-      months = new Set<string>(),
-      days = new Set<string>();
+  const dateOptions = useMemo(() => getUniqueDateParts(albums), [albums]);
 
-    albums.forEach((album) => {
-      const { m, d, y } = parseDate(album.AlbumDate);
-      if (y) years.add(y);
-      if (m) months.add(m);
-      if (d) days.add(d);
-    });
-
-    return {
-      years: Array.from(years).sort((a, b) => b.localeCompare(a)),
-      months: Array.from(months).sort(
-        (a, b) => monthOrder.indexOf(a) - monthOrder.indexOf(b),
-      ),
-      days: Array.from(days).sort((a, b) => parseInt(a) - parseInt(b)),
-    };
-  }, [albums]);
-
-  const filteredAlbums = useMemo(() => {
-    return albums.filter((album) => {
-      const matchesText = album.LinkText.toLowerCase().includes(
-        deferredQuery.toLowerCase(),
-      );
-      if (!matchesText) return false;
-
-      const { m: albM, d: albD, y: albY } = parseDate(album.AlbumDate);
-      return (
-        (dateFilter.y === "*" || albY === dateFilter.y) &&
-        (dateFilter.m === "*" || albM === dateFilter.m) &&
-        (dateFilter.d === "*" || albD === dateFilter.d)
-      );
-    });
-  }, [albums, deferredQuery, dateFilter]);
+  const filteredAlbums = useMemo(
+    () =>
+      albums.filter((album) => isAlbumMatch(album, deferredQuery, dateFilter)),
+    [albums, deferredQuery, dateFilter],
+  );
 
   return { filteredAlbums, dateOptions };
 }
