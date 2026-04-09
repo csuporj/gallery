@@ -1,5 +1,5 @@
 import { useSearchParams } from "react-router-dom";
-import type DateState from "./DateState";
+import type { DateState } from "./DateState";
 
 export function useAlbumParams() {
   const [searchParams, setSearchParams] = useSearchParams();

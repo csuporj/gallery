@@ -3,17 +3,17 @@ import { Container, Spinner } from "react-bootstrap";
 import { VirtuosoGrid } from "react-virtuoso";
 import "bootstrap/dist/css/bootstrap.min.css";
 
-import AlbumCard from "./AlbumCard";
-import FilterForm from "./FilterForm";
+import { AlbumCard } from "./AlbumCard";
+import { FilterForm } from "./FilterForm";
 import { useAlbums } from "./useAlbums";
 import { useAlbumFilters } from "./useAlbumFilters";
 import { useAlbumParams } from "./useAlbumParams";
 import { useDynamicTitle } from "./useDynamicTitle";
 import { gridComponents } from "./gridComponents";
-import BackToTop from "./BackToTop";
+import { BackToTop } from "./BackToTop";
 import "../styles/App.css";
 
-function App() {
+export function App() {
   const { query, setQuery, dateFilter, setDateFilter } = useAlbumParams();
   const { albums, loading } = useAlbums();
   const { filteredAlbums, dateOptions } = useAlbumFilters(
@@ -68,5 +68,3 @@ function App() {
     </Container>
   );
 }
-
-export default App;

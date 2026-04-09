@@ -1,4 +1,4 @@
-export default interface Album {
+export interface Album {
   LinkText: string;
   AlbumUrl: string;
   AlbumDate: string;

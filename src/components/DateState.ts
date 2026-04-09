@@ -1,4 +1,4 @@
-export default interface DateState {
+export interface DateState {
   y: string;
   m: string;
   d: string;

@@ -1,7 +1,7 @@
 import { Button } from "react-bootstrap";
 import { useBackToTop } from "./useBackToTop";
 
-const BackToTop = () => {
+export const BackToTop = () => {
   const isActive = useBackToTop();
 
   return (
@@ -36,5 +36,3 @@ const BackToTop = () => {
     </Button>
   );
 };
-
-export default BackToTop;

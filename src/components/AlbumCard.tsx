@@ -1,20 +1,10 @@
-import React, { memo, useState } from "react";
+import { memo, useState } from "react";
 import { Card } from "react-bootstrap";
-import type Album from "./Album";
+import type { Album } from "./Album";
 import { thumbnailPlaceholderUrl } from "./thumbnailPlaceholderUrl";
 import "../styles/AlbumCard.css";
 
-declare module "react" {
-  interface ImgHTMLAttributes<T> extends React.HTMLAttributes<T> {
-    fetchpriority?: "high" | "low" | "auto";
-  }
-}
-
-interface AlbumCardProps {
-  album: Album;
-}
-
-const AlbumCard = memo(({ album }: AlbumCardProps) => {
+export const AlbumCard = memo(({ album }: { album: Album }) => {
   const [isLoaded, setIsLoaded] = useState(false);
 
   const base = import.meta.env.BASE_URL;
@@ -75,5 +65,3 @@ const AlbumCard = memo(({ album }: AlbumCardProps) => {
     </div>
   );
 });
-
-export default AlbumCard;

@@ -1,4 +1,4 @@
-const monthOrder = [
+export const monthOrder = [
   "Jan",
   "Feb",
   "Mar",
@@ -12,5 +12,3 @@ const monthOrder = [
   "Nov",
   "Dec",
 ];
-
-export default monthOrder;

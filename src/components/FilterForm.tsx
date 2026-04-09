@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Row, Col, Form } from "react-bootstrap";
 import type { FilterFormProps } from "./FilterFormProps";
 
-export default function FilterForm({
+export function FilterForm({
   query,
   setQuery,
   dateFilter,
