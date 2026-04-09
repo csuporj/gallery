@@ -1,17 +1,11 @@
-import { memo, useState } from "react";
+import { memo } from "react";
 import { Card } from "react-bootstrap";
 import type { Album } from "./Album";
-import { thumbnailPlaceholderUrl } from "./thumbnailPlaceholderUrl";
+import { AlbumCardHeader } from "./AlbumCardHeader";
 import "../styles/AlbumCard.css";
 
 export const AlbumCard = memo(({ album }: { album: Album }) => {
-  const [isLoaded, setIsLoaded] = useState(false);
-
-  const base = import.meta.env.BASE_URL;
   if (!album) return null;
-
-  const hasNoImage =
-    !album.ThumbnailFileName || album.ThumbnailFileName.trim() === "";
 
   return (
     <div className="p-1">
@@ -26,35 +20,21 @@ export const AlbumCard = memo(({ album }: { album: Album }) => {
         }}
       >
         <Card className="rounded-2 border-0 shadow-sm">
-          <Card.Img
-            variant="top"
-            className="rounded-2 w-100"
-            onLoad={() => setIsLoaded(true)}
-            src={
-              hasNoImage
-                ? thumbnailPlaceholderUrl
-                : `${base}thumbnails/${album.ThumbnailFileName}`
-            }
-            style={{
-              aspectRatio: "600 / 400",
-              objectFit: "cover",
-              visibility: isLoaded ? "visible" : "hidden",
-            }}
-          />
+          <AlbumCardHeader album={album} />
 
           <Card.Body
             className="d-flex justify-content-between align-items-center px-2 rounded-2 bg-white"
             style={{ height: "48px", overflow: "hidden" }}
           >
             <span
-              className="fs-4 text-dark text-truncate me-3 rounded-2"
+              className="fs-4 text-dark text-truncate me-3"
               style={{ flex: 1 }}
               title={album.LinkText}
             >
               {album.LinkText}
             </span>
             <small
-              className="fs-5 text-muted rounded-2"
+              className="fs-5 text-muted"
               style={{ flex: 0, whiteSpace: "nowrap" }}
             >
               {album.AlbumDate}
