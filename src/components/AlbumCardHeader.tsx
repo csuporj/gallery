@@ -1,9 +1,9 @@
-import { useState } from "react";
+import { useState, memo } from "react";
 import { Card } from "react-bootstrap";
 import type { Album } from "./Album";
 import { thumbnailPlaceholderUrl } from "./thumbnailPlaceholderUrl";
 
-export const AlbumCardHeader = ({ album }: { album: Album }) => {
+function AlbumCardHeaderComponent({ album }: { album: Album }) {
   const [isLoaded, setIsLoaded] = useState(false);
   const base = import.meta.env.BASE_URL;
 
@@ -29,4 +29,6 @@ export const AlbumCardHeader = ({ album }: { album: Album }) => {
       }}
     />
   );
-};
+}
+
+export const AlbumCardHeader = memo(AlbumCardHeaderComponent);
