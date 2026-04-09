@@ -37,6 +37,7 @@ export function FilterForm({
           onChange={(e) => setLocalQuery(e.target.value)}
         />
       </Col>
+
       <Col md={2} xs={4}>
         <Form.Select
           name="y"
@@ -51,6 +52,7 @@ export function FilterForm({
           ))}
         </Form.Select>
       </Col>
+
       <Col md={2} xs={4}>
         <Form.Select
           name="m"
@@ -65,6 +67,7 @@ export function FilterForm({
           ))}
         </Form.Select>
       </Col>
+
       <Col md={2} xs={4}>
         <Form.Select
           name="d"

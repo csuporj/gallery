@@ -30,6 +30,8 @@ export function App() {
     return cols * rows;
   }, []);
 
+  const initialItemCount = Math.min(safeInitialCount, filteredAlbums.length);
+
   return (
     <Container fluid className="px-0 pb-1 min-vh-100 bg-light">
       <header className="mx-auto pt-1 pb-0 filter-form-width">
@@ -49,7 +51,7 @@ export function App() {
       ) : filteredAlbums.length > 0 ? (
         <VirtuosoGrid
           useWindowScroll
-          initialItemCount={Math.min(safeInitialCount, filteredAlbums.length)}
+          initialItemCount={initialItemCount}
           increaseViewportBy={1000}
           data={filteredAlbums}
           components={gridComponents}
