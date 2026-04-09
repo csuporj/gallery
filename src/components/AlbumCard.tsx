@@ -1,6 +1,6 @@
 import React, { memo, useState } from "react";
 import { Card } from "react-bootstrap";
-import type { Album } from "./Album";
+import type Album from "./Album";
 import { thumbnailPlaceholderUrl } from "./thumbnailPlaceholderUrl";
 import "../styles/AlbumCard.css";
 

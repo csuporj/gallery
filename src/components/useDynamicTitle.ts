@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import type { DateState } from "./DateState";
+import type DateState from "./DateState";
 
 export function useDynamicTitle(query: string, dateFilter: DateState) {
   useEffect(() => {
