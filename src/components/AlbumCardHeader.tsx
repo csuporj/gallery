@@ -14,6 +14,8 @@ export const AlbumCardHeader = ({ album }: { album: Album }) => {
     ? `${base}thumbnails/${album.ThumbnailFileName}`
     : thumbnailPlaceholderUrl;
 
+  const visibility = isLoaded ? "visible" : "hidden";
+
   return (
     <Card.Img
       variant="top"
@@ -23,7 +25,7 @@ export const AlbumCardHeader = ({ album }: { album: Album }) => {
       style={{
         aspectRatio: "600 / 400",
         objectFit: "cover",
-        visibility: isLoaded ? "visible" : "hidden",
+        visibility: visibility,
       }}
     />
   );
