@@ -4,12 +4,18 @@ import { useBackToTop } from "./useBackToTop";
 export const BackToTop = () => {
   const isActive = useBackToTop();
 
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const opacityClass = isActive ? "opacity-100" : "opacity-0";
+  const buttonTransform = isActive ? "translateY(0)" : "translateY(20px)";
+  const buttonPointerEvents = isActive ? "auto" : ("none" as const);
+
   return (
     <Button
-      onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-      className={`rounded-2 shadow-sm position-fixed border-0 d-flex align-items-center justify-content-center bg-white text-black ${
-        isActive ? "opacity-100" : "opacity-0"
-      }`}
+      onClick={scrollToTop}
+      className={`rounded-2 shadow-sm position-fixed border-0 d-flex align-items-center justify-content-center bg-white text-black ${opacityClass}`}
       style={{
         bottom: "8px",
         right: "4px",
@@ -17,8 +23,8 @@ export const BackToTop = () => {
         width: "60px",
         height: "60px",
         transition: "all 0.2s ease-in-out",
-        transform: isActive ? "translateY(0)" : "translateY(20px)",
-        pointerEvents: isActive ? "auto" : "none",
+        transform: buttonTransform,
+        pointerEvents: buttonPointerEvents,
       }}
     >
       <svg
