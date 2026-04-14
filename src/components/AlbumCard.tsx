@@ -14,13 +14,13 @@ function AlbumCardComponent({ album }: { album: Album }) {
         href={album.AlbumUrl}
         target="_blank"
         rel="noopener noreferrer"
-        className="text-decoration-none focus-ring d-block rounded-2"
+        className="text-decoration-none focus-ring d-block rounded-0"
         style={{
           width: "600px",
           maxWidth: "calc(100vw - 8px)",
         }}
       >
-        <Card className="rounded-2 border-0 shadow-sm">
+        <Card className="rounded-0 border-0 shadow-sm">
           <AlbumCardHeader album={album} />
           <AlbumCardFooter album={album} />
         </Card>

@@ -5,7 +5,7 @@ import type { Album } from "./Album";
 function AlbumCardFooterComponent({ album }: { album: Album }) {
   return (
     <Card.Body
-      className="d-flex justify-content-between align-items-center px-2 rounded-2 bg-white"
+      className="d-flex justify-content-between align-items-center px-2 rounded-0 bg-white"
       style={{
         height: "48px",
         overflow: "hidden",
