@@ -12,10 +12,10 @@ import { gridComponents } from "./gridComponents";
 import { BackToTop } from "./BackToTop";
 import "../styles/App.css";
 
-function getInitialGridCount(totalItems: number) {
+function getInitialGridCount(albumsLength: number) {
   const cols = Math.max(1, Math.floor(window.innerWidth / 608));
   const rows = Math.ceil(window.innerHeight / 456);
-  return Math.min(cols * rows, totalItems);
+  return Math.min(cols * rows, albumsLength);
 }
 
 export function App() {
@@ -32,8 +32,8 @@ export function App() {
   const initialItemCount = getInitialGridCount(filteredAlbums.length);
 
   return (
-    <Container fluid className="px-0 pb-1 min-vh-100 bg-light">
-      <header className="mx-auto pt-1 pb-0 filter-form-width">
+    <Container fluid className="px-0 py-1 min-vh-100 bg-light">
+      <header className="mx-auto filter-form-width">
         <FilterForm
           query={query}
           setQuery={setQuery}
@@ -47,7 +47,11 @@ export function App() {
         <Container className="text-center mt-5">
           <Spinner animation="border" />
         </Container>
-      ) : filteredAlbums.length > 0 ? (
+      ) : filteredAlbums.length == 0 ? (
+        <div className="mt-1 text-center" role="status">
+          No results found.
+        </div>
+      ) : (
         <VirtuosoGrid
           useWindowScroll
           initialItemCount={initialItemCount}
@@ -58,10 +62,6 @@ export function App() {
             <AlbumCard album={album} key={album.AlbumUrl} />
           )}
         />
-      ) : (
-        <div className="pt-1 text-center" role="status">
-          No results found.
-        </div>
       )}
 
       <div id="end" style={{ height: "66px" }} />
