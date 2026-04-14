@@ -32,7 +32,7 @@ export function App() {
   const initialItemCount = getInitialGridCount(filteredAlbums.length);
 
   return (
-    <Container fluid className="px-0 py-1 min-vh-100 bg-light">
+    <Container fluid className="p-0 min-vh-100 bg-light">
       <header className="mx-auto filter-form-width">
         <FilterForm
           query={query}
@@ -64,7 +64,7 @@ export function App() {
         />
       )}
 
-      <div id="end" style={{ height: "66px" }} />
+      <div id="end" style={{ height: "70px" }} />
       <BackToTop />
     </Container>
   );
