@@ -21,7 +21,7 @@ export function FilterForm({
       if (localQuery !== query) {
         setQuery(localQuery);
       }
-    }, 100);
+    }, 300);
 
     return () => clearTimeout(handler);
   }, [localQuery, setQuery, query]);
