@@ -15,13 +15,32 @@ export function useAlbums() {
   const base = import.meta.env.BASE_URL;
 
   useEffect(() => {
-    fetch(`${base}albums.json`)
-      .then((res) => res.json())
-      .then((data: Album[]) => {
+    const controller = new AbortController();
+
+    const fetchAlbums = async () => {
+      try {
+        const response = await fetch(`${base}albums.json`, {
+          signal: controller.signal,
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data: Album[] = await response.json();
         setAlbums(sortAlbumsByDate(data));
         setLoading(false);
-      })
-      .catch(() => setLoading(false));
+      } catch (error) {
+        if (error instanceof Error && error.name !== "AbortError") {
+          console.error("Failed to load albums:", error);
+          setLoading(false);
+        }
+      }
+    };
+
+    fetchAlbums();
+
+    return () => controller.abort();
   }, [base]);
 
   return { albums, loading };
