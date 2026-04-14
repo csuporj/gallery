@@ -18,7 +18,6 @@ function AlbumCardHeaderComponent({ album }: { album: Album }) {
 
   return (
     <Card.Img
-      variant="top"
       className="rounded-2 w-100"
       onLoad={() => setIsLoaded(true)}
       src={imageUrl}

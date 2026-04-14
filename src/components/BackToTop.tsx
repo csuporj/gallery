@@ -10,7 +10,7 @@ export const BackToTop = () => {
 
   const opacityClass = isActive ? "opacity-100" : "opacity-0";
   const buttonTransform = isActive ? "translateY(0)" : "translateY(20px)";
-  const buttonPointerEvents = isActive ? "auto" : ("none" as const);
+  const buttonPointerEvents = isActive ? "auto" : "none";
 
   return (
     <Button
