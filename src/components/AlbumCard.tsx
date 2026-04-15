@@ -1,11 +1,11 @@
 import { memo } from "react";
 import { Card } from "react-bootstrap";
 
+import "../styles/AlbumCard.css";
+
 import type { Album } from "./Album";
 import { AlbumCardHeader } from "./AlbumCardHeader";
 import { AlbumCardFooter } from "./AlbumCardFooter";
-
-import "../styles/AlbumCard.css";
 
 function AlbumCardComponent({ album }: { album: Album }) {
   if (!album) return null;
