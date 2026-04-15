@@ -71,7 +71,7 @@ export function App() {
         />
       )}
 
-      <div ref={endRef} style={{ height: "70px" }} />
+      <div ref={endRef} style={{ height: "72px" }} />
       <BackToTop endRef={endRef} />
     </Container>
   );
