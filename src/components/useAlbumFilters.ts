@@ -1,10 +1,10 @@
 import { useMemo, useDeferredValue } from "react";
 
-import type { Album } from "./Album";
-import type { DateState } from "./DateState";
-
 import { monthOrder } from "./monthOrder";
 import { parseDate } from "./parseDate";
+
+import type { Album } from "./Album";
+import type { DateState } from "./DateState";
 
 function sortYears(a: string, b: string) {
   return b.localeCompare(a);

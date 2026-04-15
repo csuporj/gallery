@@ -1,6 +1,6 @@
-import { useEffect } from "react";
-
 import type { DateState } from "./DateState";
+
+import { useEffect } from "react";
 
 function formatDate(dateFilter: DateState): string {
   const { y, m, d } = dateFilter;

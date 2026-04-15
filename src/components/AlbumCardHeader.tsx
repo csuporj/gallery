@@ -1,7 +1,8 @@
+import type { Album } from "./Album";
+
 import { useState, memo } from "react";
 import { Card } from "react-bootstrap";
 
-import type { Album } from "./Album";
 import { thumbnailPlaceholderUrl } from "./thumbnailPlaceholderUrl";
 
 function AlbumCardHeaderComponent({ album }: { album: Album }) {

@@ -1,6 +1,6 @@
-import { Col, Form } from "react-bootstrap";
-
 import type { FilterFormProps } from "./FilterFormProps";
+
+import { Col, Form } from "react-bootstrap";
 
 type FilterDateSelectsProps = Pick<
   FilterFormProps,

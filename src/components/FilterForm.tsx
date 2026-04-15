@@ -1,7 +1,8 @@
+import type { FilterFormProps } from "./FilterFormProps";
+
 import { useState, useEffect } from "react";
 import { Row, Col, Form } from "react-bootstrap";
 
-import type { FilterFormProps } from "./FilterFormProps";
 import { FilterDateSelects } from "./FilterDateSelects";
 
 export function FilterForm({

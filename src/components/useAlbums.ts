@@ -1,6 +1,6 @@
-import { useState, useEffect } from "react";
-
 import type { Album } from "./Album";
+
+import { useState, useEffect } from "react";
 
 const sortAlbumsByDate = (data: Album[]) => {
   return [...data].sort((a, b) => {

@@ -4,16 +4,15 @@ import { VirtuosoGrid } from "react-virtuoso";
 
 import "../styles/App.css";
 
-import { AlbumCard } from "./AlbumCard";
-import { FilterForm } from "./FilterForm";
-import { BackToTop } from "./BackToTop";
-
-import { gridComponents } from "./gridComponents";
-
 import { useAlbums } from "./useAlbums";
 import { useAlbumParams } from "./useAlbumParams";
 import { useAlbumFilters } from "./useAlbumFilters";
 import { useDynamicTitle } from "./useDynamicTitle";
+
+import { AlbumCard } from "./AlbumCard";
+import { FilterForm } from "./FilterForm";
+import { BackToTop } from "./BackToTop";
+import { gridComponents } from "./gridComponents";
 
 function getInitialGridCount(albumsLength: number) {
   const cols = Math.max(1, Math.floor(window.innerWidth / 608));

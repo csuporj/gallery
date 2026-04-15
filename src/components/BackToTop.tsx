@@ -1,7 +1,7 @@
+import { useBackToTop } from "./useBackToTop";
+
 import { Button } from "react-bootstrap";
 import { ChevronUp } from "react-bootstrap-icons";
-
-import { useBackToTop } from "./useBackToTop";
 
 export const BackToTop = ({
   endRef,
