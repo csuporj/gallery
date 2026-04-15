@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { runScrollLogic, runIntersectionLogic } from "./useBackToTop.logic";
 
-export function useBackToTop() {
+export function useBackToTop(endRef: React.RefObject<HTMLElement | null>) {
   const [visible, setVisible] = useState(false);
   const [isMoving, setIsMoving] = useState(false);
 
@@ -29,7 +29,8 @@ export function useBackToTop() {
     }
 
     const observer = new IntersectionObserver(onIntersect, { threshold: 0.1 });
-    const endElement = document.getElementById("end");
+
+    const endElement = endRef.current;
     if (endElement) observer.observe(endElement);
 
     window.addEventListener("scroll", onScroll, { passive: true });
@@ -45,7 +46,7 @@ export function useBackToTop() {
         window.clearTimeout(scrollTimeout.current);
       }
     };
-  }, []);
+  }, [endRef]);
 
   return visible && !isMoving;
 }

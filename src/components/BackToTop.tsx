@@ -1,8 +1,12 @@
 import { Button } from "react-bootstrap";
 import { useBackToTop } from "./useBackToTop";
 
-export const BackToTop = () => {
-  const isActive = useBackToTop();
+export const BackToTop = ({
+  endRef,
+}: {
+  endRef: React.RefObject<HTMLElement | null>;
+}) => {
+  const isActive = useBackToTop(endRef);
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });

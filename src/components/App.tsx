@@ -1,3 +1,4 @@
+import { useRef } from "react";
 import { Container, Spinner } from "react-bootstrap";
 import { VirtuosoGrid } from "react-virtuoso";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -27,6 +28,8 @@ export function App() {
     dateFilter,
   );
 
+  const endRef = useRef<HTMLDivElement>(null);
+
   useDynamicTitle(query, dateFilter);
 
   const initialItemCount = getInitialGridCount(filteredAlbums.length);
@@ -47,7 +50,7 @@ export function App() {
         <Container className="text-center mt-5">
           <Spinner animation="border" />
         </Container>
-      ) : filteredAlbums.length == 0 ? (
+      ) : filteredAlbums.length === 0 ? (
         <div className="mt-1 text-center" role="status">
           No results found.
         </div>
@@ -64,8 +67,8 @@ export function App() {
         />
       )}
 
-      <div id="end" style={{ height: "70px" }} />
-      <BackToTop />
+      <div ref={endRef} style={{ height: "70px" }} />
+      <BackToTop endRef={endRef} />
     </Container>
   );
 }
