@@ -6,11 +6,11 @@ import { Row, Col, Form } from "react-bootstrap";
 import { FilterDateSelects } from "./FilterDateSelects";
 
 export function FilterForm({
+  dateOptions,
   query,
   setQuery,
   dateFilter,
   setDateFilter,
-  dateOptions,
 }: FilterFormProps) {
   const [localQuery, setLocalQuery] = useState(query);
 
@@ -47,9 +47,9 @@ export function FilterForm({
         </Col>
 
         <FilterDateSelects
+          dateOptions={dateOptions}
           dateFilter={dateFilter}
           setDateFilter={setDateFilter}
-          dateOptions={dateOptions}
         />
       </Row>
     </div>

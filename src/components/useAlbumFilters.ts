@@ -7,7 +7,7 @@ import type { Album } from "./types";
 import type { DateState } from "./types";
 
 function sortYears(a: string, b: string) {
-  return b.localeCompare(a);
+  return Number(b) - Number(a);
 }
 
 function sortMonths(a: string, b: string) {
@@ -15,7 +15,7 @@ function sortMonths(a: string, b: string) {
 }
 
 function sortDays(a: string, b: string) {
-  return parseInt(a) - parseInt(b);
+  return Number(a) - Number(b);
 }
 
 function getUniqueDateParts(albums: Album[]) {
