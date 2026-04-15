@@ -1,5 +1,6 @@
 import { useCallback } from "react";
 import { useSearchParams } from "react-router-dom";
+
 import type { DateState } from "./DateState";
 
 function parseDateFilter(params: URLSearchParams): DateState {

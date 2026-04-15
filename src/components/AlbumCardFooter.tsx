@@ -1,5 +1,6 @@
 import { memo } from "react";
 import { Card } from "react-bootstrap";
+
 import type { Album } from "./Album";
 
 function AlbumCardFooterComponent({ album }: { album: Album }) {

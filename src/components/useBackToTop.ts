@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+
 import { runScrollLogic, runIntersectionLogic } from "./useBackToTop.logic";
 
 export function useBackToTop(endRef: React.RefObject<HTMLElement | null>) {

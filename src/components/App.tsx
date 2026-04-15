@@ -1,16 +1,20 @@
 import { useRef } from "react";
 import { Container, Spinner } from "react-bootstrap";
 import { VirtuosoGrid } from "react-virtuoso";
+
 import "bootstrap/dist/css/bootstrap.min.css";
 
 import { AlbumCard } from "./AlbumCard";
 import { FilterForm } from "./FilterForm";
-import { useAlbums } from "./useAlbums";
-import { useAlbumFilters } from "./useAlbumFilters";
-import { useAlbumParams } from "./useAlbumParams";
-import { useDynamicTitle } from "./useDynamicTitle";
-import { gridComponents } from "./gridComponents";
 import { BackToTop } from "./BackToTop";
+
+import { gridComponents } from "./gridComponents";
+
+import { useAlbums } from "./useAlbums";
+import { useAlbumParams } from "./useAlbumParams";
+import { useAlbumFilters } from "./useAlbumFilters";
+import { useDynamicTitle } from "./useDynamicTitle";
+
 import "../styles/App.css";
 
 function getInitialGridCount(albumsLength: number) {
