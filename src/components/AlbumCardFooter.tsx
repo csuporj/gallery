@@ -17,7 +17,6 @@ function AlbumCardFooterComponent({ album }: { album: Album }) {
         style={{
           flex: 1,
         }}
-        title={album.LinkText}
       >
         {album.LinkText}
       </span>
