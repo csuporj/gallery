@@ -1,4 +1,4 @@
-import type { FilterFormProps } from "./FilterFormProps";
+import type { FilterFormProps } from "./types";
 
 import { useState, useEffect } from "react";
 import { Row, Col, Form } from "react-bootstrap";

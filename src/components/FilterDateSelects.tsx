@@ -1,4 +1,4 @@
-import type { FilterFormProps } from "./FilterFormProps";
+import type { FilterFormProps } from "./types";
 
 import { Col, Form } from "react-bootstrap";
 
