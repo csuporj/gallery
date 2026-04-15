@@ -21,17 +21,15 @@ function getInitialGridCount(albumsLength: number) {
 }
 
 export function App() {
-  const { query, setQuery, dateFilter, setDateFilter } = useAlbumParams();
   const { albums, loading } = useAlbums();
+  const { query, setQuery, dateFilter, setDateFilter } = useAlbumParams();
   const { filteredAlbums, dateOptions } = useAlbumFilters(
     albums,
     query,
     dateFilter,
   );
-
-  const endRef = useRef<HTMLDivElement>(null);
-
   useDynamicTitle(query, dateFilter);
+  const endRef = useRef<HTMLDivElement>(null);
 
   const initialItemCount = getInitialGridCount(filteredAlbums.length);
 
@@ -39,11 +37,11 @@ export function App() {
     <Container fluid className="p-0 min-vh-100 bg-light">
       <header className="mx-auto filter-form-width">
         <FilterForm
+          dateOptions={dateOptions}
           query={query}
           setQuery={setQuery}
           dateFilter={dateFilter}
           setDateFilter={setDateFilter}
-          dateOptions={dateOptions}
         />
       </header>
 
@@ -58,13 +56,13 @@ export function App() {
       ) : (
         <VirtuosoGrid
           useWindowScroll
-          initialItemCount={initialItemCount}
           increaseViewportBy={1000}
-          data={filteredAlbums}
           components={gridComponents}
+          data={filteredAlbums}
           itemContent={(_, album) => (
             <AlbumCard album={album} key={album.AlbumUrl} />
           )}
+          initialItemCount={initialItemCount}
         />
       )}
 

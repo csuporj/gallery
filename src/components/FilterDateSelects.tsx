@@ -4,13 +4,13 @@ import { Col, Form } from "react-bootstrap";
 
 type FilterDateSelectsProps = Pick<
   FilterFormProps,
-  "dateFilter" | "setDateFilter" | "dateOptions"
+  "dateOptions" | "dateFilter" | "setDateFilter"
 >;
 
 export function FilterDateSelects({
+  dateOptions,
   dateFilter,
   setDateFilter,
-  dateOptions,
 }: FilterDateSelectsProps) {
   const onYearChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setDateFilter({ ...dateFilter, y: e.target.value });

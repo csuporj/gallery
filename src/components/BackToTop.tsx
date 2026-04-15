@@ -21,7 +21,8 @@ export const BackToTop = ({
   return (
     <Button
       onClick={scrollToTop}
-      className={`rounded-2 shadow-sm position-fixed bottom-0 end-0 mb-2 me-1 border-0 d-flex align-items-center justify-content-center bg-white text-black ${opacity}`}
+      className={`rounded-2 shadow-sm position-fixed bottom-0 end-0 mb-2 me-1 border-0
+        d-flex align-items-center justify-content-center bg-white text-black ${opacity}`}
       style={{
         zIndex: 9999,
         width: "60px",
