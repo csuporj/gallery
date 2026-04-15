@@ -1,4 +1,4 @@
-import type { Album } from "./Album";
+import type { Album } from "./types";
 
 import { useState, memo } from "react";
 import { Card } from "react-bootstrap";

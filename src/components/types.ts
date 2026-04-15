@@ -4,3 +4,9 @@ export interface Album {
   AlbumDate: string;
   ThumbnailFileName: string;
 }
+
+export interface DateState {
+  y: string;
+  m: string;
+  d: string;
+}

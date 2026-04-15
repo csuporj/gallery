@@ -1,4 +1,4 @@
-import type { DateState } from "./DateState";
+import type { DateState } from "./types";
 
 import { useEffect } from "react";
 

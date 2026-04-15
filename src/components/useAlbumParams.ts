@@ -1,4 +1,4 @@
-import type { DateState } from "./DateState";
+import type { DateState } from "./types";
 
 import { useCallback } from "react";
 import { useSearchParams } from "react-router-dom";

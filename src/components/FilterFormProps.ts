@@ -1,4 +1,4 @@
-import type { DateState } from "./DateState";
+import type { DateState } from "./types";
 
 export interface FilterFormProps {
   query: string;
