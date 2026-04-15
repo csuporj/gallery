@@ -9,6 +9,8 @@ export function useBackToTop(endRef: React.RefObject<HTMLElement | null>) {
   const scrollTimeout = useRef<number | null>(null);
   const isAtBottomRef = useRef(false);
 
+  const isTouch = window.matchMedia("(pointer: coarse)").matches;
+
   useEffect(() => {
     function onScroll() {
       runScrollLogic(
@@ -48,5 +50,5 @@ export function useBackToTop(endRef: React.RefObject<HTMLElement | null>) {
     };
   }, [endRef]);
 
-  return visible && !isMoving;
+  return visible && (!isMoving || !isTouch);
 }
