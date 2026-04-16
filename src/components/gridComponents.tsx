@@ -1,27 +1,32 @@
-import { forwardRef, type CSSProperties, type ReactNode } from "react";
+import { type ComponentPropsWithRef } from "react";
 
 export const gridComponents = {
-  List: forwardRef<
-    HTMLDivElement,
-    { style?: CSSProperties; children?: ReactNode }
-  >(({ style, children, ...props }, ref) => (
-    <div
-      ref={ref}
-      {...props}
-      style={{
-        ...style,
-        display: "flex",
-        flexWrap: "wrap",
-        justifyContent: "center",
-        paddingBottom: "4px",
-      }}
-    >
-      {children}
-    </div>
-  )),
-  Item: ({ children, ...props }: { children?: ReactNode }) => (
-    <div {...props} style={{ display: "flex" }}>
-      {children}
-    </div>
-  ),
+  List: function List({ ref, style, children, ...props }: ComponentPropsWithRef<"div">) {
+    return (
+      <div
+        ref={ref}
+        {...props}
+        style={{
+          display: "flex",
+          flexWrap: "wrap",
+          justifyContent: "center",
+          paddingBottom: "4px",
+          ...style
+        }}
+      >
+        {children}
+      </div>
+    );
+  },
+
+  Item: function Item({ ref, style, children, ...props }: ComponentPropsWithRef<"div">) {
+    return (
+      <div
+        ref={ref}
+        {...props}
+        style={{ display: "flex", ...style }}>
+        {children}
+      </div>
+    );
+  },
 };
