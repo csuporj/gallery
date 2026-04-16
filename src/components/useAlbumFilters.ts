@@ -56,15 +56,15 @@ export function useAlbumFilters(
   query: string,
   dateFilter: DateState,
 ) {
-  const deferredQuery = useDeferredValue(query);
-
   const dateOptions = useMemo(() => getUniqueDateParts(albums), [albums]);
+
+  const deferredQuery = useDeferredValue(query);
 
   const filteredAlbums = useMemo(
     () =>
       albums.filter((album) => isAlbumMatch(album, deferredQuery, dateFilter)),
-    [albums, deferredQuery, dateFilter],
+    [albums, deferredQuery, dateFilter]
   );
 
-  return { filteredAlbums, dateOptions };
+  return { dateOptions, filteredAlbums };
 }
