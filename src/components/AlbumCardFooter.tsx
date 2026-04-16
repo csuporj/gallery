@@ -1,34 +1,50 @@
 import type { Album } from "./types";
 
+import "../styles/AlbumCardFooter.css";
+
 import { memo } from "react";
 import { Card } from "react-bootstrap";
 
 function AlbumCardFooterComponent({ album }: { album: Album }) {
   return (
     <Card.Body
-      className="d-flex overflow-hidden justify-content-between align-items-center px-2 rounded-0 bg-white"
+      className="d-flex align-items-center overflow-hidden bg-white rounded-0 p-0"
       style={{
         height: "48px",
       }}
     >
-      <span
-        className="fs-4 text-dark text-truncate me-3"
+      <div
+        className="d-inline-block text-truncate fs-4 text-dark"
         style={{
           flex: 1,
+          minWidth: 0,
         }}
       >
-        {album.LinkText}
-      </span>
+        {/* the margin before the title, shrinks after the title disapeared */}
+        <div className="album-margin" />
 
-      <small
-        className="fs-5 text-muted"
-        style={{
-          flex: 0,
-          whiteSpace: "nowrap",
-        }}
+        {album.LinkText}
+      </div>
+
+      <div
+        className="d-flex align-items-center overflow-hidden"
+        style={{ minWidth: 0 }}
       >
-        {album.AlbumDate}
-      </small>
+        {/* half of the space after the title, shrinks after the title disapeared */}
+        <div
+          className="album-margin"
+          style={{
+            flex: 1,
+            minWidth: 0,
+          }}
+        />
+        <div
+          className="d-inline-block text-truncate px-2 fs-5 text-muted"
+          style={{ minWidth: 0 }}
+        >
+          {album.AlbumDate}
+        </div>
+      </div>
     </Card.Body>
   );
 }
