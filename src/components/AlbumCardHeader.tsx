@@ -1,6 +1,8 @@
 import type { Album } from "./types";
+
 import { useState, memo, useRef, useEffect } from "react";
 import { Card } from "react-bootstrap";
+
 import { thumbnailPlaceholderUrl } from "./thumbnailPlaceholderUrl";
 
 function AlbumCardHeaderComponent({ album }: { album: Album }) {
@@ -18,6 +20,8 @@ function AlbumCardHeaderComponent({ album }: { album: Album }) {
     }
   }, [imageUrl]);
 
+  const visibility = isLoaded ? "visible" : "hidden";
+
   return (
     <Card.Img
       ref={imgRef}
@@ -27,7 +31,7 @@ function AlbumCardHeaderComponent({ album }: { album: Album }) {
       style={{
         aspectRatio: "600 / 400",
         objectFit: "cover",
-        visibility: isLoaded ? "visible" : "hidden",
+        visibility: visibility,
       }}
     />
   );
