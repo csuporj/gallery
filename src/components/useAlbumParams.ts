@@ -1,6 +1,6 @@
 import type { DateState } from "./types";
 
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
 
 function parseDateFilter(params: URLSearchParams): DateState {
@@ -26,7 +26,11 @@ export function useAlbumParams() {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const query = searchParams.get("q") ?? "";
-  const dateFilter = parseDateFilter(searchParams);
+  const dateFilter = useMemo(() => parseDateFilter(searchParams), [
+    searchParams.get("y"),
+    searchParams.get("m"),
+    searchParams.get("d")
+  ]);
 
   const setQuery = useCallback(
     (newQuery: string) => {
