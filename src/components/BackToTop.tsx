@@ -3,11 +3,11 @@ import { useBackToTop } from "./useBackToTop";
 import { Button } from "react-bootstrap";
 import { ChevronUp } from "react-bootstrap-icons";
 
-export const BackToTop = ({
+export function BackToTop({
   endRef,
 }: {
   endRef: React.RefObject<HTMLElement | null>;
-}) => {
+}) {
   const isActive = useBackToTop(endRef);
 
   const scrollToTop = () => {
