@@ -54,7 +54,9 @@ export function useAlbums() {
 
     fetchAlbums();
 
-    return () => controller.abort();
+    return function cleanupUseAlbums() {
+      controller.abort();
+    };
   }, [base]);
 
   return { albums, loading };
