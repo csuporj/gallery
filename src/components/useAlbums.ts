@@ -26,9 +26,9 @@ function sortAlbumsByDate(data: Album[]): Album[] {
 export function useAlbums() {
   const [albums, setAlbums] = useState<Album[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const base = import.meta.env.BASE_URL;
 
   useEffect(() => {
+    const base = import.meta.env.BASE_URL;
     const controller = new AbortController();
 
     async function fetchAlbums() {
@@ -57,7 +57,7 @@ export function useAlbums() {
     return function cleanupUseAlbums() {
       controller.abort();
     };
-  }, [base]);
+  }, []);
 
   return { albums, loading };
 }
