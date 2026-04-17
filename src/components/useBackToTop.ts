@@ -1,28 +1,18 @@
 import { useState, useEffect, useRef } from "react";
-
 import { runScrollLogic, runIntersectionLogic } from "./useBackToTop.logic";
+import { useIsTouch } from "./useIsTouch";
 
 export function useBackToTop(endRef: React.RefObject<HTMLElement | null>) {
   const [visible, setVisible] = useState(false);
   const [isMoving, setIsMoving] = useState(false);
-  const [isTouch, setIsTouch] = useState(false);
+  const isTouch = useIsTouch();
 
   const lastScrollY = useRef(0);
   const scrollTimeout = useRef<number | null>(null);
   const isAtBottomRef = useRef(false);
 
   useEffect(() => {
-    function checkTouch() {
-      setIsTouch(window.matchMedia("(pointer: coarse)").matches);
-    }
-    checkTouch();
-    const monitor = window.matchMedia("(pointer: coarse)");
-    monitor.addEventListener("change", checkTouch);
-    return () => monitor.removeEventListener("change", checkTouch);
-  }, []);
-
-  useEffect(() => {
-    const onScroll = () =>
+    function onScroll() {
       runScrollLogic(
         lastScrollY,
         isAtBottomRef,
@@ -30,12 +20,20 @@ export function useBackToTop(endRef: React.RefObject<HTMLElement | null>) {
         setVisible,
         setIsMoving,
       );
-    const onIntersect = ([entry]: IntersectionObserverEntry[]) =>
+    }
+
+    function onIntersect([entry]: IntersectionObserverEntry[]) {
       runIntersectionLogic(entry, isAtBottomRef, setVisible);
-    const onScrollEnd = () => setIsMoving(false);
+    }
+
+    function onScrollEnd() {
+      setIsMoving(false);
+    }
 
     const observer = new IntersectionObserver(onIntersect, { threshold: 0.1 });
-    if (endRef.current) observer.observe(endRef.current);
+
+    const endElement = endRef.current;
+    if (endElement) observer.observe(endElement);
 
     window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("scrollend", onScrollEnd);

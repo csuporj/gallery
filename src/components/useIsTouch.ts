@@ -1,16 +1,21 @@
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 
 export function useIsTouch() {
   const [isTouch, setIsTouch] = useState(false);
 
   useEffect(() => {
-    const check = () =>
+    function checkTouch() {
       setIsTouch(window.matchMedia("(pointer: coarse)").matches);
-    check();
+    }
 
-    const mql = window.matchMedia("(pointer: coarse)");
-    mql.addEventListener("change", check);
-    return () => mql.removeEventListener("change", check);
+    checkTouch();
+
+    const monitor = window.matchMedia("(pointer: coarse)");
+    monitor.addEventListener("change", checkTouch);
+
+    return function cleanupIsTouch() {
+      monitor.removeEventListener("change", checkTouch);
+    };
   }, []);
 
   return isTouch;
