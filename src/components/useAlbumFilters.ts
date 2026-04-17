@@ -63,7 +63,11 @@ export function useAlbumFilters(
   const filteredAlbums = useMemo(
     () =>
       albums.filter((album) => isAlbumMatch(album, deferredQuery, dateFilter)),
-    [albums, deferredQuery, dateFilter]
+    [albums, deferredQuery, dateFilter],
+  );
+
+  console.log(
+    `useAlbumFilters ${deferredQuery} ${dateFilter?.y} ${dateFilter.m} ${dateFilter.d}`,
   );
 
   return { dateOptions, filteredAlbums };

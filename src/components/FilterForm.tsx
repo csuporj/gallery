@@ -32,6 +32,10 @@ export function FilterForm({
     setLocalQuery(e.target.value);
   };
 
+  console.log(
+    `FilterForm ${localQuery} ${dateFilter?.y} ${dateFilter.m} ${dateFilter.d}`,
+  );
+
   return (
     <div className="mx-auto px-0 pt-2 pb-1 pt-md-1 pb-md-0 filter-form-width">
       <Row className="gx-1 gy-2 gy-md-1 justify-content-center">
