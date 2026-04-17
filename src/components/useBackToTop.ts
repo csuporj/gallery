@@ -15,17 +15,14 @@ export function useBackToTop(endRef: React.RefObject<HTMLElement | null>) {
     function checkTouch() {
       setIsTouch(window.matchMedia("(pointer: coarse)").matches);
     }
-
     checkTouch();
-
     const monitor = window.matchMedia("(pointer: coarse)");
     monitor.addEventListener("change", checkTouch);
-
     return () => monitor.removeEventListener("change", checkTouch);
   }, []);
 
   useEffect(() => {
-    function onScroll() {
+    const onScroll = () =>
       runScrollLogic(
         lastScrollY,
         isAtBottomRef,
@@ -33,20 +30,12 @@ export function useBackToTop(endRef: React.RefObject<HTMLElement | null>) {
         setVisible,
         setIsMoving,
       );
-    }
-
-    function onIntersect([entry]: IntersectionObserverEntry[]) {
+    const onIntersect = ([entry]: IntersectionObserverEntry[]) =>
       runIntersectionLogic(entry, isAtBottomRef, setVisible);
-    }
-
-    function onScrollEnd() {
-      setIsMoving(false);
-    }
+    const onScrollEnd = () => setIsMoving(false);
 
     const observer = new IntersectionObserver(onIntersect, { threshold: 0.1 });
-
-    const endElement = endRef.current;
-    if (endElement) observer.observe(endElement);
+    if (endRef.current) observer.observe(endRef.current);
 
     window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("scrollend", onScrollEnd);
