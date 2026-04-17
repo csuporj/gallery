@@ -1,7 +1,12 @@
 import { type ComponentPropsWithRef } from "react";
 
 export const gridComponents = {
-  List: function List({ ref, style, children, ...props }: ComponentPropsWithRef<"div">) {
+  List: function List({
+    ref,
+    style,
+    children,
+    ...props
+  }: ComponentPropsWithRef<"div">) {
     return (
       <div
         ref={ref}
@@ -10,8 +15,7 @@ export const gridComponents = {
           display: "flex",
           flexWrap: "wrap",
           justifyContent: "center",
-          paddingBottom: "4px",
-          ...style
+          ...style,
         }}
       >
         {children}
@@ -19,12 +23,14 @@ export const gridComponents = {
     );
   },
 
-  Item: function Item({ ref, style, children, ...props }: ComponentPropsWithRef<"div">) {
+  Item: function Item({
+    ref,
+    style,
+    children,
+    ...props
+  }: ComponentPropsWithRef<"div">) {
     return (
-      <div
-        ref={ref}
-        {...props}
-        style={{ display: "flex", ...style }}>
+      <div ref={ref} {...props} style={{ display: "flex", ...style }}>
         {children}
       </div>
     );
