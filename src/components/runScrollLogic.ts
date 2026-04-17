@@ -2,7 +2,7 @@ import type { RefObject } from "react";
 
 const MIN_SCROLL_DEPTH = 400;
 const SCROLL_DELAY_MS = 300;
-const SCROLL_DELTA = 10;
+const SCROLL_DELTA = 1;
 
 export function runScrollLogic(
   lastScrollY: RefObject<number>,
@@ -25,9 +25,9 @@ export function runScrollLogic(
 
   if (currentY < MIN_SCROLL_DEPTH) {
     setVisible(false);
-  } else if (currentY < lastY - SCROLL_DELTA) {
+  } else if (currentY <= lastY - SCROLL_DELTA) {
     setVisible(true);
-  } else if (currentY > lastY + SCROLL_DELTA) {
+  } else if (currentY >= lastY + SCROLL_DELTA) {
     setVisible(false);
   }
 
