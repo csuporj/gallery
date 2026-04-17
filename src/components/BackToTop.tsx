@@ -11,12 +11,12 @@ export function BackToTop({
   const isActive = useBackToTop(endRef);
 
   function scrollToTop() {
-    window.scrollTo(0, 0);
+    window.scrollTo({ top: 0, behavior: "instant" });
 
-    setTimeout(() => {
+    requestAnimationFrame(() => {
       window.scrollBy(0, 1);
       window.scrollBy(0, -1);
-    }, 50);
+    });
   }
 
   const opacity = isActive ? "opacity-100" : "opacity-0";
