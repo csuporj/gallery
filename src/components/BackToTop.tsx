@@ -13,10 +13,10 @@ export function BackToTop({
   function scrollToTop() {
     window.scrollTo({ top: 0, behavior: "instant" });
 
-    requestAnimationFrame(() => {
-      window.scrollBy(0, 1);
-      window.scrollBy(0, -1);
-    });
+    setTimeout(() => {
+      window.scrollBy({ top: 1, behavior: "instant" });
+      window.scrollBy({ top: -1, behavior: "instant" });
+    }, 100);
   }
 
   const opacity = isActive ? "opacity-100" : "opacity-0";
