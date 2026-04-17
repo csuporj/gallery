@@ -11,9 +11,12 @@ export function BackToTop({
   const isActive = useBackToTop(endRef);
 
   function scrollToTop() {
-    document
-      .getElementById("top")
-      ?.scrollIntoView({ behavior: "auto", block: "start" });
+    window.scrollTo(0, 0);
+
+    setTimeout(() => {
+      window.scrollBy(0, 1);
+      window.scrollBy(0, -1);
+    }, 50);
   }
 
   const opacity = isActive ? "opacity-100" : "opacity-0";
