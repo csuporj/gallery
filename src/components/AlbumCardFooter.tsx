@@ -20,7 +20,7 @@ function AlbumCardFooterComponent({ album }: { album: Album }) {
       >
         {/* the margin before the title, shrinks after the title disapeared */}
         <div
-          className="d-inline-block bg-white"
+          className="d-inline-block"
           style={{ width: "8px", height: "8px" }}
         />
 
@@ -33,7 +33,7 @@ function AlbumCardFooterComponent({ album }: { album: Album }) {
       >
         {/* half of the gap after the title, shrinks after the title disapeared */}
         <div
-          className="d-inline-block bg-white"
+          className="d-inline-block"
           style={{
             flex: 1,
             minWidth: 0,
