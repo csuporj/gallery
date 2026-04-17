@@ -10,8 +10,8 @@ export function BackToTop({
 }) {
   const isActive = useBackToTop(endRef);
 
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
+  function scrollToTop() {
+    window.scrollTo({ top: 0, behavior: "instant" });
   };
 
   const opacity = isActive ? "opacity-100" : "opacity-0";
