@@ -1,4 +1,3 @@
-import { useRef } from "react";
 import { Container, Spinner } from "react-bootstrap";
 import { VirtuosoGrid } from "react-virtuoso";
 
@@ -27,7 +26,6 @@ export function App() {
     dateFilter,
   );
   useDynamicTitle(query, dateFilter);
-  const endRef = useRef<HTMLDivElement>(null);
 
   const initialItemCount = getInitialGridCount(filteredAlbums.length);
 
@@ -60,8 +58,7 @@ export function App() {
         />
       )}
 
-      <div ref={endRef} style={{ height: "72px" }} />
-      <BackToTop endRef={endRef} />
+      <BackToTop />
     </Container>
   );
 }

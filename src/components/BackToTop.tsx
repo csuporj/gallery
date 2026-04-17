@@ -3,20 +3,11 @@ import { useBackToTop } from "./useBackToTop";
 import { Button } from "react-bootstrap";
 import { ChevronUp } from "react-bootstrap-icons";
 
-export function BackToTop({
-  endRef,
-}: {
-  endRef: React.RefObject<HTMLElement | null>;
-}) {
-  const isActive = useBackToTop(endRef);
+export function BackToTop() {
+  const isActive = useBackToTop();
 
   function scrollToTop() {
     window.scrollTo({ top: 0, behavior: "instant" });
-
-    setTimeout(() => {
-      window.scrollBy({ top: 1, behavior: "instant" });
-      window.scrollBy({ top: -1, behavior: "instant" });
-    }, 100);
   }
 
   const opacity = isActive ? "opacity-100" : "opacity-0";
