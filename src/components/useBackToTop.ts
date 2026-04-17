@@ -1,9 +1,13 @@
 import { useState, useEffect, useRef } from "react";
-import { runScrollLogic } from "./runScrollLogic";
 import { useIsTouch } from "./useIsTouch";
 
+const MIN_SCROLL_DEPTH = 400;
+const SCROLL_DELAY_MS = 300;
+const SCROLL_DELTA_UP = 10;
+const SCROLL_DELTA_DOWN = 1;
+
 export function useBackToTop() {
-  const [visible, setVisible] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
   const [isMoving, setIsMoving] = useState(false);
   const isTouch = useIsTouch();
 
@@ -12,12 +16,28 @@ export function useBackToTop() {
 
   useEffect(() => {
     function onScroll() {
-      runScrollLogic(
-        lastScrollY,
-        scrollTimeout,
-        setVisible,
-        setIsMoving,
-      );
+      setIsMoving(true);
+
+      if (scrollTimeout.current) {
+        window.clearTimeout(scrollTimeout.current);
+      }
+
+      scrollTimeout.current = window.setTimeout(function onScrollTimeout() {
+        setIsMoving(false);
+      }, SCROLL_DELAY_MS);
+
+      const currentY = window.scrollY;
+      const lastY = lastScrollY.current;
+
+      if (currentY < MIN_SCROLL_DEPTH) {
+        setIsVisible(false);
+      } else if (currentY <= lastY - SCROLL_DELTA_UP) {
+        setIsVisible(true);
+      } else if (currentY >= lastY + SCROLL_DELTA_DOWN) {
+        setIsVisible(false);
+      }
+
+      lastScrollY.current = currentY;
     }
 
     function onScrollEnd() {
@@ -38,5 +58,5 @@ export function useBackToTop() {
     };
   }, []);
 
-  return visible && (!isMoving || !isTouch);
+  return isVisible && (!isMoving || !isTouch);
 }
