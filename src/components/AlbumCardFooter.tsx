@@ -1,7 +1,5 @@
 import type { Album } from "./types";
 
-import "../styles/AlbumCardFooter.css";
-
 import { memo } from "react";
 import { Card } from "react-bootstrap";
 
@@ -21,7 +19,10 @@ function AlbumCardFooterComponent({ album }: { album: Album }) {
         }}
       >
         {/* the margin before the title, shrinks after the title disapeared */}
-        <div className="album-margin" />
+        <div
+          className="d-inline-block bg-white"
+          style={{ width: "8px", height: "8px" }}
+        />
 
         {album.LinkText}
       </div>
@@ -30,12 +31,14 @@ function AlbumCardFooterComponent({ album }: { album: Album }) {
         className="d-flex align-items-center overflow-hidden"
         style={{ minWidth: 0 }}
       >
-        {/* half of the space after the title, shrinks after the title disapeared */}
+        {/* half of the gap after the title, shrinks after the title disapeared */}
         <div
-          className="album-margin"
+          className="d-inline-block bg-white"
           style={{
             flex: 1,
             minWidth: 0,
+            width: "8px",
+            height: "8px",
           }}
         />
         <div
