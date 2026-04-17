@@ -11,8 +11,10 @@ export function BackToTop({
   const isActive = useBackToTop(endRef);
 
   function scrollToTop() {
-    window.scrollTo({ top: -100, behavior: "instant" });
-  };
+    document
+      .getElementById("top")
+      ?.scrollIntoView({ behavior: "auto", block: "start" });
+  }
 
   const opacity = isActive ? "opacity-100" : "opacity-0";
   const transform = isActive ? "translateY(0)" : "translateY(20px)";
@@ -35,4 +37,4 @@ export function BackToTop({
       <ChevronUp size={24} />
     </Button>
   );
-};
+}
