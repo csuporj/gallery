@@ -3,8 +3,6 @@ import type { Album } from "./types";
 import { memo } from "react";
 import { Card } from "react-bootstrap";
 
-import "../styles/AlbumCard.css";
-
 import { AlbumCardHeader } from "./AlbumCardHeader";
 import { AlbumCardFooter } from "./AlbumCardFooter";
 

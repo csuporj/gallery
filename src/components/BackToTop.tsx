@@ -11,7 +11,7 @@ export function BackToTop({
   const isActive = useBackToTop(endRef);
 
   function scrollToTop() {
-    window.scrollTo({ top: 0, behavior: "instant" });
+    window.scrollTo({ top: -100, behavior: "instant" });
   };
 
   const opacity = isActive ? "opacity-100" : "opacity-0";

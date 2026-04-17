@@ -2,8 +2,6 @@ import { useRef } from "react";
 import { Container, Spinner } from "react-bootstrap";
 import { VirtuosoGrid } from "react-virtuoso";
 
-import "../styles/App.css";
-
 import { useAlbums } from "./useAlbums";
 import { useAlbumParams } from "./useAlbumParams";
 import { useAlbumFilters } from "./useAlbumFilters";
@@ -35,15 +33,13 @@ export function App() {
 
   return (
     <Container fluid className="p-0">
-      <header className="mx-auto filter-form-width">
-        <FilterForm
-          dateOptions={dateOptions}
-          query={query}
-          setQuery={setQuery}
-          dateFilter={dateFilter}
-          setDateFilter={setDateFilter}
-        />
-      </header>
+      <FilterForm
+        dateOptions={dateOptions}
+        query={query}
+        setQuery={setQuery}
+        dateFilter={dateFilter}
+        setDateFilter={setDateFilter}
+      />
 
       {loading ? (
         <Container className="text-center mt-5">

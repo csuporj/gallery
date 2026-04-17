@@ -1,3 +1,0 @@
-a.focus-ring:focus:not(:focus-visible) {
-  box-shadow: none;
-}
