@@ -35,5 +35,6 @@ export function useDynamicTitle(query: string, dateFilter: DateState) {
   useEffect(() => {
     const dateString = formatDate(dateFilter);
     document.title = formatTitle(query, dateString);
+    console.log(`useDynamicTitle ${document.title}`);
   }, [query, dateFilter]);
 }

@@ -47,5 +47,9 @@ export function useAlbumParams() {
     [query, setSearchParams],
   );
 
+  console.log(
+    `useAlbumParams ${query} ${dateFilter?.y} ${dateFilter.m} ${dateFilter.d}`,
+  );
+
   return { query, setQuery, dateFilter, setDateFilter };
 }
