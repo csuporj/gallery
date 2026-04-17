@@ -5,12 +5,24 @@ import { runScrollLogic, runIntersectionLogic } from "./useBackToTop.logic";
 export function useBackToTop(endRef: React.RefObject<HTMLElement | null>) {
   const [visible, setVisible] = useState(false);
   const [isMoving, setIsMoving] = useState(false);
+  const [isTouch, setIsTouch] = useState(false);
 
   const lastScrollY = useRef(0);
   const scrollTimeout = useRef<number | null>(null);
   const isAtBottomRef = useRef(false);
 
-  const isTouch = window.matchMedia("(pointer: coarse)").matches;
+  useEffect(() => {
+    function checkTouch() {
+      setIsTouch(window.matchMedia("(pointer: coarse)").matches);
+    }
+
+    checkTouch();
+
+    const monitor = window.matchMedia("(pointer: coarse)");
+    monitor.addEventListener("change", checkTouch);
+
+    return () => monitor.removeEventListener("change", checkTouch);
+  }, []);
 
   useEffect(() => {
     function onScroll() {
