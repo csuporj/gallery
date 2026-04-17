@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { runScrollLogic } from "./useBackToTop.logic";
+import { runScrollLogic } from "./runScrollLogic";
 import { useIsTouch } from "./useIsTouch";
 
 export function useBackToTop() {
