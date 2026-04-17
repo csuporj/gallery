@@ -22,16 +22,15 @@ export function useBackToTop(endRef: React.RefObject<HTMLElement | null>) {
       );
     }
 
-    function onIntersect([entry]: IntersectionObserverEntry[]) {
-      runIntersectionLogic(entry, isAtBottomRef, setVisible);
-    }
-
     function onScrollEnd() {
       setIsMoving(false);
     }
 
-    const observer = new IntersectionObserver(onIntersect, { threshold: 0.1 });
+    function onIntersect([entry]: IntersectionObserverEntry[]) {
+      runIntersectionLogic(entry, isAtBottomRef, setVisible);
+    }
 
+    const observer = new IntersectionObserver(onIntersect, { threshold: 0.1 });
     const endElement = endRef.current;
     if (endElement) observer.observe(endElement);
 
