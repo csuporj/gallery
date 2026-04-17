@@ -50,9 +50,7 @@ export function App() {
           <Spinner animation="border" />
         </Container>
       ) : filteredAlbums.length === 0 ? (
-        <div className="mt-1 text-center" role="status">
-          No results found.
-        </div>
+        <div className="mt-1 text-center">No results found.</div>
       ) : (
         <VirtuosoGrid
           useWindowScroll
