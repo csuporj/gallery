@@ -3,7 +3,6 @@ import { type ComponentPropsWithRef } from "react";
 export const gridComponents = {
   List: function List({
     ref,
-    style,
     children,
     ...props
   }: ComponentPropsWithRef<"div">) {
@@ -11,12 +10,7 @@ export const gridComponents = {
       <div
         ref={ref}
         {...props}
-        style={{
-          display: "flex",
-          flexWrap: "wrap",
-          justifyContent: "center",
-          ...style,
-        }}
+        className="d-flex flex-wrap justify-content-center"
       >
         {children}
       </div>
@@ -25,12 +19,11 @@ export const gridComponents = {
 
   Item: function Item({
     ref,
-    style,
     children,
     ...props
   }: ComponentPropsWithRef<"div">) {
     return (
-      <div ref={ref} {...props} style={{ display: "flex", ...style }}>
+      <div ref={ref} {...props} className="p-1">
         {children}
       </div>
     );
