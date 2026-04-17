@@ -26,11 +26,10 @@ export function useAlbumParams() {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const query = searchParams.get("q") ?? "";
-  const dateFilter = useMemo(() => parseDateFilter(searchParams), [
-    searchParams.get("y"),
-    searchParams.get("m"),
-    searchParams.get("d")
-  ]);
+  const dateFilter = useMemo(
+    () => parseDateFilter(searchParams),
+    [searchParams],
+  );
 
   const setQuery = useCallback(
     (newQuery: string) => {
