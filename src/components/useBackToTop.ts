@@ -7,56 +7,59 @@ const SCROLL_DELTA_UP = 10;
 const SCROLL_DELTA_DOWN = 1;
 
 export function useBackToTop() {
-  const [isVisible, setIsVisible] = useState(false);
-  const [isMoving, setIsMoving] = useState(false);
+  const [shouldShow, setShouldShow] = useState(false);
   const isTouch = useIsTouch();
 
   const lastScrollY = useRef(0);
-  const scrollTimeout = useRef<number | null>(null);
+  const isMovingRef = useRef(false);
+  const wasScrollingUpRef = useRef(false);
+  const lastShouldShowRef = useRef(false);
+  const timeoutRef = useRef<number | null>(null);
 
   useEffect(() => {
+    function checkAndNotify() {
+      const result = wasScrollingUpRef.current && (!isMovingRef.current || !isTouch);
+
+      if (result === lastShouldShowRef.current) return;
+
+      lastShouldShowRef.current = result;
+      setShouldShow(result);
+    }
+
     function onScroll() {
-      setIsMoving(true);
-
-      if (scrollTimeout.current) {
-        window.clearTimeout(scrollTimeout.current);
-      }
-
-      scrollTimeout.current = window.setTimeout(function onScrollTimeout() {
-        setIsMoving(false);
-      }, SCROLL_DELAY_MS);
-
       const currentY = window.scrollY;
       const lastY = lastScrollY.current;
 
+      isMovingRef.current = true;
+
+      if (timeoutRef.current) window.clearTimeout(timeoutRef.current);
+      timeoutRef.current = window.setTimeout(() => {
+        isMovingRef.current = false;
+        checkAndNotify();
+      }, SCROLL_DELAY_MS);
+
       if (currentY < MIN_SCROLL_DEPTH) {
-        setIsVisible(false);
+        wasScrollingUpRef.current = false;
       } else if (currentY <= lastY - SCROLL_DELTA_UP) {
-        setIsVisible(true);
+        wasScrollingUpRef.current = true;
       } else if (currentY >= lastY + SCROLL_DELTA_DOWN) {
-        setIsVisible(false);
+        wasScrollingUpRef.current = false;
       }
 
       lastScrollY.current = currentY;
-    }
-
-    function onScrollEnd() {
-      setIsMoving(false);
+      checkAndNotify();
     }
 
     window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("scrollend", onScrollEnd);
 
-    return function cleanupBackToTop() {
+    return () => {
       window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("scrollend", onScrollEnd);
-
-      if (scrollTimeout.current) {
+      if (timeoutRef.current) {
         // eslint-disable-next-line react-hooks/exhaustive-deps
-        window.clearTimeout(scrollTimeout.current);
+        window.clearTimeout(timeoutRef.current);
       }
     };
-  }, []);
+  }, [isTouch]);
 
-  return isVisible && (!isMoving || !isTouch);
+  return shouldShow;
 }
