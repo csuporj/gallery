@@ -30,7 +30,7 @@ export function App() {
   const initialItemCount = getInitialGridCount(filteredAlbums.length);
 
   return (
-    <Container fluid className="p-0">
+    <Container fluid className="px-0 pt-0 pb-1">
       <FilterForm
         dateOptions={dateOptions}
         query={query}
