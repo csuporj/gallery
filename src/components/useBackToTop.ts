@@ -18,12 +18,14 @@ export function useBackToTop() {
 
   useEffect(() => {
     function checkAndNotify() {
-      const result = wasScrollingUpRef.current && (!isMovingRef.current || !isTouch);
+      const result =
+        wasScrollingUpRef.current && (!isMovingRef.current || !isTouch);
 
       if (result === lastShouldShowRef.current) return;
 
       lastShouldShowRef.current = result;
       setShouldShow(result);
+      console.log(`useBackToTop ${result}`);
     }
 
     function onScroll() {
