@@ -1,5 +1,5 @@
 import "bootstrap/dist/css/bootstrap.min.css";
-import "../styles/index.css"
+import "../styles/main.css";
 
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
@@ -14,5 +14,5 @@ createRoot(document.getElementById("root")!).render(
         <Route path="/" element={<App />} />
       </Routes>
     </BrowserRouter>
-  </StrictMode>
+  </StrictMode>,
 );

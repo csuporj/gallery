@@ -1,3 +1,11 @@
+html {
+  scrollbar-gutter: stable;
+}
+
+body {
+  background-color: var(--bs-light) !important;
+}
+
 .filter-form-width {
   width: 600px;
   max-width: calc(100vw - 8px);
