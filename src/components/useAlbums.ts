@@ -1,7 +1,6 @@
-import { useState, useEffect } from "react";
+import albumsData from "../albums.json";
 import { parseDate } from "./parseDate";
 import { monthOrder } from "./monthOrder";
-
 import type { Album } from "./types";
 
 function getSortKey(dateStr: string): number {
@@ -17,49 +16,9 @@ function getSortKey(dateStr: string): number {
 }
 
 function sortAlbumsByDate(data: Album[]): Album[] {
-  return data
-    .map((album) => ({ album, key: getSortKey(album.AlbumDate) }))
-    .sort((a, b) => b.key - a.key)
-    .map((item) => item.album);
+  return [...data].sort((a, b) => {
+    return getSortKey(b.AlbumDate) - getSortKey(a.AlbumDate);
+  });
 }
 
-export function useAlbums() {
-  const [albums, setAlbums] = useState<Album[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-
-  useEffect(() => {
-    const base = import.meta.env.BASE_URL;
-    const controller = new AbortController();
-
-    async function fetchAlbums() {
-      try {
-        const response = await fetch(`${base}albums.json`, {
-          signal: controller.signal,
-        });
-
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        const data: Album[] = await response.json();
-        setAlbums(sortAlbumsByDate(data));
-        setLoading(false);
-      } catch (error) {
-        if (error instanceof Error && error.name !== "AbortError") {
-          console.error("Failed to load albums:", error);
-          setLoading(false);
-        }
-      }
-    }
-
-    fetchAlbums();
-
-    console.log(`useAlbums`);
-
-    return function cleanupUseAlbums() {
-      controller.abort();
-    };
-  }, []);
-
-  return { albums, loading };
-}
+export const albums: Album[] = sortAlbumsByDate(albumsData as Album[]);

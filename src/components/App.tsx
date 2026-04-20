@@ -1,7 +1,6 @@
-import { Container, Spinner } from "react-bootstrap";
+import { Container } from "react-bootstrap";
 import { VirtuosoGrid } from "react-virtuoso";
 
-import { useAlbums } from "./useAlbums";
 import { useAlbumParams } from "./useAlbumParams";
 import { useAlbumFilters } from "./useAlbumFilters";
 import { useDynamicTitle } from "./useDynamicTitle";
@@ -18,13 +17,8 @@ function getInitialGridCount(albumsLength: number) {
 }
 
 export function App() {
-  const { albums, loading } = useAlbums();
   const { query, setQuery, dateFilter, setDateFilter } = useAlbumParams();
-  const { filteredAlbums, dateOptions } = useAlbumFilters(
-    albums,
-    query,
-    dateFilter,
-  );
+  const { filteredAlbums, dateOptions } = useAlbumFilters(query, dateFilter);
   useDynamicTitle(query, dateFilter);
 
   const initialItemCount = getInitialGridCount(filteredAlbums.length);
@@ -39,11 +33,7 @@ export function App() {
         setDateFilter={setDateFilter}
       />
 
-      {loading ? (
-        <Container className="text-center mt-5">
-          <Spinner animation="border" />
-        </Container>
-      ) : filteredAlbums.length === 0 ? (
+      {filteredAlbums.length === 0 ? (
         <div className="mt-1 text-center">No results found.</div>
       ) : (
         <VirtuosoGrid

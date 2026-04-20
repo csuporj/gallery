@@ -5,6 +5,7 @@ import { parseDate } from "./parseDate";
 
 import type { Album } from "./types";
 import type { DateState } from "./types";
+import { albums } from "./useAlbums";
 
 function sortYears(a: string, b: string) {
   return Number(b) - Number(a);
@@ -51,19 +52,15 @@ function isAlbumMatch(album: Album, query: string, filter: DateState) {
   );
 }
 
-export function useAlbumFilters(
-  albums: Album[],
-  query: string,
-  dateFilter: DateState,
-) {
-  const dateOptions = useMemo(() => getUniqueDateParts(albums), [albums]);
+export function useAlbumFilters(query: string, dateFilter: DateState) {
+  const dateOptions = useMemo(() => getUniqueDateParts(albums), []);
 
   const deferredQuery = useDeferredValue(query);
 
   const filteredAlbums = useMemo(
     () =>
       albums.filter((album) => isAlbumMatch(album, deferredQuery, dateFilter)),
-    [albums, deferredQuery, dateFilter],
+    [deferredQuery, dateFilter],
   );
 
   console.log(
