@@ -31,9 +31,9 @@ jobs:
           dotnet-version: "10.0.x"
 
       - name: Run Scraper
-        working-directory: ./gallery-dir/public
+        working-directory: ./gallery-dir
         run: |
-          dotnet run --project ../../scraper-dir/scraper/scraper.csproj
+          dotnet run --project ../scraper-dir/scraper/scraper.csproj
 
       - name: Commit and Push
         id: auto-commit
@@ -43,7 +43,7 @@ jobs:
           commit_message: "Auto-update: New thumbnails and albums.json"
           # 'public/*.json' matches the root file
           # 'public/**/*.jpg' matches JPGs in any subfolder
-          file_pattern: "public/*.json public/**/*.jpg"
+          file_pattern: "src/albums.json public/**/*.jpg"
 
       - name: Build React App
         if: steps.auto-commit.outputs.changes_detected == 'true'
