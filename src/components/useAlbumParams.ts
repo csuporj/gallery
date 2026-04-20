@@ -1,7 +1,7 @@
 import type { DateState } from "./types";
 
 import { useCallback, useMemo } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useNavigate, useLocation } from "react-router-dom";
 
 function parseDateFilter(params: URLSearchParams): DateState {
   return {
@@ -23,7 +23,9 @@ function buildSearchParams(query: string, date: DateState): URLSearchParams {
 }
 
 export function useAlbumParams() {
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const query = searchParams.get("q") ?? "";
   const dateFilter = useMemo(
@@ -31,40 +33,42 @@ export function useAlbumParams() {
     [searchParams],
   );
 
-  const updateUrlSilently = useCallback(
+  const updateUrl = useCallback(
     (newParams: URLSearchParams) => {
-      const newUrl = `${window.location.pathname}?${newParams.toString()}`;
+      const newSearch = newParams.toString();
+      const currentSearch = searchParams.toString();
 
-      // Update the browser URL without triggering the loading indicator
-      window.history.replaceState(null, "", newUrl);
-
-      // Update React Router's internal state so the app re-renders
-      setSearchParams(newParams, { replace: true });
+      // Only move if the URL is actually different
+      if (newSearch !== currentSearch) {
+        navigate(
+          {
+            pathname: location.pathname,
+            search: `?${newSearch}`,
+          },
+          {
+            replace: true,
+            state: { scroll: false }, // Prevents scroll jumps
+          },
+        );
+      }
     },
-    [setSearchParams],
+    [location.pathname, navigate, searchParams],
   );
 
   const setQuery = useCallback(
     (newQuery: string) => {
       const currentDates = parseDateFilter(searchParams);
-      if (query === newQuery) return;
-      updateUrlSilently(buildSearchParams(newQuery, currentDates));
+      updateUrl(buildSearchParams(newQuery, currentDates));
     },
-    [query, searchParams, updateUrlSilently],
+    [searchParams, updateUrl],
   );
 
   const setDateFilter = useCallback(
     (newDate: DateState) => {
-      if (
-        dateFilter.y === newDate.y &&
-        dateFilter.m === newDate.m &&
-        dateFilter.d === newDate.d
-      ) {
-        return;
-      }
-      updateUrlSilently(buildSearchParams(query, newDate));
+      const currentQuery = searchParams.get("q") ?? "";
+      updateUrl(buildSearchParams(currentQuery, newDate));
     },
-    [query, dateFilter, updateUrlSilently],
+    [searchParams, updateUrl],
   );
 
   console.log(
