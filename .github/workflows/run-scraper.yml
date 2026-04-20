@@ -3,11 +3,8 @@ name: Gallery Auto-Update Scraper
 on:
   schedule:
     - cron: "0 0 * * *"
-
-  # Allows you to trigger it manually from the Actions tab
   workflow_dispatch:
 
-# Required permissions for the official GitHub Pages deployment
 permissions:
   contents: write
   pages: write
@@ -55,8 +52,6 @@ jobs:
         uses: actions/setup-node@v6
         with:
           node-version: 24
-          cache: "npm"
-          cache-dependency-path: ./gallery-dir/package-lock.json
 
       - name: Build React App
         if: steps.auto-commit.outputs.changes_detected == 'true'
