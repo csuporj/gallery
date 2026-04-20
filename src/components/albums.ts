@@ -1,7 +1,9 @@
+import type { Album } from "./types";
+
 import albumsData from "../albums.json";
+
 import { parseDate } from "./parseDate";
 import { monthOrder } from "./monthOrder";
-import type { Album } from "./types";
 
 function getSortKey(dateStr: string): number {
   const { m, d, y } = parseDate(dateStr);

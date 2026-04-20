@@ -1,11 +1,10 @@
+import type { Album, DateState } from "./types";
+
 import { useMemo, useDeferredValue } from "react";
 
+import { albums } from "./albums";
 import { monthOrder } from "./monthOrder";
 import { parseDate } from "./parseDate";
-
-import type { Album } from "./types";
-import type { DateState } from "./types";
-import { albums } from "./useAlbums";
 
 function sortYears(a: string, b: string) {
   return Number(b) - Number(a);
