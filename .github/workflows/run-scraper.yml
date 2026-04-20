@@ -41,8 +41,6 @@ jobs:
         with:
           repository: gallery-dir
           commit_message: "Auto-update: New thumbnails and albums.json"
-          # 'public/*.json' matches the root file
-          # 'public/**/*.jpg' matches JPGs in any subfolder
           file_pattern: "src/albums.json public/**/*.jpg"
 
       - name: Build React App
