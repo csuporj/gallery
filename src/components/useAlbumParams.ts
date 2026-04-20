@@ -31,39 +31,40 @@ export function useAlbumParams() {
     [searchParams],
   );
 
-  const setQuery = useCallback(
-    (newQuery: string) => {
-      setSearchParams(
-        (prev) => {
-          if ((prev.get("q") ?? "") === newQuery) return prev;
-          return buildSearchParams(newQuery, parseDateFilter(prev));
-        },
-        {
-          replace: true,
-        },
-      );
+  const updateUrlSilently = useCallback(
+    (newParams: URLSearchParams) => {
+      const newUrl = `${window.location.pathname}?${newParams.toString()}`;
+
+      // Update the browser URL without triggering the loading indicator
+      window.history.replaceState(null, "", newUrl);
+
+      // Update React Router's internal state so the app re-renders
+      setSearchParams(newParams, { replace: true });
     },
     [setSearchParams],
   );
 
+  const setQuery = useCallback(
+    (newQuery: string) => {
+      const currentDates = parseDateFilter(searchParams);
+      if (query === newQuery) return;
+      updateUrlSilently(buildSearchParams(newQuery, currentDates));
+    },
+    [query, searchParams, updateUrlSilently],
+  );
+
   const setDateFilter = useCallback(
     (newDate: DateState) => {
-      setSearchParams(
-        (prev) => {
-          const currentDates = parseDateFilter(prev);
-          if (
-            currentDates.y === newDate.y &&
-            currentDates.m === newDate.m &&
-            currentDates.d === newDate.d
-          ) {
-            return prev;
-          }
-          return buildSearchParams(prev.get("q") ?? "", newDate);
-        },
-        { replace: true },
-      );
+      if (
+        dateFilter.y === newDate.y &&
+        dateFilter.m === newDate.m &&
+        dateFilter.d === newDate.d
+      ) {
+        return;
+      }
+      updateUrlSilently(buildSearchParams(query, newDate));
     },
-    [setSearchParams],
+    [query, dateFilter, updateUrlSilently],
   );
 
   console.log(
