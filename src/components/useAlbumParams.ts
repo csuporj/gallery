@@ -33,18 +33,37 @@ export function useAlbumParams() {
 
   const setQuery = useCallback(
     (newQuery: string) => {
-      setSearchParams(buildSearchParams(newQuery, dateFilter), {
-        replace: true,
-      });
+      setSearchParams(
+        (prev) => {
+          if ((prev.get("q") ?? "") === newQuery) return prev;
+          return buildSearchParams(newQuery, parseDateFilter(prev));
+        },
+        {
+          replace: true,
+        },
+      );
     },
-    [dateFilter, setSearchParams],
+    [setSearchParams],
   );
 
   const setDateFilter = useCallback(
     (newDate: DateState) => {
-      setSearchParams(buildSearchParams(query, newDate), { replace: true });
+      setSearchParams(
+        (prev) => {
+          const currentDates = parseDateFilter(prev);
+          if (
+            currentDates.y === newDate.y &&
+            currentDates.m === newDate.m &&
+            currentDates.d === newDate.d
+          ) {
+            return prev;
+          }
+          return buildSearchParams(prev.get("q") ?? "", newDate);
+        },
+        { replace: true },
+      );
     },
-    [query, setSearchParams],
+    [setSearchParams],
   );
 
   console.log(
