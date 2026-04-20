@@ -7,23 +7,30 @@ on:
   # Allows you to trigger it manually from the Actions tab
   workflow_dispatch:
 
+# Required permissions for the official GitHub Pages deployment
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
 jobs:
   scrape-and-commit:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
 
     steps:
       - name: Checkout Gallery
         uses: actions/checkout@v6
         with:
-          path: gallery-dir
+          path: ./gallery-dir
 
       - name: Checkout Scraper
         uses: actions/checkout@v6
         with:
           repository: csuporj/scraper
-          path: scraper-dir
+          path: ./scraper-dir
 
       - name: Setup .NET 10
         uses: actions/setup-dotnet@v5
@@ -39,17 +46,17 @@ jobs:
         id: auto-commit
         uses: stefanzweifel/git-auto-commit-action@v7
         with:
-          repository: gallery-dir
+          repository: ./gallery-dir
           commit_message: "Auto-update: New thumbnails and albums.json"
           file_pattern: "src/albums.json public/**/*.jpg"
 
       - name: Setup Node
         if: steps.auto-commit.outputs.changes_detected == 'true'
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: 24
           cache: "npm"
-          cache-dependency-path: gallery-dir/package-lock.json
+          cache-dependency-path: ./gallery-dir/package-lock.json
 
       - name: Build React App
         if: steps.auto-commit.outputs.changes_detected == 'true'
@@ -58,10 +65,13 @@ jobs:
           npm ci
           npm run build
 
+      - name: Upload Artifact
+        if: steps.auto-commit.outputs.changes_detected == 'true'
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./gallery-dir/dist
+
       - name: Deploy to GitHub Pages
         if: steps.auto-commit.outputs.changes_detected == 'true'
-        uses: peaceiris/actions-gh-pages@v4
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          # Vite puts the final website in 'dist'
-          publish_dir: ./gallery-dir/dist
+        id: deployment
+        uses: actions/deploy-pages@v4
