@@ -1,6 +1,7 @@
 import type { Album } from "./types";
 
 import albumsData from "../albums.json";
+import { getTimestamp, IS_DEBUG } from "./debug";
 
 function getSortKey(dateStr: string): number {
   const { m, d, y } = parseDate(dateStr);
@@ -63,5 +64,11 @@ const monthOrder = [
   "Dec",
 ];
 
+if (IS_DEBUG) {
+  console.log(getTimestamp(), "albums.ts start");
+}
 export const albums: Album[] = sortAlbums(albumsData as Album[]);
 export const dateOptions = getDateOptions();
+if (IS_DEBUG) {
+  console.log(getTimestamp(), "albums.ts end");
+}
