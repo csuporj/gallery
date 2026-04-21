@@ -14,33 +14,25 @@ function AlbumCardHeaderComponent({ album }: { album: Album }) {
     ? `${base}thumbnails/${album.ThumbnailFileName}`
     : thumbnailPlaceholderUrl;
 
-  function handleRefAssignment(img: HTMLImageElement | null) {
-    imgRef.current = img;
-    if (img?.complete) {
-      setIsLoaded(true);
-    }
-  }
-
-  function handleImageLoad() {
-    setIsLoaded(true);
-  }
-
-  useEffect(function setupCleanup() {
-    function cancelImageDownload() {
+  useEffect(function scrollPastCancel() {
+    return () => {
       if (imgRef.current) {
         imgRef.current.src = "";
       }
-    }
-
-    return cancelImageDownload;
+    };
   }, []);
 
   const visibility = isLoaded ? "visible" : "hidden";
 
   return (
     <Card.Img
-      ref={handleRefAssignment}
-      onLoad={handleImageLoad}
+      ref={(img) => {
+        imgRef.current = img;
+        if (img?.complete) {
+          setIsLoaded(true);
+        }
+      }}
+      onLoad={() => setIsLoaded(true)}
       src={imageUrl}
       className="rounded-0 w-100"
       style={{
