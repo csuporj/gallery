@@ -21,8 +21,8 @@ function buildSearchParams(query: string, date: DateState): URLSearchParams {
 }
 
 export function useFilter() {
-  const [query, setQuery] = useState(
-    () => new URLSearchParams(window.location.search).get("q") ?? "",
+  const [query, setQuery] = useState(() =>
+    new URLSearchParams(window.location.search).get("q") ?? "",
   );
 
   const [dateFilter, setDateFilter] = useState(() =>
