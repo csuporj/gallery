@@ -3,8 +3,6 @@ import type { Album } from "./types";
 import { useState, memo, useEffect, useRef } from "react";
 import { Card } from "react-bootstrap";
 
-import { thumbnailPlaceholderUrl } from "./thumbnailPlaceholderUrl";
-
 function AlbumCardHeaderComponent({ album }: { album: Album }) {
   const [isLoaded, setIsLoaded] = useState(false);
   const imgRef = useRef<HTMLImageElement | null>(null);
@@ -12,7 +10,7 @@ function AlbumCardHeaderComponent({ album }: { album: Album }) {
 
   const imageUrl = album.ThumbnailFileName?.trim()
     ? `${base}thumbnails/${album.ThumbnailFileName}`
-    : thumbnailPlaceholderUrl;
+    : "https://placehold.co/1200x800?text=Image+Unavailable";
 
   useEffect(function scrollPastCancel() {
     return () => {
