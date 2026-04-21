@@ -3,7 +3,7 @@ import { VirtuosoGrid } from "react-virtuoso";
 
 import { useAlbumParams } from "./useAlbumParams";
 import { useAlbumFilters } from "./useAlbumFilters";
-import { useDynamicTitle } from "./useDynamicTitle";
+import { useTitle } from "./useTitle";
 
 import { AlbumCard } from "./AlbumCard";
 import { FilterForm } from "./FilterForm";
@@ -19,7 +19,7 @@ function getInitialGridCount(albumsLength: number) {
 export function App() {
   const { query, setQuery, dateFilter, setDateFilter } = useAlbumParams();
   const { filteredAlbums } = useAlbumFilters(query, dateFilter);
-  useDynamicTitle(query, dateFilter);
+  useTitle(query, dateFilter);
 
   const initialItemCount = getInitialGridCount(filteredAlbums.length);
 

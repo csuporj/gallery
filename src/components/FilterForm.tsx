@@ -3,7 +3,6 @@ import type { FilterFormProps } from "./types";
 import { useState, useEffect } from "react";
 import { Row, Col, Form } from "react-bootstrap";
 
-import { getTimestamp, IS_DEBUG } from "./debug";
 import { FilterDateSelects } from "./FilterDateSelects";
 
 export function FilterForm({
@@ -21,13 +20,6 @@ export function FilterForm({
     },
     [localQuery, setQuery],
   );
-
-  if (IS_DEBUG) {
-    console.log(
-      getTimestamp(),
-      `FilterForm ${localQuery} ${dateFilter?.y} ${dateFilter?.m} ${dateFilter?.d}`,
-    );
-  }
 
   return (
     <div className="mx-auto px-0 pt-2 pb-1 pt-md-1 pb-md-0 filter-form-width">

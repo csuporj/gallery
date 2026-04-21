@@ -4,11 +4,11 @@ import { Button } from "react-bootstrap";
 import { ChevronUp } from "react-bootstrap-icons";
 
 export function BackToTop() {
-  const isActive = useBackToTop();
+  const show = useBackToTop();
 
-  const opacity = isActive ? "opacity-100" : "opacity-0";
-  const transform = isActive ? "translateY(0)" : "translateY(20px)";
-  const pointerEvents = isActive ? "auto" : "none";
+  const opacity = show ? "opacity-100" : "opacity-0";
+  const transform = show ? "translateY(0)" : "translateY(20px)";
+  const pointerEvents = show ? "auto" : "none";
 
   return (
     <Button

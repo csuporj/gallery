@@ -8,7 +8,7 @@ const SCROLL_DELTA_UP = 10;
 const SCROLL_DELTA_DOWN = 1;
 
 export function useBackToTop() {
-  const [shouldShow, setShouldShow] = useState(false);
+  const [show, setShow] = useState(false);
   const isTouch = useIsTouch();
 
   const lastScrollY = useRef(0);
@@ -17,24 +17,25 @@ export function useBackToTop() {
   const lastShouldShowRef = useRef(false);
 
   useEffect(() => {
-    function checkAndNotify() {
-      const result =
+    function updateShow() {
+      const newShow =
         wasScrollingUpRef.current && (!isMovingRef.current || !isTouch);
+      if (newShow === lastShouldShowRef.current) {
+        return;
+      }
 
-      if (result === lastShouldShowRef.current) return;
+      lastShouldShowRef.current = newShow;
+      setShow(newShow);
 
-      lastShouldShowRef.current = result;
-      setShouldShow(result);
       if (IS_DEBUG) {
-        console.log(getTimestamp(), `useBackToTop ${result}`);
+        console.log(getTimestamp(), `useBackToTop ${newShow}`);
       }
     }
 
     function onScroll() {
+      isMovingRef.current = true;
       const currentY = window.scrollY;
       const lastY = lastScrollY.current;
-
-      isMovingRef.current = true;
 
       if (currentY < MIN_SCROLL_DEPTH) {
         wasScrollingUpRef.current = false;
@@ -45,12 +46,12 @@ export function useBackToTop() {
       }
 
       lastScrollY.current = currentY;
-      checkAndNotify();
+      updateShow();
     }
 
     function onScrollEnd() {
       isMovingRef.current = false;
-      checkAndNotify();
+      updateShow();
     }
 
     window.addEventListener("scroll", onScroll, { passive: true });
@@ -62,5 +63,5 @@ export function useBackToTop() {
     };
   }, [isTouch]);
 
-  return shouldShow;
+  return show;
 }

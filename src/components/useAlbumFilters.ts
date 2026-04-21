@@ -8,25 +8,24 @@ import { albums, parseDate } from "./albums";
 function isAlbumMatch(album: Album, query: string, filter: DateState) {
   const { m, d, y } = parseDate(album.AlbumDate);
   return (
-    (filter.y === "*" || y === filter.y) &&
-    (filter.m === "*" || m === filter.m) &&
-    (filter.d === "*" || d === filter.d) &&
+    (filter.y === "*" || filter.y === y) &&
+    (filter.m === "*" || filter.m === m) &&
+    (filter.d === "*" || filter.d === d) &&
     album.LinkText.toLowerCase().includes(query.toLowerCase())
   );
 }
 
 export function useAlbumFilters(query: string, dateFilter: DateState) {
-  const filteredAlbums = useMemo(
-    () => albums.filter((album) => isAlbumMatch(album, query, dateFilter)),
-    [query, dateFilter],
-  );
+  const filteredAlbums = useMemo(() => {
+    if (IS_DEBUG) {
+      console.log(
+        getTimestamp(),
+        `useAlbumFilters ${query} ${dateFilter?.y} ${dateFilter.m} ${dateFilter.d}`,
+      );
+    }
 
-  if (IS_DEBUG) {
-    console.log(
-      getTimestamp(),
-      `useAlbumFilters ${query} ${dateFilter?.y} ${dateFilter.m} ${dateFilter.d}`,
-    );
-  }
+    return albums.filter((album) => isAlbumMatch(album, query, dateFilter));
+  }, [query, dateFilter]);
 
   return { filteredAlbums };
 }

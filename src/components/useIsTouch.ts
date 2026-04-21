@@ -8,14 +8,10 @@ export function useIsTouch() {
       setIsTouch(window.matchMedia("(pointer: coarse)").matches);
     }
 
-    checkTouch();
-
     const monitor = window.matchMedia("(pointer: coarse)");
     monitor.addEventListener("change", checkTouch);
-
-    return function cleanupIsTouch() {
-      monitor.removeEventListener("change", checkTouch);
-    };
+    checkTouch();
+    return () => monitor.removeEventListener("change", checkTouch);
   }, []);
 
   return isTouch;
