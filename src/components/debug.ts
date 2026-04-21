@@ -1,4 +1,4 @@
-export const IS_DEBUG = import.meta.env.DEV;
+export const IS_DEBUG = true;
 
 export function getTimestamp(): string {
   const d = new Date();

@@ -12,17 +12,17 @@ export function FilterDateSelects({
   dateFilter,
   setDateFilter,
 }: FilterDateSelectsProps) {
-  const onYearChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  function onYearChange(e: React.ChangeEvent<HTMLSelectElement>) {
     setDateFilter({ ...dateFilter, y: e.target.value });
-  };
+  }
 
-  const onMonthChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  function onMonthChange(e: React.ChangeEvent<HTMLSelectElement>) {
     setDateFilter({ ...dateFilter, m: e.target.value });
-  };
+  }
 
-  const onDayChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  function onDayChange(e: React.ChangeEvent<HTMLSelectElement>) {
     setDateFilter({ ...dateFilter, d: e.target.value });
-  };
+  }
 
   const yearOptions = dateOptions.years.map((y) => (
     <option key={y} value={y}>
