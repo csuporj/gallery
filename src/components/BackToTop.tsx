@@ -6,17 +6,13 @@ import { ChevronUp } from "react-bootstrap-icons";
 export function BackToTop() {
   const isActive = useBackToTop();
 
-  function scrollToTop() {
-    window.scrollTo({ top: 0, behavior: "instant" });
-  }
-
   const opacity = isActive ? "opacity-100" : "opacity-0";
   const transform = isActive ? "translateY(0)" : "translateY(20px)";
   const pointerEvents = isActive ? "auto" : "none";
 
   return (
     <Button
-      onClick={scrollToTop}
+      onClick={() => window.scrollTo({ top: 0, behavior: "instant" })}
       className={`position-fixed bottom-0 end-0 mb-1 me-1 rounded-2 border-0 shadow-sm
         d-flex align-items-center justify-content-center bg-white text-black ${opacity}`}
       style={{

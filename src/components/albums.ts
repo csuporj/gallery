@@ -3,7 +3,6 @@ import type { Album } from "./types";
 import albumsData from "../albums.json";
 
 import { parseDate } from "./parseDate";
-import { monthOrder } from "./monthOrder";
 
 function getSortKey(dateStr: string): number {
   const { m, d, y } = parseDate(dateStr);
@@ -43,6 +42,21 @@ function getUniqueDateParts() {
     days: Array.from(days).sort((a, b) => Number(a) - Number(b)),
   };
 }
+
+const monthOrder = [
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec",
+];
 
 export const albums: Album[] = sortAlbumsByDate(albumsData as Album[]);
 export const dateOptions = getUniqueDateParts();
