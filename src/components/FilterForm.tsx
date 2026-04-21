@@ -16,32 +16,12 @@ export function FilterForm({
   const [localQuery, setLocalQuery] = useState(query);
 
   useEffect(
-    function syncWithParent() {
-      setLocalQuery(query);
+    function debounceQuery() {
+      const queryTimeout = setTimeout(() => setQuery(localQuery), 500);
+      return () => clearTimeout(queryTimeout);
     },
-    [query],
+    [localQuery, setQuery],
   );
-
-  useEffect(
-    function debounceEffect() {
-      function updateParentQuery() {
-        if (localQuery !== query) {
-          setQuery(localQuery);
-        }
-      }
-
-      const handler = setTimeout(updateParentQuery, 500);
-
-      return function cleanup() {
-        clearTimeout(handler);
-      };
-    },
-    [localQuery, setQuery, query],
-  );
-
-  function onQueryChange(e: React.ChangeEvent<HTMLInputElement>) {
-    setLocalQuery(e.target.value);
-  }
 
   if (IS_DEBUG) {
     console.log(
@@ -60,7 +40,7 @@ export function FilterForm({
             placeholder="Search..."
             spellCheck="false"
             value={localQuery}
-            onChange={onQueryChange}
+            onChange={(e) => setLocalQuery(e.target.value)}
           />
         </Col>
 
