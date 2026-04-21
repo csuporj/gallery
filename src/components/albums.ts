@@ -14,13 +14,13 @@ function getSortKey(dateStr: string): number {
   return Number(`${y}${mm}${dd}`);
 }
 
-function sortAlbumsByDate(data: Album[]): Album[] {
+function sortAlbums(data: Album[]): Album[] {
   return [...data].sort((a, b) => {
     return getSortKey(b.AlbumDate) - getSortKey(a.AlbumDate);
   });
 }
 
-function getUniqueDateParts() {
+function getDateOptions() {
   const years = new Set<string>();
   const months = new Set<string>();
   const days = new Set<string>();
@@ -46,7 +46,7 @@ export function parseDate(dateStr: string) {
   return match
     ? { m: match[1], d: match[2], y: match[3] }
     : { m: "", d: "", y: "" };
-};
+}
 
 const monthOrder = [
   "Jan",
@@ -63,5 +63,5 @@ const monthOrder = [
   "Dec",
 ];
 
-export const albums: Album[] = sortAlbumsByDate(albumsData as Album[]);
-export const dateOptions = getUniqueDateParts();
+export const albums: Album[] = sortAlbums(albumsData as Album[]);
+export const dateOptions = getDateOptions();
