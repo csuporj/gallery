@@ -1,9 +1,8 @@
 import type { Album } from "./types";
 
-import { memo } from "react";
 import { Card } from "react-bootstrap";
 
-function AlbumCardFooterComponent({ album }: { album: Album }) {
+export function AlbumCardFooter({ album }: { album: Album }) {
   return (
     <Card.Body
       className="d-flex align-items-center overflow-hidden bg-white rounded-0 p-0"
@@ -51,5 +50,3 @@ function AlbumCardFooterComponent({ album }: { album: Album }) {
     </Card.Body>
   );
 }
-
-export const AlbumCardFooter = memo(AlbumCardFooterComponent);

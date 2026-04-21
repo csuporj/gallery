@@ -1,9 +1,9 @@
 import type { Album } from "./types";
 
-import { useState, memo, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Card } from "react-bootstrap";
 
-function AlbumCardHeaderComponent({ album }: { album: Album }) {
+export function AlbumCardHeader({ album }: { album: Album }) {
   const [isLoaded, setIsLoaded] = useState(false);
   const imgRef = useRef<HTMLImageElement | null>(null);
 
@@ -38,5 +38,3 @@ function AlbumCardHeaderComponent({ album }: { album: Album }) {
     />
   );
 }
-
-export const AlbumCardHeader = memo(AlbumCardHeaderComponent);

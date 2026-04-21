@@ -1,12 +1,11 @@
 import type { Album } from "./types";
 
-import { memo } from "react";
 import { Card } from "react-bootstrap";
 
 import { AlbumCardHeader } from "./AlbumCardHeader";
 import { AlbumCardFooter } from "./AlbumCardFooter";
 
-function AlbumCardComponent({ album }: { album: Album }) {
+export function AlbumCard({ album }: { album: Album }) {
   if (!album) return null;
 
   return (
@@ -27,5 +26,3 @@ function AlbumCardComponent({ album }: { album: Album }) {
     </a>
   );
 }
-
-export const AlbumCard = memo(AlbumCardComponent);
