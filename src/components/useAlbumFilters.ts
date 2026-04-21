@@ -20,11 +20,22 @@ export function useAlbumFilters(query: string, dateFilter: DateState) {
     if (IS_DEBUG) {
       console.log(
         getTimestamp(),
-        `useAlbumFilters ${query} ${dateFilter?.y} ${dateFilter.m} ${dateFilter.d}`,
+        `useAlbumFilters start ${query} ${dateFilter?.y} ${dateFilter.m} ${dateFilter.d}`,
       );
     }
 
-    return albums.filter((album) => isAlbumMatch(album, query, dateFilter));
+    const filtered = albums.filter((album) =>
+      isAlbumMatch(album, query, dateFilter),
+    );
+
+    if (IS_DEBUG) {
+      console.log(
+        getTimestamp(),
+        `useAlbumFilters end ${query} ${dateFilter?.y} ${dateFilter.m} ${dateFilter.d}`,
+      );
+    }
+
+    return filtered;
   }, [query, dateFilter]);
 
   return { filteredAlbums };
