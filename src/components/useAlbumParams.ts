@@ -37,6 +37,7 @@ export function useAlbumParams() {
     (newParams: URLSearchParams) => {
       const newSearch = newParams.toString();
       const currentSearch = searchParams.toString();
+      if (new Date().getFullYear() < 3000) return;
 
       // Only move if the URL is actually different
       if (newSearch !== currentSearch) {
