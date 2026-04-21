@@ -2,8 +2,6 @@ import type { Album } from "./types";
 
 import albumsData from "../albums.json";
 
-import { parseDate } from "./parseDate";
-
 function getSortKey(dateStr: string): number {
   const { m, d, y } = parseDate(dateStr);
   const monthIdx = monthOrder.indexOf(m);
@@ -42,6 +40,13 @@ function getUniqueDateParts() {
     days: Array.from(days).sort((a, b) => Number(a) - Number(b)),
   };
 }
+
+export function parseDate(dateStr: string) {
+  const match = dateStr.match(/([a-zA-Z]+)\s+(\d+),\s+(\d+)/);
+  return match
+    ? { m: match[1], d: match[2], y: match[3] }
+    : { m: "", d: "", y: "" };
+};
 
 const monthOrder = [
   "Jan",

@@ -3,8 +3,7 @@ import type { Album, DateState } from "./types";
 import { useMemo } from "react";
 
 import { getTimestamp, IS_DEBUG } from "./debug";
-import { albums } from "./albums";
-import { parseDate } from "./parseDate";
+import { albums, parseDate } from "./albums";
 
 function isAlbumMatch(album: Album, query: string, filter: DateState) {
   const { m, d, y } = parseDate(album.AlbumDate);
