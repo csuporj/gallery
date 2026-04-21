@@ -1,8 +1,8 @@
 import { Container } from "react-bootstrap";
 import { VirtuosoGrid } from "react-virtuoso";
 
-import { useAlbumParams } from "./useAlbumParams";
-import { useAlbumFilters } from "./useAlbumFilters";
+import { useFilter } from "./useFilter";
+import { useFilteredAlbums } from "./useFilteredAlbums";
 import { useTitle } from "./useTitle";
 
 import { AlbumCard } from "./AlbumCard";
@@ -17,8 +17,8 @@ function getInitialGridCount(albumsLength: number) {
 }
 
 export function App() {
-  const { query, setQuery, dateFilter, setDateFilter } = useAlbumParams();
-  const { filteredAlbums } = useAlbumFilters(query, dateFilter);
+  const { query, setQuery, dateFilter, setDateFilter } = useFilter();
+  const { filteredAlbums } = useFilteredAlbums(query, dateFilter);
   useTitle(query, dateFilter);
 
   const initialItemCount = getInitialGridCount(filteredAlbums.length);

@@ -22,7 +22,7 @@ function buildSearchParams(query: string, date: DateState): URLSearchParams {
   return params;
 }
 
-export function useAlbumParams() {
+export function useFilter() {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const query = searchParams.get("q") ?? "";

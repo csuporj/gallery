@@ -15,7 +15,7 @@ function isAlbumMatch(album: Album, query: string, filter: DateState) {
   );
 }
 
-export function useAlbumFilters(query: string, dateFilter: DateState) {
+export function useFilteredAlbums(query: string, dateFilter: DateState) {
   const filteredAlbums = useMemo(() => {
     if (IS_DEBUG) {
       console.log(
