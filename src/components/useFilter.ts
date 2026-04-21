@@ -1,5 +1,4 @@
 import type { DateState } from "./types";
-
 import { useState } from "react";
 
 function parseDateFilter(params: URLSearchParams): DateState {
@@ -22,11 +21,34 @@ function buildSearchParams(query: string, date: DateState): URLSearchParams {
 }
 
 export function useFilter() {
-  const urlParams = new URLSearchParams(window.location.search);
-  const [query, setQuery] = useState(urlParams.get("q") ?? "");
-  const [dateFilter, setDateFilter] = useState(parseDateFilter(urlParams));
+  const [query, setQuery] = useState(
+    () => new URLSearchParams(window.location.search).get("q") ?? "",
+  );
 
-  const searchParams = buildSearchParams(query, dateFilter);
-  window.history.replaceState(null, "", "?" + searchParams.toString());
-  return { query, setQuery, dateFilter, setDateFilter };
+  const [dateFilter, setDateFilter] = useState(() =>
+    parseDateFilter(new URLSearchParams(window.location.search)),
+  );
+
+  function replaceUrl(newQuery: string, newDate: DateState) {
+    const params = buildSearchParams(newQuery, newDate).toString();
+    const url = params ? `?${params}` : window.location.pathname;
+    window.history.replaceState(null, "", url);
+  }
+
+  function updateQuery(newQuery: string) {
+    setQuery(newQuery);
+    replaceUrl(newQuery, dateFilter);
+  }
+
+  function updateDate(newDate: DateState) {
+    setDateFilter(newDate);
+    replaceUrl(query, newDate);
+  }
+
+  return {
+    query,
+    setQuery: updateQuery,
+    dateFilter,
+    setDateFilter: updateDate,
+  };
 }
