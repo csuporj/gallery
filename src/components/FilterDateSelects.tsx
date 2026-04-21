@@ -2,11 +2,12 @@ import type { FilterFormProps } from "./types";
 
 import { Col, Form } from "react-bootstrap";
 
+import { dateOptions } from "./albums";
+
 export function FilterDateSelects({
-  dateOptions,
   dateFilter,
   setDateFilter,
-}: Pick<FilterFormProps, "dateOptions" | "dateFilter" | "setDateFilter">) {
+}: Pick<FilterFormProps, "dateFilter" | "setDateFilter">) {
   const yearSelect = (
     <Col md={2} xs={4}>
       <Form.Select

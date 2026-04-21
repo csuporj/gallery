@@ -7,7 +7,6 @@ import { getTimestamp, IS_DEBUG } from "./debug";
 import { FilterDateSelects } from "./FilterDateSelects";
 
 export function FilterForm({
-  dateOptions,
   query,
   setQuery,
   dateFilter,
@@ -45,7 +44,6 @@ export function FilterForm({
         </Col>
 
         <FilterDateSelects
-          dateOptions={dateOptions}
           dateFilter={dateFilter}
           setDateFilter={setDateFilter}
         />

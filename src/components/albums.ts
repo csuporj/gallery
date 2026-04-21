@@ -23,4 +23,26 @@ function sortAlbumsByDate(data: Album[]): Album[] {
   });
 }
 
+function getUniqueDateParts() {
+  const years = new Set<string>();
+  const months = new Set<string>();
+  const days = new Set<string>();
+
+  albums.forEach((album) => {
+    const { m, d, y } = parseDate(album.AlbumDate);
+    if (y) years.add(y);
+    if (m) months.add(m);
+    if (d) days.add(d);
+  });
+
+  return {
+    years: Array.from(years).sort((a, b) => Number(b) - Number(a)),
+    months: Array.from(months).sort(
+      (a, b) => monthOrder.indexOf(a) - monthOrder.indexOf(b),
+    ),
+    days: Array.from(days).sort((a, b) => Number(a) - Number(b)),
+  };
+}
+
 export const albums: Album[] = sortAlbumsByDate(albumsData as Album[]);
+export const dateOptions = getUniqueDateParts();
