@@ -1,4 +1,6 @@
 import { useState, useEffect, useRef } from "react";
+
+import { getTimestamp, IS_DEBUG } from "./debug";
 import { useIsTouch } from "./useIsTouch";
 
 const MIN_SCROLL_DEPTH = 400;
@@ -23,7 +25,9 @@ export function useBackToTop() {
 
       lastShouldShowRef.current = result;
       setShouldShow(result);
-      console.log(`useBackToTop ${result}`);
+      if (IS_DEBUG) {
+        console.log(getTimestamp(), `useBackToTop ${result}`);
+      }
     }
 
     function onScroll() {

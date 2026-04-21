@@ -2,6 +2,7 @@ import type { Album, DateState } from "./types";
 
 import { useMemo, useDeferredValue } from "react";
 
+import { getTimestamp, IS_DEBUG } from "./debug";
 import { albums } from "./albums";
 import { monthOrder } from "./monthOrder";
 import { parseDate } from "./parseDate";
@@ -62,9 +63,12 @@ export function useAlbumFilters(query: string, dateFilter: DateState) {
     [deferredQuery, dateFilter],
   );
 
-  console.log(
-    `useAlbumFilters ${deferredQuery} ${dateFilter?.y} ${dateFilter.m} ${dateFilter.d}`,
-  );
+  if (IS_DEBUG) {
+    console.log(
+      getTimestamp(),
+      `useAlbumFilters ${deferredQuery} ${dateFilter?.y} ${dateFilter.m} ${dateFilter.d}`,
+    );
+  }
 
   return { dateOptions, filteredAlbums };
 }

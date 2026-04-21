@@ -3,6 +3,7 @@ import type { FilterFormProps } from "./types";
 import { useState, useEffect } from "react";
 import { Row, Col, Form } from "react-bootstrap";
 
+import { getTimestamp, IS_DEBUG } from "./debug";
 import { FilterDateSelects } from "./FilterDateSelects";
 
 export function FilterForm({
@@ -14,27 +15,40 @@ export function FilterForm({
 }: FilterFormProps) {
   const [localQuery, setLocalQuery] = useState(query);
 
-  useEffect(() => {
-    setLocalQuery(query);
-  }, [query]);
-
-  useEffect(() => {
-    const handler = setTimeout(() => {
-      if (localQuery !== query) {
-        setQuery(localQuery);
-      }
-    }, 500);
-
-    return () => clearTimeout(handler);
-  }, [localQuery, setQuery, query]);
-
-  const onQueryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setLocalQuery(e.target.value);
-  };
-
-  console.log(
-    `FilterForm ${localQuery} ${dateFilter?.y} ${dateFilter.m} ${dateFilter.d}`,
+  useEffect(
+    function syncWithParent() {
+      setLocalQuery(query);
+    },
+    [query],
   );
+
+  useEffect(
+    function debounceEffect() {
+      function updateParentQuery() {
+        if (localQuery !== query) {
+          setQuery(localQuery);
+        }
+      }
+
+      const handler = setTimeout(updateParentQuery, 500);
+
+      return function cleanup() {
+        clearTimeout(handler);
+      };
+    },
+    [localQuery, setQuery, query],
+  );
+
+  function onQueryChange(e: React.ChangeEvent<HTMLInputElement>) {
+    setLocalQuery(e.target.value);
+  }
+
+  if (IS_DEBUG) {
+    console.log(
+      getTimestamp(),
+      `FilterForm ${localQuery} ${dateFilter?.y} ${dateFilter?.m} ${dateFilter?.d}`,
+    );
+  }
 
   return (
     <div className="mx-auto px-0 pt-2 pb-1 pt-md-1 pb-md-0 filter-form-width">

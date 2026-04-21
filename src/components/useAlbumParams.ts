@@ -3,6 +3,8 @@ import type { DateState } from "./types";
 import { useCallback, useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
 
+import { getTimestamp, IS_DEBUG } from "./debug";
+
 function parseDateFilter(params: URLSearchParams): DateState {
   return {
     y: params.get("y") ?? "*",
@@ -66,9 +68,12 @@ export function useAlbumParams() {
     [setSearchParams],
   );
 
-  console.log(
-    `useAlbumParams ${query} ${dateFilter?.y} ${dateFilter.m} ${dateFilter.d}`,
-  );
+  if (IS_DEBUG) {
+    console.log(
+      getTimestamp(),
+      `useAlbumParams ${query} ${dateFilter?.y} ${dateFilter.m} ${dateFilter.d}`,
+    );
+  }
 
   return { query, setQuery, dateFilter, setDateFilter };
 }

@@ -2,6 +2,8 @@ import type { DateState } from "./types";
 
 import { useEffect } from "react";
 
+import { getTimestamp, IS_DEBUG } from "./debug";
+
 function formatDate(dateFilter: DateState): string {
   const { y, m, d } = dateFilter;
 
@@ -35,6 +37,8 @@ export function useDynamicTitle(query: string, dateFilter: DateState) {
   useEffect(() => {
     const dateString = formatDate(dateFilter);
     document.title = formatTitle(query, dateString);
-    console.log(`useDynamicTitle ${document.title}`);
+    if (IS_DEBUG) {
+      console.log(getTimestamp(), `useDynamicTitle ${document.title}`);
+    }
   }, [query, dateFilter]);
 }
