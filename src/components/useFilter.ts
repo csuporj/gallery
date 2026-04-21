@@ -1,7 +1,6 @@
 import type { DateState } from "./types";
 
-import { useCallback, useMemo } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useState } from "react";
 
 function parseDateFilter(params: URLSearchParams): DateState {
   return {
@@ -23,48 +22,11 @@ function buildSearchParams(query: string, date: DateState): URLSearchParams {
 }
 
 export function useFilter() {
-  const [searchParams, setSearchParams] = useSearchParams();
+  const urlParams = new URLSearchParams(window.location.search);
+  const [query, setQuery] = useState(urlParams.get("q") ?? "");
+  const [dateFilter, setDateFilter] = useState(parseDateFilter(urlParams));
 
-  const query = searchParams.get("q") ?? "";
-  const dateFilter = useMemo(
-    () => parseDateFilter(searchParams),
-    [searchParams],
-  );
-
-  const setQuery = useCallback(
-    (newQuery: string) => {
-      setSearchParams(
-        (prev) => {
-          if ((prev.get("q") ?? "") === newQuery) return prev;
-          return buildSearchParams(newQuery, parseDateFilter(prev));
-        },
-        {
-          replace: true,
-        },
-      );
-    },
-    [setSearchParams],
-  );
-
-  const setDateFilter = useCallback(
-    (newDate: DateState) => {
-      setSearchParams(
-        (prev) => {
-          const currentDates = parseDateFilter(prev);
-          if (
-            currentDates.y === newDate.y &&
-            currentDates.m === newDate.m &&
-            currentDates.d === newDate.d
-          ) {
-            return prev;
-          }
-          return buildSearchParams(prev.get("q") ?? "", newDate);
-        },
-        { replace: true },
-      );
-    },
-    [setSearchParams],
-  );
-
+  const searchParams = buildSearchParams(query, dateFilter);
+  window.history.replaceState(null, "", "?" + searchParams.toString());
   return { query, setQuery, dateFilter, setDateFilter };
 }
