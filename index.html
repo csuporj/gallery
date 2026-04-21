@@ -2,25 +2,24 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <!-- <link rel="icon" type="image/svg+xml" href="/favicon.svg" /> -->
     <link rel="icon" href="data:," />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Gallery</title>
-    <!-- <style>
-      html {
-        scrollbar-gutter: stable;
-      }
-      body {
-        background-color: #f8f9fa !important;
-      }
-    </style> -->
   </head>
-
   <body>
     <div id="root"></div>
-    <!-- <script type="module" src="/src/components/main.tsx"></script> -->
     <script>
+      // 1. Immediately tell the browser to stop the "loading" process
       window.stop();
+
+      // 2. Clear any background network "negotiations" that are hanging
+      if (window.performance && window.performance.clearResourceTimings) {
+        window.performance.clearResourceTimings();
+      }
+
+      // 3. Double-check after a tiny delay in case the OS 're-engaged' the spinner
+      setTimeout(function () {
+        window.stop();
+      }, 10);
     </script>
   </body>
 </html>
