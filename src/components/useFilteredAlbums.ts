@@ -22,7 +22,7 @@ export function useFilteredAlbums(query: string, dateFilter: DateState) {
     if (IS_DEBUG) {
       console.log(
         getTimestamp(),
-        `useAlbumFilters start ${query} ${dateFilter?.y} ${dateFilter.m} ${dateFilter.d}`,
+        `useFilteredAlbums start ${query} ${dateFilter?.y} ${dateFilter.m} ${dateFilter.d}`,
       );
     }
 
@@ -33,7 +33,7 @@ export function useFilteredAlbums(query: string, dateFilter: DateState) {
     if (IS_DEBUG) {
       console.log(
         getTimestamp(),
-        `useAlbumFilters end ${query} ${dateFilter?.y} ${dateFilter.m} ${dateFilter.d}`,
+        `useFilteredAlbums end ${query} ${dateFilter?.y} ${dateFilter.m} ${dateFilter.d}`,
       );
     }
 

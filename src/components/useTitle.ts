@@ -38,7 +38,7 @@ export function useTitle(query: string, dateFilter: DateState) {
     const dateString = formatDate(dateFilter);
     document.title = formatTitle(query, dateString);
     if (IS_DEBUG) {
-      console.log(getTimestamp(), `useDynamicTitle ${document.title}`);
+      console.log(getTimestamp(), `useTitle ${document.title}`);
     }
   }, [query, dateFilter]);
 }
