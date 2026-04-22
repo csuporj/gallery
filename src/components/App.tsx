@@ -18,8 +18,8 @@ function getInitialGridCount(albumsLength: number) {
 
 export function App() {
   const { query, setQuery, dateFilter, setDateFilter } = useFilter();
-  const { filteredAlbums } = useFilteredAlbums(query, dateFilter);
   useTitle(query, dateFilter);
+  const { filteredAlbums } = useFilteredAlbums(query, dateFilter);
 
   const initialItemCount = getInitialGridCount(filteredAlbums.length);
 

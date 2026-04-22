@@ -52,10 +52,18 @@ function getDateOptions() {
 }
 
 export function parseDate(dateStr: string) {
-  const match = dateStr.match(/([a-zA-Z]+)\s+(\d+),\s+(\d+)/);
-  return match
-    ? { m: match[1], d: match[2], y: match[3] }
-    : { m: "", d: "", y: "" };
+  const spaceIdx = dateStr.indexOf(" ");
+  const commaIdx = dateStr.indexOf(",");
+
+  if (spaceIdx === -1 || commaIdx === -1) {
+    return { m: "", d: "", y: "" };
+  }
+
+  return {
+    m: dateStr.slice(0, spaceIdx),
+    d: dateStr.slice(spaceIdx + 1, commaIdx),
+    y: dateStr.slice(commaIdx + 2),
+  };
 }
 
 const monthOrder = [
