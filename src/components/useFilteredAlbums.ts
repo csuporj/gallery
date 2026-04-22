@@ -7,13 +7,12 @@ import { albums, parseDate } from "./albums";
 
 function isAlbumMatch(album: Album, query: string, filter: DateState) {
   const { m, d, y } = parseDate(album.AlbumDate);
-  const q = query.toLowerCase();
 
   return (
     (filter.y === "*" || filter.y === y) &&
     (filter.m === "*" || filter.m === m) &&
     (filter.d === "*" || filter.d === d) &&
-    album.LinkText.toLowerCase().includes(q)
+    album.LinkText.toLowerCase().includes(query.toLowerCase())
   );
 }
 

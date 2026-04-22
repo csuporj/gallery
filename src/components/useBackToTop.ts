@@ -4,7 +4,7 @@ import { getTimestamp, IS_DEBUG } from "./debug";
 import { useIsTouch } from "./useIsTouch";
 
 const MIN_SCROLL_DEPTH = 400;
-const SCROLL_DELTA_UP = 10;
+const SCROLL_DELTA_UP = 5;
 const SCROLL_DELTA_DOWN = 1;
 
 export function useBackToTop() {
