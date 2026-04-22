@@ -3,8 +3,19 @@ import type { Album } from "./types";
 import albumsData from "../albums.json";
 import { getTimestamp, IS_DEBUG } from "./debug";
 
-function getSortKey(dateStr: string): number {
-  const { m, d, y } = parseDate(dateStr);
+function sortWithKey<T>(
+  array: T[],
+  getSortKey: (item: T) => number,
+  desc = false,
+): T[] {
+  return array
+    .map((item) => ({ item, key: getSortKey(item) }))
+    .sort((a, b) => (desc ? b.key - a.key : a.key - b.key))
+    .map(({ item }) => item);
+}
+
+function getSortKey(album: Album): number {
+  const { m, d, y } = parseDate(album.AlbumDate);
   const monthIdx = monthOrder.indexOf(m);
 
   if (monthIdx === -1 || !y) return 0;
@@ -16,9 +27,7 @@ function getSortKey(dateStr: string): number {
 }
 
 function sortAlbums(data: Album[]): Album[] {
-  return [...data].sort((a, b) => {
-    return getSortKey(b.AlbumDate) - getSortKey(a.AlbumDate);
-  });
+  return sortWithKey(data, getSortKey, true);
 }
 
 function getDateOptions() {
@@ -68,6 +77,9 @@ if (IS_DEBUG) {
   console.log(getTimestamp(), "albums.ts start");
 }
 export const albums: Album[] = sortAlbums(albumsData as Album[]);
+if (IS_DEBUG) {
+  console.log(getTimestamp(), "albums.ts middle");
+}
 export const dateOptions = getDateOptions();
 if (IS_DEBUG) {
   console.log(getTimestamp(), "albums.ts end");
