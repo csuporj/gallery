@@ -1,6 +1,6 @@
 import type { Album } from "./types";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useRef } from "react";
 import { Card } from "react-bootstrap";
 
 export function AlbumCardHeader({ album }: { album: Album }) {
