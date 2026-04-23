@@ -3,6 +3,11 @@ import { useBackToTop } from "./useBackToTop";
 import { Button } from "react-bootstrap";
 import { ChevronUp } from "react-bootstrap-icons";
 
+function scrollToTop() {
+  window.scrollTo({ top: 0, behavior: "instant" });
+  document.getElementById("query")?.focus();
+}
+
 export function BackToTop() {
   const show = useBackToTop();
 
@@ -12,7 +17,7 @@ export function BackToTop() {
 
   return (
     <Button
-      onClick={() => window.scrollTo({ top: 0, behavior: "instant" })}
+      onClick={scrollToTop}
       className={`position-fixed bottom-0 end-0 mb-1 me-1 rounded-2 border-0 shadow-sm
         d-flex align-items-center justify-content-center bg-white text-black ${opacity}`}
       aria-label="back to top"
