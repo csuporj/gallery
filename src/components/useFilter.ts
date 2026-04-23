@@ -36,11 +36,19 @@ export function useFilter() {
   }
 
   function updateQuery(newQuery: string) {
+    if (newQuery === query) return;
     replaceUrl(newQuery, dateFilter);
     setQuery(newQuery);
   }
 
   function updateDate(newDate: DateState) {
+    if (
+      newDate.y === dateFilter.y &&
+      newDate.m === dateFilter.m &&
+      newDate.d === dateFilter.d
+    ) {
+      return;
+    }
     replaceUrl(query, newDate);
     setDateFilter(newDate);
   }
