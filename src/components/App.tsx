@@ -28,7 +28,7 @@ export function App() {
 
   // scroll to top on reload, dont break bfcache
   useEffect(() => {
-    const timer = setTimeout(() => setIsReady(true), 1000);
+    const timer = setTimeout(() => setIsReady(true), 100);
     return () => clearTimeout(timer);
   }, []);
 
