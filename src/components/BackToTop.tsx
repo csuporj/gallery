@@ -15,6 +15,7 @@ export function BackToTop() {
       onClick={() => window.scrollTo({ top: 0, behavior: "instant" })}
       className={`position-fixed bottom-0 end-0 mb-1 me-1 rounded-2 border-0 shadow-sm
         d-flex align-items-center justify-content-center bg-white text-black ${opacity}`}
+      aria-label="back to top"
       style={{
         zIndex: 9999,
         width: "60px",

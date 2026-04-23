@@ -29,6 +29,7 @@ export function AlbumCardHeader({ album }: { album: Album }) {
       }}
       onLoad={() => setIsLoaded(true)}
       src={imageUrl}
+      alt={`${album.LinkText} ${album.AlbumDate}`}
       className="rounded-0 w-100"
       style={{
         aspectRatio: "600 / 400",
