@@ -63,5 +63,5 @@ export function useBackToTop() {
     };
   }, [isTouch]);
 
-  return show;
+  return { show, isTouch };
 }

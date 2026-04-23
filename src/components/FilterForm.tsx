@@ -26,7 +26,7 @@ export function FilterForm({
       <Row className="gx-1 gy-2 gy-md-1 justify-content-center">
         <Col md={6} xs={12}>
           <Form.Control
-            id="query"
+            id="search"
             type="search"
             name="s"
             placeholder="Search..."
