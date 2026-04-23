@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { Container } from "react-bootstrap";
 import { VirtuosoGrid } from "react-virtuoso";
 
@@ -23,6 +24,14 @@ export function App() {
 
   const initialItemCount = getInitialGridCount(filteredAlbums.length);
 
+  const [isReady, setIsReady] = useState(false);
+
+  // scroll to top on reload, dont break bfcache
+  useEffect(() => {
+    const timer = setTimeout(() => setIsReady(true), 1);
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
     <Container fluid className="px-0 pt-0 pb-1">
       <FilterForm
@@ -32,7 +41,7 @@ export function App() {
         setDateFilter={setDateFilter}
       />
 
-      {filteredAlbums?.length === 0 ? (
+      {!isReady ? null : filteredAlbums?.length === 0 ? (
         <div className="mt-1 text-center">No results found.</div>
       ) : (
         <VirtuosoGrid
