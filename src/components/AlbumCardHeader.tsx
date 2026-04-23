@@ -11,14 +11,6 @@ export function AlbumCardHeader({ album }: { album: Album }) {
     ? `${import.meta.env.BASE_URL}thumbnails/${album.ThumbnailFileName}`
     : "https://placehold.co/1200x800?text=Image+Unavailable";
 
-  useEffect(function scrollPastCancel() {
-    return () => {
-      if (imgRef.current) {
-        imgRef.current.src = "";
-      }
-    };
-  }, []);
-
   return (
     <Card.Img
       ref={(img) => {
