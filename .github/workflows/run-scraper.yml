@@ -7,15 +7,11 @@ on:
 
 permissions:
   contents: write
-  pages: write
-  id-token: write
+  deployments: write
 
 jobs:
   scrape-and-commit:
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
 
     steps:
       - name: Checkout Gallery
@@ -60,13 +56,11 @@ jobs:
           npm ci
           npm run build
 
-      - name: Upload Artifact
+      - name: Deploy to Cloudflare Pages
         if: steps.auto-commit.outputs.changes_detected == 'true'
-        uses: actions/upload-pages-artifact@v5
+        uses: cloudflare/wrangler-action@v3
         with:
-          path: ./gallery-dir/dist
-
-      - name: Deploy to GitHub Pages
-        if: steps.auto-commit.outputs.changes_detected == 'true'
-        id: deployment
-        uses: actions/deploy-pages@v5
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          workingDirectory: ./gallery-dir
+          command: pages deploy dist --project-name=csuporj-gallery
