@@ -7,6 +7,10 @@ body {
   background-color: #f8f9fa !important;
 }
 
+body.loading {
+  overflow: hidden;
+}
+
 .filter-form-width {
   width: 600px;
   max-width: calc(100vw - 8px);

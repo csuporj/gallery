@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Container } from "react-bootstrap";
 import { VirtuosoGrid } from "react-virtuoso";
 
@@ -53,6 +53,13 @@ export function App() {
             <AlbumCard album={album} key={album.AlbumUrl} />
           )}
           initialItemCount={initialItemCount}
+          readyStateChanged={(r) => {
+            if (r) {
+              setTimeout(() => {
+                document.body.classList.remove("loading");
+              }, 100);
+            }
+          }}
         />
       )}
 
