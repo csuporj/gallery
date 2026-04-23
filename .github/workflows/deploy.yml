@@ -28,7 +28,6 @@ jobs:
       - name: Deploy to Cloudflare Pages
         uses: cloudflare/wrangler-action@v3
         with:
-          # Use brackets to hide the 'secrets' keyword from the linter
-          apiToken: ${{ fromJSON('[secrets.CLOUDFLARE_API_TOKEN]')[0] }}
-          accountId: ${{ fromJSON('[secrets.CLOUDFLARE_ACCOUNT_ID]')[0] }}
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           command: pages deploy dist --project-name=csuporj-gallery
