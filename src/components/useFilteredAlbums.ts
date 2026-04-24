@@ -18,19 +18,12 @@ function isAlbumMatch(album: Album, filter: Filter) {
 
 export function useFilteredAlbums(filter: Filter) {
   const filteredAlbums = useMemo(() => {
-    if (IS_DEBUG) {
-      console.log(
-        getTimestamp(),
-        `useFilteredAlbums start ${filter.s} ${filter.y} ${filter.m} ${filter.d}`,
-      );
-    }
-
     const filtered = albums.filter((album) => isAlbumMatch(album, filter));
 
     if (IS_DEBUG) {
       console.log(
         getTimestamp(),
-        `useFilteredAlbums end ${filter.s} ${filter.y} ${filter.m} ${filter.d}`,
+        `useFilteredAlbums ${filter.s} ${filter.y} ${filter.m} ${filter.d}`,
       );
     }
 

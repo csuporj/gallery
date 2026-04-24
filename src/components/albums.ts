@@ -85,10 +85,4 @@ if (IS_DEBUG) {
   console.log(getTimestamp(), "albums.ts start");
 }
 export const albums: Album[] = sortAlbums(albumsData as Album[]);
-if (IS_DEBUG) {
-  console.log(getTimestamp(), "albums.ts middle");
-}
 export const dateOptions = getDateOptions();
-if (IS_DEBUG) {
-  console.log(getTimestamp(), "albums.ts end");
-}
