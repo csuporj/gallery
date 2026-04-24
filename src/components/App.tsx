@@ -25,7 +25,7 @@ export function App() {
 
   const initialItemCount = getInitialGridCount(filteredAlbums.length);
 
-  // scroll to top on reload, dont break bfcache
+  // scroll to top on reload, do not break bfcache
   useEffect(() => {
     const timer = setTimeout(() => setIsReady(true), 100);
     return () => clearTimeout(timer);
