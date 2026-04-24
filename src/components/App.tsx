@@ -21,10 +21,9 @@ export function App() {
   const { query, setQuery, dateFilter, setDateFilter } = useFilter();
   useTitle(query, dateFilter);
   const { filteredAlbums } = useFilteredAlbums(query, dateFilter);
+  const [isReady, setIsReady] = useState(false);
 
   const initialItemCount = getInitialGridCount(filteredAlbums.length);
-
-  const [isReady, setIsReady] = useState(false);
 
   // scroll to top on reload, dont break bfcache
   useEffect(() => {
