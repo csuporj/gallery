@@ -20,13 +20,10 @@ export function FilterForm({
 }: FilterFormProps) {
   const [localS, setLocalS] = useState(filter.s);
 
-  useEffect(
-    function debounceQuery() {
-      const queryTimeout = setTimeout(() => setS(localS), 500);
-      return () => clearTimeout(queryTimeout);
-    },
-    [localS, setS],
-  );
+  useEffect(() => {
+    const queryTimeout = setTimeout(() => setS(localS), 500);
+    return () => clearTimeout(queryTimeout);
+  }, [localS, setS]);
 
   return (
     <div className="mx-auto px-0 pt-2 pb-1 pt-md-1 pb-md-0 filter-form-width">

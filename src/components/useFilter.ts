@@ -1,3 +1,4 @@
+import { IS_DEBUG, getTimestamp } from "./debug";
 import type { Filter } from "./types";
 import { useState } from "react";
 
@@ -21,8 +22,8 @@ function filterToUrl(filter: Filter): URLSearchParams {
   return params;
 }
 
-function replaceUrl(f: Filter) {
-  const params = filterToUrl(f).toString();
+function replaceUrl(filter: Filter) {
+  const params = filterToUrl(filter).toString();
   const url = params ? `?${params}` : window.location.pathname;
   window.history.replaceState(null, "", url);
 }
@@ -38,8 +39,14 @@ export function useFilter() {
       if (oldFilter.s === s) {
         return oldFilter;
       }
+
+      if (IS_DEBUG) {
+        console.log(getTimestamp(), `setS ${oldFilter.s} ${s}`);
+      }
+
       const newFilter = { ...oldFilter, s };
       replaceUrl(newFilter);
+
       return newFilter;
     });
   }
@@ -49,8 +56,13 @@ export function useFilter() {
       if (oldFilter.y === y) {
         return oldFilter;
       }
+
       const newFilter = { ...oldFilter, y };
       replaceUrl(newFilter);
+      if (IS_DEBUG) {
+        console.log(getTimestamp(), `setY ${oldFilter.y} ${y}`);
+      }
+
       return newFilter;
     });
   }
@@ -62,6 +74,10 @@ export function useFilter() {
       }
       const newFilter = { ...oldFilter, m };
       replaceUrl(newFilter);
+      if (IS_DEBUG) {
+        console.log(getTimestamp(), `setM ${oldFilter.m} ${m}`);
+      }
+
       return newFilter;
     });
   }
@@ -71,8 +87,13 @@ export function useFilter() {
       if (oldFilter.d === d) {
         return oldFilter;
       }
+
       const newFilter = { ...oldFilter, d };
       replaceUrl(newFilter);
+      if (IS_DEBUG) {
+        console.log(getTimestamp(), `setD ${oldFilter.d} ${d}`);
+      }
+
       return newFilter;
     });
   }
