@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Container } from "react-bootstrap";
 import { VirtuosoGrid } from "react-virtuoso";
 
+import { getTimestamp, IS_DEBUG } from "./debug";
 import { useFilter } from "./useFilter";
 import { useFilteredAlbums } from "./useFilteredAlbums";
 import { useTitle } from "./useTitle";
@@ -15,6 +16,13 @@ function getInitialGridCount(albumsLength: number) {
   const cols = Math.max(1, Math.floor(window.innerWidth / 608));
   const rows = Math.ceil(window.innerHeight / 456);
   return Math.min(cols * rows, albumsLength);
+}
+
+function showScrollbar() {
+  document.body.classList.remove("loading");
+  if (IS_DEBUG) {
+    console.log(getTimestamp(), "showScrollbar");
+  }
 }
 
 export function App() {
@@ -56,7 +64,7 @@ export function App() {
           readyStateChanged={(r) => {
             if (r) {
               setTimeout(() => {
-                document.body.classList.remove("loading");
+                showScrollbar();
               }, 100);
             }
           }}
