@@ -5,6 +5,12 @@ import { Row, Col, Form } from "react-bootstrap";
 
 import { FilterDateSelects } from "./FilterDateSelects";
 
+window.onkeydown = (e) => {
+  if (e.altKey && ["KeyS", "KeyY", "KeyM"].includes(e.code)) {
+    window.scrollTo(0, 0);
+  }
+};
+
 export function FilterForm({
   query,
   setQuery,

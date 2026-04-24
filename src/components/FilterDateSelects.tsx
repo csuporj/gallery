@@ -52,7 +52,6 @@ export function FilterDateSelects({
         name="d"
         value={dateFilter.d}
         aria-label="day"
-        accessKey="d"
         onChange={(e) => setDateFilter({ ...dateFilter, d: e.target.value })}
       >
         <option value="*">Day</option>
