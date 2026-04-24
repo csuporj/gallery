@@ -10,7 +10,6 @@ function scrollToTop(isTouch: boolean) {
     }, 50);
   } else {
     window.scrollTo({ top: 0, behavior: "instant" });
-    document.getElementById("search")?.focus();
   }
 }
 
