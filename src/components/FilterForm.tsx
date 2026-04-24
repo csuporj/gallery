@@ -21,8 +21,8 @@ export function FilterForm({
   const [localS, setLocalS] = useState(filter.s);
 
   useEffect(() => {
-    const queryTimeout = setTimeout(() => setS(localS), 500);
-    return () => clearTimeout(queryTimeout);
+    const typingTimeout = setTimeout(() => setS(localS), 500);
+    return () => clearTimeout(typingTimeout);
   }, [localS, setS]);
 
   return (

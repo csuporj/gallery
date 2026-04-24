@@ -4,7 +4,7 @@ import { useState } from "react";
 
 function urlToFilter(params: URLSearchParams): Filter {
   return {
-    s: params.get("q") ?? "",
+    s: params.get("s") ?? "",
     y: params.get("y") ?? "*",
     m: params.get("m") ?? "*",
     d: params.get("d") ?? "*",
@@ -14,7 +14,7 @@ function urlToFilter(params: URLSearchParams): Filter {
 function filterToUrl(filter: Filter): URLSearchParams {
   const params = new URLSearchParams();
 
-  if (filter.s) params.set("q", filter.s);
+  if (filter.s) params.set("s", filter.s);
   if (filter.y !== "*") params.set("y", filter.y);
   if (filter.m !== "*") params.set("m", filter.m);
   if (filter.d !== "*") params.set("d", filter.d);
@@ -41,7 +41,7 @@ export function useFilter() {
       }
 
       if (IS_DEBUG) {
-        console.log(getTimestamp(), `setS ${oldFilter.s} ${s}`);
+        console.log(getTimestamp(), `setS "${oldFilter.s}" "${s}"`);
       }
 
       const newFilter = { ...oldFilter, s };
