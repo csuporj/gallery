@@ -4,8 +4,12 @@ import { Button } from "react-bootstrap";
 import { ChevronUp } from "react-bootstrap-icons";
 
 function scrollToTop(isTouch: boolean) {
-  window.scrollTo({ top: 0, behavior: "instant" });
-  if (!isTouch) {
+  if (isTouch) {
+    setTimeout(() => {
+      window.scrollTo({ top: 0, behavior: "instant" });
+    }, 50);
+  } else {
+    window.scrollTo({ top: 0, behavior: "instant" });
     document.getElementById("search")?.focus();
   }
 }
