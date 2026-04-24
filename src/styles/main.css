@@ -1,6 +1,9 @@
 html {
   scrollbar-gutter: stable;
   scroll-behavior: auto !important;
+  /* when the search box is focused, you scroll down, then start typing "cluj",
+  without this it does not scroll all the way to the top */
+  scroll-padding-top: 16px;
 }
 
 body {
