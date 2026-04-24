@@ -7,7 +7,7 @@ import { FilterDateSelects } from "./FilterDateSelects";
 
 window.onkeydown = (e) => {
   if (e.altKey && ["KeyS", "KeyY", "KeyM"].includes(e.code)) {
-    window.scrollTo(0, 0);
+    window.scrollTo({ top: 0, behavior: "instant" });
   }
 };
 
