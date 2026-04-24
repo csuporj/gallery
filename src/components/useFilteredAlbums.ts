@@ -1,43 +1,41 @@
-import type { Album, DateState } from "./types";
+import type { Album, Filter } from "./types";
 
 import { useMemo } from "react";
 
 import { getTimestamp, IS_DEBUG } from "./debug";
 import { albums, parseDate } from "./albums";
 
-function isAlbumMatch(album: Album, query: string, filter: DateState) {
+function isAlbumMatch(album: Album, filter: Filter) {
   const { m, d, y } = parseDate(album.AlbumDate);
 
   return (
     (filter.y === "*" || filter.y === y) &&
     (filter.m === "*" || filter.m === m) &&
     (filter.d === "*" || filter.d === d) &&
-    album.LinkText.toLowerCase().includes(query.toLowerCase())
+    album.LinkText.toLowerCase().includes(filter.s.toLowerCase())
   );
 }
 
-export function useFilteredAlbums(query: string, dateFilter: DateState) {
+export function useFilteredAlbums(filter: Filter) {
   const filteredAlbums = useMemo(() => {
     if (IS_DEBUG) {
       console.log(
         getTimestamp(),
-        `useFilteredAlbums start ${query} ${dateFilter?.y} ${dateFilter.m} ${dateFilter.d}`,
+        `useFilteredAlbums start ${filter.s} ${filter.y} ${filter.m} ${filter.d}`,
       );
     }
 
-    const filtered = albums.filter((album) =>
-      isAlbumMatch(album, query, dateFilter),
-    );
+    const filtered = albums.filter((album) => isAlbumMatch(album, filter));
 
     if (IS_DEBUG) {
       console.log(
         getTimestamp(),
-        `useFilteredAlbums end ${query} ${dateFilter?.y} ${dateFilter.m} ${dateFilter.d}`,
+        `useFilteredAlbums end ${filter.s} ${filter.y} ${filter.m} ${filter.d}`,
       );
     }
 
     return filtered;
-  }, [query, dateFilter]);
+  }, [filter]);
 
   return { filteredAlbums };
 }

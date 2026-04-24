@@ -18,9 +18,9 @@ function getInitialGridCount(albumsLength: number) {
 }
 
 export function App() {
-  const { query, setQuery, dateFilter, setDateFilter } = useFilter();
-  useTitle(query, dateFilter);
-  const { filteredAlbums } = useFilteredAlbums(query, dateFilter);
+  const { filter, setS, setY, setM, setD } = useFilter();
+  useTitle(filter);
+  const { filteredAlbums } = useFilteredAlbums(filter);
   const [isReady, setIsReady] = useState(false);
 
   const initialItemCount = getInitialGridCount(filteredAlbums.length);
@@ -34,10 +34,11 @@ export function App() {
   return (
     <Container fluid className="px-0 pt-0 pb-1">
       <FilterForm
-        query={query}
-        setQuery={setQuery}
-        dateFilter={dateFilter}
-        setDateFilter={setDateFilter}
+        filter={filter}
+        setS={setS}
+        setY={setY}
+        setM={setM}
+        setD={setD}
       />
 
       {!isReady ? null : filteredAlbums?.length === 0 ? (

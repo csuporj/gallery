@@ -12,19 +12,20 @@ window.onkeydown = (e) => {
 };
 
 export function FilterForm({
-  query,
-  setQuery,
-  dateFilter,
-  setDateFilter,
+  filter,
+  setS,
+  setY,
+  setM,
+  setD,
 }: FilterFormProps) {
-  const [localQuery, setLocalQuery] = useState(query);
+  const [localS, setLocalS] = useState(filter.s);
 
   useEffect(
     function debounceQuery() {
-      const queryTimeout = setTimeout(() => setQuery(localQuery), 500);
+      const queryTimeout = setTimeout(() => setS(localS), 500);
       return () => clearTimeout(queryTimeout);
     },
-    [localQuery, setQuery],
+    [localS, setS],
   );
 
   return (
@@ -37,15 +38,17 @@ export function FilterForm({
             name="s"
             placeholder="Search..."
             spellCheck="false"
-            value={localQuery}
+            value={localS}
             accessKey="s"
-            onChange={(e) => setLocalQuery(e.target.value)}
+            onChange={(e) => setLocalS(e.target.value)}
           />
         </Col>
 
         <FilterDateSelects
-          dateFilter={dateFilter}
-          setDateFilter={setDateFilter}
+          filter={filter}
+          setY={setY}
+          setM={setM}
+          setD={setD}
         />
       </Row>
     </div>

@@ -5,16 +5,17 @@ export interface Album {
   ThumbnailFileName: string;
 }
 
-export interface DateState {
+export interface Filter {
+  s: string;
   y: string;
   m: string;
   d: string;
 }
 
 export interface FilterFormProps {
-  query: string;
-  setQuery: (val: string) => void;
-
-  dateFilter: DateState;
-  setDateFilter: (filter: DateState) => void;
+  filter: Filter;
+  setS: (s: string) => void;
+  setY: (y: string) => void;
+  setM: (m: string) => void;
+  setD: (d: string) => void;
 }

@@ -5,17 +5,19 @@ import { Col, Form } from "react-bootstrap";
 import { dateOptions } from "./albums";
 
 export function FilterDateSelects({
-  dateFilter,
-  setDateFilter,
-}: Pick<FilterFormProps, "dateFilter" | "setDateFilter">) {
+  filter,
+  setY,
+  setM,
+  setD,
+}: Pick<FilterFormProps, "filter" | "setY" | "setM" | "setD">) {
   const yearSelect = (
     <Col md={2} xs={4}>
       <Form.Select
         name="y"
-        value={dateFilter.y}
+        value={filter.y}
         aria-label="year"
         accessKey="y"
-        onChange={(e) => setDateFilter({ ...dateFilter, y: e.target.value })}
+        onChange={(e) => setY(e.target.value)}
       >
         <option value="*">Year</option>
         {dateOptions.years.map((y) => (
@@ -31,10 +33,10 @@ export function FilterDateSelects({
     <Col md={2} xs={4}>
       <Form.Select
         name="m"
-        value={dateFilter.m}
+        value={filter.m}
         aria-label="month"
         accessKey="m"
-        onChange={(e) => setDateFilter({ ...dateFilter, m: e.target.value })}
+        onChange={(e) => setM(e.target.value)}
       >
         <option value="*">Month</option>
         {dateOptions.months.map((m) => (
@@ -50,9 +52,9 @@ export function FilterDateSelects({
     <Col md={2} xs={4}>
       <Form.Select
         name="d"
-        value={dateFilter.d}
+        value={filter.d}
         aria-label="day"
-        onChange={(e) => setDateFilter({ ...dateFilter, d: e.target.value })}
+        onChange={(e) => setD(e.target.value)}
       >
         <option value="*">Day</option>
         {dateOptions.days.map((d) => (
