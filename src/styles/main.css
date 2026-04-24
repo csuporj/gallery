@@ -4,6 +4,8 @@ html {
   /* when the search box is focused, you scroll down, then start typing "cluj",
   without this it does not scroll all the way to the top */
   scroll-padding-top: 16px;
+  /* when you tab from the last visible cards, the next rows bottom shadow does not get into view without this */
+  scroll-padding-bottom: 8px;
 }
 
 body {
