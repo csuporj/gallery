@@ -18,10 +18,12 @@ function getInitialGridCount(albumsLength: number) {
   return Math.min(cols * rows, albumsLength);
 }
 
-function showScrollbar() {
+let hasLoadingClass = true;
+
+function removeLoadingClass() {
   document.body.classList.remove("loading");
   if (IS_DEBUG) {
-    console.log(getTimestamp(), "showScrollbar");
+    console.log(getTimestamp(), "removeLoadingClass");
   }
 }
 
@@ -62,9 +64,10 @@ export function App() {
           )}
           initialItemCount={initialItemCount}
           readyStateChanged={(r) => {
-            if (r) {
+            if (r && hasLoadingClass) {
+              hasLoadingClass = false;
               setTimeout(() => {
-                showScrollbar();
+                removeLoadingClass();
               }, 100);
             }
           }}
