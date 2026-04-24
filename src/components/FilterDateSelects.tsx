@@ -14,6 +14,7 @@ export function FilterDateSelects({
         name="y"
         value={dateFilter.y}
         aria-label="year"
+        accessKey="y"
         onChange={(e) => setDateFilter({ ...dateFilter, y: e.target.value })}
       >
         <option value="*">Year</option>
@@ -32,6 +33,7 @@ export function FilterDateSelects({
         name="m"
         value={dateFilter.m}
         aria-label="month"
+        accessKey="m"
         onChange={(e) => setDateFilter({ ...dateFilter, m: e.target.value })}
       >
         <option value="*">Month</option>
@@ -50,6 +52,7 @@ export function FilterDateSelects({
         name="d"
         value={dateFilter.d}
         aria-label="day"
+        accessKey="d"
         onChange={(e) => setDateFilter({ ...dateFilter, d: e.target.value })}
       >
         <option value="*">Day</option>

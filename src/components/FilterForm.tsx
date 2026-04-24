@@ -32,6 +32,7 @@ export function FilterForm({
             placeholder="Search..."
             spellCheck="false"
             value={localQuery}
+            accessKey="s"
             onChange={(e) => setLocalQuery(e.target.value)}
           />
         </Col>
