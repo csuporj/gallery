@@ -7,6 +7,10 @@ permissions:
   contents: read
   deployments: write
 
+concurrency:
+  group: deployment-lock
+  cancel-in-progress: false
+
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest

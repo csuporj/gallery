@@ -9,6 +9,10 @@ permissions:
   contents: write
   deployments: write
 
+concurrency:
+  group: deployment-lock
+  cancel-in-progress: false
+
 jobs:
   scrape-and-commit:
     runs-on: ubuntu-latest
