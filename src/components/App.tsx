@@ -6,11 +6,12 @@ import { getTimestamp, IS_DEBUG } from "./debug";
 import { useFilter } from "./useFilter";
 import { useFilteredAlbums } from "./useFilteredAlbums";
 import { useTitle } from "./useTitle";
+import { useBodyResize } from "./useBodyResize";
+import { gridComponents } from "./gridComponents";
 
 import { AlbumCard } from "./AlbumCard";
 import { FilterForm } from "./FilterForm";
 import { BackToTop } from "./BackToTop";
-import { gridComponents } from "./gridComponents";
 
 function getInitialGridCount(albumsLength: number) {
   const cols = Math.max(1, Math.floor(window.innerWidth / 608));
@@ -31,6 +32,7 @@ export function App() {
   const { filter, setS, setY, setM, setD } = useFilter();
   useTitle(filter);
   const { filteredAlbums } = useFilteredAlbums(filter);
+  useBodyResize();
   const [isReady, setIsReady] = useState(false);
 
   const initialItemCount = getInitialGridCount(filteredAlbums.length);
