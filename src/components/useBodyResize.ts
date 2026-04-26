@@ -28,15 +28,21 @@ export function useBodyResize() {
   const lastInnerWidth = useRef(window.innerWidth);
   const lastScrollHeight = useRef(document.body.scrollHeight);
   const lastScrollY = useRef(window.scrollY);
+  const isCoerceScroll = useRef(false);
 
   useEffect(() => {
     const handleScroll = () => {
+      const scrollHeight = document.body.scrollHeight - window.innerHeight;
       const scrollY = window.scrollY;
+      if (lastScrollY.current > scrollHeight) {
+        // todo flag as coerce scroll and don't do anything in the next resize
+        // isCoerceScroll.current = true;
+      }
 
       if (IS_DEBUG) {
         console.log(
           getTimestamp(),
-          `handleScroll lsy=${lastScrollY.current} sy=${scrollY}`);
+          `handleScroll sh=${scrollHeight} lsy=${lastScrollY.current} sy=${scrollY}`);
       }
 
       lastScrollY.current = scrollY;
@@ -47,9 +53,13 @@ export function useBodyResize() {
     const resizeObserver = new ResizeObserver(() => {
       // todo delay this so that the scrollHeight is updated when read (on ctrl + plus)
       const innerWidth = window.innerWidth;
-      const scrollHeight = document.body.scrollHeight;
+      const scrollHeight = document.body.scrollHeight - window.innerHeight;
       var desiredY = getDesiredScrollY(lastInnerWidth.current, innerWidth, lastScrollHeight.current, scrollHeight, lastScrollY.current);
-      if (lastScrollY.current !== desiredY) {
+      
+      if (isCoerceScroll.current) {
+        isCoerceScroll.current = false;
+      }
+      else if (lastScrollY.current !== desiredY) {
         window.scrollTo({top: desiredY, behavior: "instant"});
       }
       
