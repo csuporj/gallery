@@ -1,84 +1,76 @@
 import { useRef, useCallback, useEffect } from "react";
-import type { VirtuosoGridHandle, GridStateSnapshot } from "react-virtuoso";
+import type { VirtuosoGridHandle } from "react-virtuoso";
+import type { Album } from "./types";
 
-const ITEM_WIDTH = 608;
-const BASE_ROW_HEIGHT = 456;
-const THRESHOLD = 456;
-
-export const useResilientScroll = () => {
+export const useResilientScroll = (albums: Album[]) => {
   const virtuosoRef = useRef<VirtuosoGridHandle>(null);
-  const lastGoodScroll = useRef(0);
-  const lastCols = useRef(0);
+  const anchorUrl = useRef<string | null>(null);
   const isResizing = useRef(false);
-  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const getCols = () => Math.max(1, Math.floor(window.innerWidth / ITEM_WIDTH));
+  const updateAnchor = useCallback(() => {
+    if (isResizing.current) return;
 
-  const handleStateChanged = useCallback((state: GridStateSnapshot) => {
-    // Strict lock: prevents any browser-clamped values from corrupting our baseline
-    if (!isResizing.current) {
-      lastGoodScroll.current = state.scrollTop;
-      lastCols.current = getCols();
+    const elements = document.querySelectorAll("a[href]");
+    if (elements.length === 0) return;
+
+    for (const el of elements) {
+      const rect = el.getBoundingClientRect();
+      // rect.bottom > 0 ensures we anchor to the first visible item
+      if (rect.bottom > 0) {
+        const url = el.getAttribute("href");
+        if (url && url !== anchorUrl.current) {
+          anchorUrl.current = url;
+        }
+        break;
+      }
     }
   }, []);
 
   useEffect(() => {
-    const performRestoration = () => {
-      if (!virtuosoRef.current) return;
-
-      const dpr = window.devicePixelRatio || 1;
-      const newCols = getCols();
-      const oldCols = lastCols.current || newCols;
-
-      const oldRowIndex = Math.round(lastGoodScroll.current / BASE_ROW_HEIGHT);
-      const anchorItemIndex = oldRowIndex * oldCols;
-      const newRowIndex = Math.floor(anchorItemIndex / newCols);
-
-      let rowsPerPixel = 0;
-      if (dpr > 1.08 && dpr < 1.12) rowsPerPixel = 45;
-      if (dpr > 0.88 && dpr < 0.92) rowsPerPixel = 35;
-      if (dpr > 0.78 && dpr < 0.82) rowsPerPixel = 22;
-      if (dpr > 0.65 && dpr < 0.69) rowsPerPixel = 20;
-      if (dpr > 0.31 && dpr < 0.35) rowsPerPixel = 18;
-
-      const driftCorrection =
-        rowsPerPixel > 0 ? Math.floor(newRowIndex / rowsPerPixel) * -1 : 0;
-
-      let target = newRowIndex * BASE_ROW_HEIGHT + driftCorrection;
-      target = Math.round(target * dpr) / dpr;
-
-      // Force instant jump. behavior 'auto' is faster than default for zoom.
-      virtuosoRef.current.scrollTo({ top: target, behavior: "auto" });
-
-      lastGoodScroll.current = target;
-      lastCols.current = newCols;
-    };
+    const onScroll = () => updateAnchor();
 
     const onResize = () => {
-      if (lastGoodScroll.current <= THRESHOLD) return;
+      if (!virtuosoRef.current || !anchorUrl.current) return;
 
-      // 1. SYNC LOCK: Intercepts the very first clamped scroll event
-      isResizing.current = true;
+      const targetIndex = albums.findIndex(
+        (a) => a.AlbumUrl === anchorUrl.current,
+      );
 
-      // 2. IMMEDIATE SNAP: Fights the browser's native zoom jump instantly
-      performRestoration();
+      if (targetIndex !== -1) {
+        isResizing.current = true;
 
-      // 3. RAF SNAP: Catches the final layout after the browser stabilizes
-      requestAnimationFrame(performRestoration);
+        // SOLUTION: The 'Triple-Frame' wait
+        // 1. First rAF: Wait for window resize event to finish.
+        // 2. Second rAF: Wait for CSS to apply the new 1-column responsive heights.
+        // 3. setTimeout(0): Yield to Virtuoso's internal ResizeObserver so it can
+        //    re-measure the cards before we ask it to scroll to them.
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            setTimeout(() => {
+              virtuosoRef.current?.scrollToIndex({
+                index: targetIndex,
+                align: "start",
+                behavior: "auto",
+              });
 
-      // 4. DEBOUNCED UNLOCK: Ensure all layout-related scroll events have finished
-      if (timeoutRef.current) clearTimeout(timeoutRef.current);
-      timeoutRef.current = setTimeout(() => {
-        isResizing.current = false;
-      }, 300); // Increased buffer to ensure layout stability
+              // Hold the lock long enough for the browser to settle (important for mobile)
+              setTimeout(() => {
+                isResizing.current = false;
+              }, 300);
+            }, 50); // A 50ms buffer is critical for mobile reflows
+          });
+        });
+      }
     };
 
+    window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", onResize);
-    return () => {
-      window.removeEventListener("resize", onResize);
-      if (timeoutRef.current) clearTimeout(timeoutRef.current);
-    };
-  }, []);
 
-  return { virtuosoRef, handleStateChanged };
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onResize);
+    };
+  }, [albums, updateAnchor]);
+
+  return { virtuosoRef };
 };

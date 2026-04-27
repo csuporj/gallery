@@ -33,8 +33,7 @@ export function App() {
   useTitle(filter);
   const { filteredAlbums } = useFilteredAlbums(filter);
   const [isReady, setIsReady] = useState(false);
-  const { virtuosoRef, handleStateChanged } = useResilientScroll();
-
+  const { virtuosoRef } = useResilientScroll(filteredAlbums);
   const initialItemCount = getInitialGridCount(filteredAlbums.length);
 
   // scroll to top on reload, do not break bfcache
@@ -74,7 +73,6 @@ export function App() {
               }, 100);
             }
           }}
-          stateChanged={handleStateChanged}
         />
       )}
 
