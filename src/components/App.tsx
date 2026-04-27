@@ -6,7 +6,7 @@ import { getTimestamp, IS_DEBUG } from "./debug";
 import { useFilter } from "./useFilter";
 import { useFilteredAlbums } from "./useFilteredAlbums";
 import { useTitle } from "./useTitle";
-import { useBodyResize } from "./useBodyResize";
+import { useResilientScroll } from "./useResilientScroll";
 import { gridComponents } from "./gridComponents";
 
 import { AlbumCard } from "./AlbumCard";
@@ -32,8 +32,8 @@ export function App() {
   const { filter, setS, setY, setM, setD } = useFilter();
   useTitle(filter);
   const { filteredAlbums } = useFilteredAlbums(filter);
-  useBodyResize();
   const [isReady, setIsReady] = useState(false);
+  const { virtuosoRef, handleStateChanged } = useResilientScroll();
 
   const initialItemCount = getInitialGridCount(filteredAlbums.length);
 
@@ -57,6 +57,7 @@ export function App() {
         <div className="mt-1 text-center">No results found.</div>
       ) : (
         <VirtuosoGrid
+          ref={virtuosoRef}
           useWindowScroll
           increaseViewportBy={1000}
           components={gridComponents}
@@ -73,6 +74,7 @@ export function App() {
               }, 100);
             }
           }}
+          stateChanged={handleStateChanged}
         />
       )}
 
