@@ -15,8 +15,7 @@ export const useResilientScroll = () => {
   const getCols = () => Math.max(1, Math.floor(window.innerWidth / ITEM_WIDTH));
 
   const handleStateChanged = useCallback((state: GridStateSnapshot) => {
-    // If we are resizing, we ignore all incoming state changes.
-    // This prevents the "double jump" where a clamped value is saved and then restored.
+    // Strict lock: prevents any browser-clamped values from corrupting our baseline
     if (!isResizing.current) {
       lastGoodScroll.current = state.scrollTop;
       lastCols.current = getCols();
@@ -36,20 +35,19 @@ export const useResilientScroll = () => {
       const newRowIndex = Math.floor(anchorItemIndex / newCols);
 
       let rowsPerPixel = 0;
-      if (dpr > 1.08 && dpr < 1.12) rowsPerPixel = 45; // 110%
-      if (dpr > 0.88 && dpr < 0.92) rowsPerPixel = 35; // 90%
-      if (dpr > 0.78 && dpr < 0.82) rowsPerPixel = 22; // 80%
-      if (dpr > 0.65 && dpr < 0.69) rowsPerPixel = 20; // 67%
-      if (dpr > 0.31 && dpr < 0.35) rowsPerPixel = 18; // 33%
+      if (dpr > 1.08 && dpr < 1.12) rowsPerPixel = 45;
+      if (dpr > 0.88 && dpr < 0.92) rowsPerPixel = 35;
+      if (dpr > 0.78 && dpr < 0.82) rowsPerPixel = 22;
+      if (dpr > 0.65 && dpr < 0.69) rowsPerPixel = 20;
+      if (dpr > 0.31 && dpr < 0.35) rowsPerPixel = 18;
 
       const driftCorrection =
         rowsPerPixel > 0 ? Math.floor(newRowIndex / rowsPerPixel) * -1 : 0;
-      let target = newRowIndex * BASE_ROW_HEIGHT + driftCorrection;
 
+      let target = newRowIndex * BASE_ROW_HEIGHT + driftCorrection;
       target = Math.round(target * dpr) / dpr;
 
-      // We use 'auto' behavior to ensure it snaps instantly
-      // before the browser has a chance to paint the "wrong" position.
+      // Force instant jump. behavior 'auto' is faster than default for zoom.
       virtuosoRef.current.scrollTo({ top: target, behavior: "auto" });
 
       lastGoodScroll.current = target;
@@ -59,17 +57,20 @@ export const useResilientScroll = () => {
     const onResize = () => {
       if (lastGoodScroll.current <= THRESHOLD) return;
 
-      // 1. Lock immediately and synchronously
+      // 1. SYNC LOCK: Intercepts the very first clamped scroll event
       isResizing.current = true;
 
-      // 2. Perform restoration in a rAF to ensure it wins the race against the browser paint
+      // 2. IMMEDIATE SNAP: Fights the browser's native zoom jump instantly
+      performRestoration();
+
+      // 3. RAF SNAP: Catches the final layout after the browser stabilizes
       requestAnimationFrame(performRestoration);
 
-      // 3. Debounce the UNLOCK only.
+      // 4. DEBOUNCED UNLOCK: Ensure all layout-related scroll events have finished
       if (timeoutRef.current) clearTimeout(timeoutRef.current);
       timeoutRef.current = setTimeout(() => {
         isResizing.current = false;
-      }, 200); // Slightly longer timeout to ensure layout is fully stable
+      }, 300); // Increased buffer to ensure layout stability
     };
 
     window.addEventListener("resize", onResize);
