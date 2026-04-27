@@ -2,24 +2,22 @@ import { useRef, useCallback, useEffect } from "react";
 import type { VirtuosoGridHandle, GridStateSnapshot } from "react-virtuoso";
 
 const ITEM_WIDTH = 608;
-const FIRST_ROW_THRESHOLD = 456;
+const BASE_ROW_HEIGHT = 456;
+const THRESHOLD = 456;
 
 export const useResilientScroll = () => {
   const virtuosoRef = useRef<VirtuosoGridHandle>(null);
   const lastGoodScroll = useRef(0);
-  const lastColumnCount = useRef(0);
+  const lastCols = useRef(0);
   const isResizing = useRef(false);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const getColumnCount = () => {
-    return Math.max(1, Math.floor(window.innerWidth / ITEM_WIDTH));
-  };
+  const getCols = () => Math.max(1, Math.floor(window.innerWidth / ITEM_WIDTH));
 
   const handleStateChanged = useCallback((state: GridStateSnapshot) => {
-    // If we are currently resizing, ignore the browser's "clamped" state updates
     if (!isResizing.current) {
       lastGoodScroll.current = state.scrollTop;
-      lastColumnCount.current = getColumnCount();
+      lastCols.current = getCols();
     }
   }, []);
 
@@ -27,31 +25,39 @@ export const useResilientScroll = () => {
     const performRestoration = () => {
       if (!virtuosoRef.current) return;
 
-      const newCols = getColumnCount();
-      const oldCols = lastColumnCount.current || newCols;
+      const dpr = window.devicePixelRatio || 1;
+      const newCols = getCols();
+      const oldCols = lastCols.current || newCols;
 
-      if (newCols !== oldCols) {
-        const ratio = oldCols / newCols;
-        const adjustedScroll = lastGoodScroll.current * ratio;
+      const oldRowIndex = Math.round(lastGoodScroll.current / BASE_ROW_HEIGHT);
+      const anchorItemIndex = oldRowIndex * oldCols;
+      const newRowIndex = Math.floor(anchorItemIndex / newCols);
 
-        virtuosoRef.current.scrollTo({ top: adjustedScroll });
+      // ADJUST THESE FACTORS (1px every X rows)
+      let rowsPerPixel = 0;
+      if (dpr > 1.08 && dpr < 1.12) rowsPerPixel = 45; // 110%
+      if (dpr > 0.88 && dpr < 0.92) rowsPerPixel = 35; // 90%
+      if (dpr > 0.78 && dpr < 0.82) rowsPerPixel = 22; // 80%
+      if (dpr > 0.65 && dpr < 0.69) rowsPerPixel = 20; // 67%
+      if (dpr > 0.31 && dpr < 0.35) rowsPerPixel = 18; // 33%
 
-        // Update baseline immediately so continuous drags stay synced
-        lastGoodScroll.current = adjustedScroll;
-        lastColumnCount.current = newCols;
-      }
+      const driftCorrection =
+        rowsPerPixel > 0 ? Math.floor(newRowIndex / rowsPerPixel) * -1 : 0;
+      let target = newRowIndex * BASE_ROW_HEIGHT + driftCorrection;
+
+      // Hardware Pixel Snap
+      target = Math.round(target * dpr) / dpr;
+
+      virtuosoRef.current.scrollTo({ top: target });
+
+      lastGoodScroll.current = target;
+      lastCols.current = newCols;
     };
 
     const onResize = () => {
-      if (lastGoodScroll.current <= FIRST_ROW_THRESHOLD) {
-        isResizing.current = false;
-        return;
-      }
+      if (lastGoodScroll.current <= THRESHOLD) return;
 
-      // Synchronous Lock: Blocks the very next 'stateChanged' (clamped) event
       isResizing.current = true;
-
-      // Use rAF to snap the scroll in the same paint cycle as the resize/zoom
       requestAnimationFrame(performRestoration);
 
       if (timeoutRef.current) clearTimeout(timeoutRef.current);
