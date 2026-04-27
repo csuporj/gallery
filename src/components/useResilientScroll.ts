@@ -8,14 +8,14 @@ export const useResilientScroll = (albums: Album[]) => {
   const isResizing = useRef(false);
 
   const updateAnchor = useCallback(() => {
+    // CRITICAL: If we are in the middle of a resize/scroll restoration,
+    // do not allow the anchor to be updated by the "jitter" scroll events.
     if (isResizing.current) return;
 
     const elements = document.querySelectorAll("a[href]");
-    if (elements.length === 0) return;
-
     for (const el of elements) {
       const rect = el.getBoundingClientRect();
-      // rect.bottom > 0 ensures we anchor to the first visible item
+      // rect.bottom > 0 is the most stable check for "first visible"
       if (rect.bottom > 0) {
         const url = el.getAttribute("href");
         if (url && url !== anchorUrl.current) {
@@ -37,15 +37,14 @@ export const useResilientScroll = (albums: Album[]) => {
       );
 
       if (targetIndex !== -1) {
+        // Lock the anchor immediately to prevent "jump" events from corrupting it
         isResizing.current = true;
 
-        // SOLUTION: The 'Triple-Frame' wait
-        // 1. First rAF: Wait for window resize event to finish.
-        // 2. Second rAF: Wait for CSS to apply the new 1-column responsive heights.
-        // 3. setTimeout(0): Yield to Virtuoso's internal ResizeObserver so it can
-        //    re-measure the cards before we ask it to scroll to them.
+        // Sync with browser layout cycles
         requestAnimationFrame(() => {
           requestAnimationFrame(() => {
+            // A tiny 50ms buffer allows Virtuoso's ResizeObserver
+            // to update its internal column-math (3 -> 4)
             setTimeout(() => {
               virtuosoRef.current?.scrollToIndex({
                 index: targetIndex,
@@ -53,11 +52,11 @@ export const useResilientScroll = (albums: Album[]) => {
                 behavior: "auto",
               });
 
-              // Hold the lock long enough for the browser to settle (important for mobile)
+              // Release lock once the layout has settled
               setTimeout(() => {
                 isResizing.current = false;
-              }, 300);
-            }, 50); // A 50ms buffer is critical for mobile reflows
+              }, 150);
+            }, 50);
           });
         });
       }
