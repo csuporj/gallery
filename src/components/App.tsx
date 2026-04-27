@@ -6,11 +6,12 @@ import { getTimestamp, IS_DEBUG } from "./debug";
 import { useFilter } from "./useFilter";
 import { useFilteredAlbums } from "./useFilteredAlbums";
 import { useTitle } from "./useTitle";
+import { useResilientScroll } from "./useResilientScroll";
+import { gridComponents } from "./gridComponents";
 
 import { AlbumCard } from "./AlbumCard";
 import { FilterForm } from "./FilterForm";
 import { BackToTop } from "./BackToTop";
-import { gridComponents } from "./gridComponents";
 
 function getInitialGridCount(albumsLength: number) {
   const cols = Math.max(1, Math.floor(window.innerWidth / 608));
@@ -32,7 +33,7 @@ export function App() {
   useTitle(filter);
   const { filteredAlbums } = useFilteredAlbums(filter);
   const [isReady, setIsReady] = useState(false);
-
+  const { virtuosoRef } = useResilientScroll(filteredAlbums);
   const initialItemCount = getInitialGridCount(filteredAlbums.length);
 
   // scroll to top on reload, do not break bfcache
@@ -55,6 +56,7 @@ export function App() {
         <div className="mt-1 text-center">No results found.</div>
       ) : (
         <VirtuosoGrid
+          ref={virtuosoRef}
           useWindowScroll
           increaseViewportBy={1000}
           components={gridComponents}
