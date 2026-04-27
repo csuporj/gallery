@@ -15,6 +15,8 @@ export const useResilientScroll = () => {
   const getCols = () => Math.max(1, Math.floor(window.innerWidth / ITEM_WIDTH));
 
   const handleStateChanged = useCallback((state: GridStateSnapshot) => {
+    // If we are resizing, we ignore all incoming state changes.
+    // This prevents the "double jump" where a clamped value is saved and then restored.
     if (!isResizing.current) {
       lastGoodScroll.current = state.scrollTop;
       lastCols.current = getCols();
@@ -33,7 +35,6 @@ export const useResilientScroll = () => {
       const anchorItemIndex = oldRowIndex * oldCols;
       const newRowIndex = Math.floor(anchorItemIndex / newCols);
 
-      // ADJUST THESE FACTORS (1px every X rows)
       let rowsPerPixel = 0;
       if (dpr > 1.08 && dpr < 1.12) rowsPerPixel = 45; // 110%
       if (dpr > 0.88 && dpr < 0.92) rowsPerPixel = 35; // 90%
@@ -45,10 +46,11 @@ export const useResilientScroll = () => {
         rowsPerPixel > 0 ? Math.floor(newRowIndex / rowsPerPixel) * -1 : 0;
       let target = newRowIndex * BASE_ROW_HEIGHT + driftCorrection;
 
-      // Hardware Pixel Snap
       target = Math.round(target * dpr) / dpr;
 
-      virtuosoRef.current.scrollTo({ top: target });
+      // We use 'auto' behavior to ensure it snaps instantly
+      // before the browser has a chance to paint the "wrong" position.
+      virtuosoRef.current.scrollTo({ top: target, behavior: "auto" });
 
       lastGoodScroll.current = target;
       lastCols.current = newCols;
@@ -57,13 +59,17 @@ export const useResilientScroll = () => {
     const onResize = () => {
       if (lastGoodScroll.current <= THRESHOLD) return;
 
+      // 1. Lock immediately and synchronously
       isResizing.current = true;
+
+      // 2. Perform restoration in a rAF to ensure it wins the race against the browser paint
       requestAnimationFrame(performRestoration);
 
+      // 3. Debounce the UNLOCK only.
       if (timeoutRef.current) clearTimeout(timeoutRef.current);
       timeoutRef.current = setTimeout(() => {
         isResizing.current = false;
-      }, 150);
+      }, 200); // Slightly longer timeout to ensure layout is fully stable
     };
 
     window.addEventListener("resize", onResize);
