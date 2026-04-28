@@ -4,9 +4,10 @@ import { VirtuosoGrid } from "react-virtuoso";
 
 import { getTimestamp, IS_DEBUG } from "./debug";
 import { useFilter } from "./useFilter";
-import { useFilteredAlbums } from "./useFilteredAlbums";
 import { useTitle } from "./useTitle";
-import { useResilientScroll } from "./useResilientScroll";
+import { useFilteredAlbums } from "./useFilteredAlbums";
+import { useIsTouch } from "./useIsTouch";
+// import { useResilientScroll } from "./useResilientScroll";
 import { gridComponents } from "./gridComponents";
 
 import { AlbumCard } from "./AlbumCard";
@@ -31,9 +32,10 @@ function removeLoadingClass() {
 export function App() {
   const { filter, setS, setY, setM, setD } = useFilter();
   useTitle(filter);
-  const { filteredAlbums } = useFilteredAlbums(filter);
+  const filteredAlbums = useFilteredAlbums(filter);
+  const isTouch = useIsTouch();
+  //const { virtuosoRef } = useResilientScroll(filteredAlbums);
   const [isReady, setIsReady] = useState(false);
-  const { virtuosoRef } = useResilientScroll(filteredAlbums);
   const initialItemCount = getInitialGridCount(filteredAlbums.length);
 
   // scroll to top on reload, do not break bfcache
@@ -56,7 +58,7 @@ export function App() {
         <div className="mt-1 text-center">No results found.</div>
       ) : (
         <VirtuosoGrid
-          ref={virtuosoRef}
+          // ref={virtuosoRef}
           useWindowScroll
           increaseViewportBy={1000}
           components={gridComponents}
@@ -76,7 +78,7 @@ export function App() {
         />
       )}
 
-      <BackToTop />
+      <BackToTop isTouch={isTouch} />
     </Container>
   );
 }

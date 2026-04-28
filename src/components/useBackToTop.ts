@@ -1,15 +1,13 @@
 import { useState, useEffect, useRef } from "react";
 
 import { getTimestamp, IS_DEBUG } from "./debug";
-import { useIsTouch } from "./useIsTouch";
 
 const MIN_SCROLL_DEPTH = 400;
 const SCROLL_DELTA_UP = 5;
 const SCROLL_DELTA_DOWN = 1;
 
-export function useBackToTop() {
+export function useBackToTop(isTouch: boolean) {
   const [show, setShow] = useState(false);
-  const isTouch = useIsTouch();
 
   const lastScrollY = useRef(0);
   const isMovingRef = useRef(false);
@@ -63,5 +61,5 @@ export function useBackToTop() {
     };
   }, [isTouch]);
 
-  return { show, isTouch };
+  return show;
 }

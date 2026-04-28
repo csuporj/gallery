@@ -13,8 +13,8 @@ function scrollToTop(isTouch: boolean) {
   }
 }
 
-export function BackToTop() {
-  const { show, isTouch } = useBackToTop();
+export function BackToTop({ isTouch }: { isTouch: boolean }) {
+  const show = useBackToTop(isTouch);
 
   const opacity = show ? "opacity-100" : "opacity-0";
   const transform = show ? "translateY(0)" : "translateY(20px)";

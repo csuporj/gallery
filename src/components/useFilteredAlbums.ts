@@ -30,5 +30,5 @@ export function useFilteredAlbums(filter: Filter) {
     return filtered;
   }, [filter]);
 
-  return { filteredAlbums };
+  return filteredAlbums;
 }
