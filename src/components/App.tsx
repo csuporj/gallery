@@ -7,7 +7,7 @@ import { useFilter } from "./useFilter";
 import { useTitle } from "./useTitle";
 import { useFilteredAlbums } from "./useFilteredAlbums";
 import { useIsTouch } from "./useIsTouch";
-// import { useResilientScroll } from "./useResilientScroll";
+import { useResilientScroll } from "./useResilientScroll";
 import { gridComponents } from "./gridComponents";
 
 import { AlbumCard } from "./AlbumCard";
@@ -34,7 +34,7 @@ export function App() {
   useTitle(filter);
   const filteredAlbums = useFilteredAlbums(filter);
   const isTouch = useIsTouch();
-  //const { virtuosoRef } = useResilientScroll(filteredAlbums);
+  const { virtuosoRef } = useResilientScroll(filteredAlbums, isTouch);
   const [isReady, setIsReady] = useState(false);
   const initialItemCount = getInitialGridCount(filteredAlbums.length);
 
@@ -58,7 +58,7 @@ export function App() {
         <div className="mt-1 text-center">No results found.</div>
       ) : (
         <VirtuosoGrid
-          // ref={virtuosoRef}
+          ref={virtuosoRef}
           useWindowScroll
           increaseViewportBy={1000}
           components={gridComponents}

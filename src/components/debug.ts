@@ -1,5 +1,6 @@
 export const IS_DEBUG = true;
 
 export function getTimestamp(): string {
-  return "[" + performance.now().toFixed(1) + "]";
+  const now = new Date();
+  return `[${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}.${now.getMilliseconds()}]`;
 }
