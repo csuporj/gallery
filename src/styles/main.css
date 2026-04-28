@@ -1,9 +1,5 @@
-html,
-body {
-  overflow-x: hidden;
-}
-
 html {
+  overflow-x: hidden;
   scrollbar-gutter: stable;
   scroll-behavior: auto !important;
   /* when the search box is focused, you scroll down, then start typing "cluj",
@@ -14,11 +10,11 @@ html {
 }
 
 body {
-  background-color: #f8f9fa !important;
+  overflow-x: hidden;
 }
 
 body.loading {
-  overflow: hidden;
+  overflow-y: hidden;
 }
 
 .filter-form-width {
