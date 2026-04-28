@@ -20,8 +20,6 @@ export function BackToTop({ isTouch }: { isTouch: boolean }) {
   const transform = show ? "translateY(0)" : "translateY(20px)";
   const pointerEvents = show ? "auto" : "none";
 
-  // me-2 is needed to don't get a horizontal scrollbar on the phone
-  // during vertical scrolling when Desktop Site is ticked
   return (
     <Button
       onClick={() => scrollToTop(isTouch)}

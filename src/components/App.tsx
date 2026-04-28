@@ -12,7 +12,7 @@ import { gridComponents } from "./gridComponents";
 
 import { AlbumCard } from "./AlbumCard";
 import { FilterForm } from "./FilterForm";
-// import { BackToTop } from "./BackToTop";
+import { BackToTop } from "./BackToTop";
 
 function getInitialGridCount(albumsLength: number) {
   const cols = Math.max(1, Math.floor(window.innerWidth / 608));
@@ -76,7 +76,7 @@ export function App() {
         />
       )}
 
-      {/* <BackToTop isTouch={isTouch} /> */}
+      <BackToTop isTouch={isTouch} />
     </Container>
   );
 }
