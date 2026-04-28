@@ -20,10 +20,12 @@ export function BackToTop({ isTouch }: { isTouch: boolean }) {
   const transform = show ? "translateY(0)" : "translateY(20px)";
   const pointerEvents = show ? "auto" : "none";
 
+  // me-2 is needed to don't get a horizontal scrollbar on the phone
+  // during vertical scrolling when Desktop Site is ticked
   return (
     <Button
       onClick={() => scrollToTop(isTouch)}
-      className={`position-fixed bottom-0 end-0 mb-1 me-1 rounded-2 border-0 shadow-sm
+      className={`position-fixed bottom-0 end-0 mb-2 me-2 rounded-2 border-0 shadow-sm
         d-flex align-items-center justify-content-center bg-white text-black ${opacity}`}
       aria-label="back to top"
       style={{
