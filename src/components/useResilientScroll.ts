@@ -35,13 +35,13 @@ export const useResilientScroll = (
 
         if (rect.height > 0 && rect.top >= 0 && rect.top < viewportHeight) {
           const url = el.getAttribute("href");
-          const albumDate = el.getAttribute("data-album-date");
+          const albumInfo = el.getAttribute("data-album-info");
 
           if (url && url !== anchorUrl.current) {
             anchorUrl.current = url;
-            anchorDate.current = albumDate;
+            anchorDate.current = albumInfo;
             if (IS_DEBUG)
-              console.log(getTimestamp(), `updateAnchor ${albumDate}`);
+              console.log(getTimestamp(), `updateAnchor ${albumInfo}`);
           }
           return;
         }
