@@ -81,8 +81,6 @@ const monthOrder = [
   "Dec",
 ];
 
-if (IS_DEBUG) {
-  console.log(getTimestamp(), "albums.ts start");
-}
+if (IS_DEBUG) console.log(getTimestamp(), "albums.ts start");
 export const albums: Album[] = sortAlbums(albumsData as Album[]);
 export const dateOptions = getDateOptions();

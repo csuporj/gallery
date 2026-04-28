@@ -25,9 +25,7 @@ export function useBackToTop(isTouch: boolean) {
       lastShouldShowRef.current = newShow;
       setShow(newShow);
 
-      if (IS_DEBUG) {
-        console.log(getTimestamp(), `useBackToTop ${newShow}`);
-      }
+      if (IS_DEBUG) console.log(getTimestamp(), `useBackToTop ${newShow}`);
     }
 
     function onScroll() {

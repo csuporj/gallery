@@ -20,12 +20,11 @@ export function useFilteredAlbums(filter: Filter) {
   const filteredAlbums = useMemo(() => {
     const filtered = albums.filter((album) => isAlbumMatch(album, filter));
 
-    if (IS_DEBUG) {
+    if (IS_DEBUG)
       console.log(
         getTimestamp(),
         `useFilteredAlbums ${filter.s} ${filter.y} ${filter.m} ${filter.d}`,
       );
-    }
 
     return filtered;
   }, [filter]);

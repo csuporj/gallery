@@ -32,8 +32,6 @@ function formatTitle(filter: Filter): string {
 export function useTitle(filter: Filter) {
   useEffect(() => {
     document.title = formatTitle(filter);
-    if (IS_DEBUG) {
-      console.log(getTimestamp(), `useTitle ${document.title}`);
-    }
+    if (IS_DEBUG) console.log(getTimestamp(), `useTitle ${document.title}`);
   }, [filter]);
 }

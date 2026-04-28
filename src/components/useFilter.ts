@@ -40,9 +40,7 @@ export function useFilter() {
         return oldFilter;
       }
 
-      if (IS_DEBUG) {
-        console.log(getTimestamp(), `setS "${oldFilter.s}" "${s}"`);
-      }
+      if (IS_DEBUG) console.log(getTimestamp(), `setS "${oldFilter.s}" "${s}"`);
 
       const newFilter = { ...oldFilter, s };
       replaceUrl(newFilter);
@@ -59,9 +57,7 @@ export function useFilter() {
 
       const newFilter = { ...oldFilter, y };
       replaceUrl(newFilter);
-      if (IS_DEBUG) {
-        console.log(getTimestamp(), `setY ${oldFilter.y} ${y}`);
-      }
+      if (IS_DEBUG) console.log(getTimestamp(), `setY ${oldFilter.y} ${y}`);
 
       return newFilter;
     });
@@ -74,9 +70,7 @@ export function useFilter() {
       }
       const newFilter = { ...oldFilter, m };
       replaceUrl(newFilter);
-      if (IS_DEBUG) {
-        console.log(getTimestamp(), `setM ${oldFilter.m} ${m}`);
-      }
+      if (IS_DEBUG) console.log(getTimestamp(), `setM ${oldFilter.m} ${m}`);
 
       return newFilter;
     });
@@ -90,9 +84,7 @@ export function useFilter() {
 
       const newFilter = { ...oldFilter, d };
       replaceUrl(newFilter);
-      if (IS_DEBUG) {
-        console.log(getTimestamp(), `setD ${oldFilter.d} ${d}`);
-      }
+      if (IS_DEBUG) console.log(getTimestamp(), `setD ${oldFilter.d} ${d}`);
 
       return newFilter;
     });

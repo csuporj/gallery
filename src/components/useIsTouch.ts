@@ -8,9 +8,7 @@ export function useIsTouch() {
     function updateIsTouch() {
       const m = monitor.matches;
       setIsTouch(m);
-      if (IS_DEBUG) {
-        console.log(getTimestamp(), `updateIsTouch ${m}`);
-      }
+      if (IS_DEBUG) console.log(getTimestamp(), `updateIsTouch ${m}`);
     }
 
     const monitor = window.matchMedia("(pointer: coarse)");

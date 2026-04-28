@@ -1,7 +1,7 @@
 import { useRef, useCallback, useEffect } from "react";
 import type { VirtuosoGridHandle } from "react-virtuoso";
 import type { Album } from "./types";
-import { getTimestamp } from "./debug";
+import { getTimestamp, IS_DEBUG } from "./debug";
 
 export const useResilientScroll = (
   filteredAlbums: Album[],
@@ -15,7 +15,6 @@ export const useResilientScroll = (
   const updateAnchor = useCallback(() => {
     if (isResizing.current) return;
 
-    // delay the execution until the browser has painted the new items
     requestAnimationFrame(() => {
       const currentScroll = window.scrollY;
 
@@ -23,7 +22,7 @@ export const useResilientScroll = (
         if (anchorUrl.current !== null) {
           anchorUrl.current = null;
           anchorDate.current = null;
-          console.log(getTimestamp(), "updateAnchor null");
+          if (IS_DEBUG) console.log(getTimestamp(), "updateAnchor null");
         }
         return;
       }
@@ -41,12 +40,13 @@ export const useResilientScroll = (
           if (url && url !== anchorUrl.current) {
             anchorUrl.current = url;
             anchorDate.current = title;
-            console.log(getTimestamp(), `updateAnchor ${title}`);
+            if (IS_DEBUG) console.log(getTimestamp(), `updateAnchor ${title}`);
           }
           return;
         }
       }
-      console.log(getTimestamp(), "updateAnchor no visible items found");
+      if (IS_DEBUG)
+        console.log(getTimestamp(), "updateAnchor no visible items found");
     });
   }, []);
 
@@ -56,7 +56,8 @@ export const useResilientScroll = (
     const onResize = () => {
       if (isTouch) return;
       if (!virtuosoRef.current || !anchorUrl.current) {
-        console.log(getTimestamp(), "onResize no anchor to restore");
+        if (IS_DEBUG)
+          console.log(getTimestamp(), "onResize no anchor to restore");
         return;
       }
 
@@ -65,10 +66,11 @@ export const useResilientScroll = (
       );
 
       if (targetIndex !== -1) {
-        console.log(
-          getTimestamp(),
-          `onResize restoring to ${anchorDate.current}`,
-        );
+        if (IS_DEBUG)
+          console.log(
+            getTimestamp(),
+            `onResize restoring to ${anchorDate.current}`,
+          );
         isResizing.current = true;
 
         requestAnimationFrame(() => {

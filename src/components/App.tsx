@@ -24,9 +24,7 @@ let hasLoadingClass = true;
 
 function removeLoadingClass() {
   document.body.classList.remove("loading");
-  if (IS_DEBUG) {
-    console.log(getTimestamp(), "removeLoadingClass");
-  }
+  if (IS_DEBUG) console.log(getTimestamp(), "removeLoadingClass");
 }
 
 export function App() {
