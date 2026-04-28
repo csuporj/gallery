@@ -27,7 +27,7 @@ export const useResilientScroll = (
         return;
       }
 
-      const elements = document.querySelectorAll("a[href]");
+      const elements = document.querySelectorAll(".js-album-link");
       const viewportHeight = window.innerHeight;
 
       for (const el of elements) {
@@ -35,12 +35,13 @@ export const useResilientScroll = (
 
         if (rect.height > 0 && rect.top >= 0 && rect.top < viewportHeight) {
           const url = el.getAttribute("href");
-          const title = el.getAttribute("title");
+          const albumDate = el.getAttribute("data-album-date");
 
           if (url && url !== anchorUrl.current) {
             anchorUrl.current = url;
-            anchorDate.current = title;
-            if (IS_DEBUG) console.log(getTimestamp(), `updateAnchor ${title}`);
+            anchorDate.current = albumDate;
+            if (IS_DEBUG)
+              console.log(getTimestamp(), `updateAnchor ${albumDate}`);
           }
           return;
         }

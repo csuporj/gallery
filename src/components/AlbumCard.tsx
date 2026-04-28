@@ -11,9 +11,9 @@ export function AlbumCard({ album }: { album: Album }) {
   return (
     <a
       href={album.AlbumUrl}
-      title={album.AlbumDate}
+      data-album-date={album.AlbumDate}
       rel="noopener noreferrer"
-      className="text-decoration-none focus-ring d-block rounded-0"
+      className="text-decoration-none focus-ring d-block rounded-0 js-album-link"
       style={{
         width: "600px",
         maxWidth: "calc(100vw - 8px)",
