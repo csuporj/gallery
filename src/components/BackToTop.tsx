@@ -4,13 +4,11 @@ import { Button } from "react-bootstrap";
 import { ChevronUp } from "react-bootstrap-icons";
 
 function scrollToTop(isTouch: boolean) {
-  if (isTouch) {
-    setTimeout(() => {
-      window.scrollTo({ top: 0, behavior: "instant" });
-    }, 50);
-  } else {
+  function scroll() {
     window.scrollTo({ top: 0, behavior: "instant" });
   }
+  if (isTouch) setTimeout(scroll, 50);
+  else scroll();
 }
 
 export function BackToTop({ isTouch }: { isTouch: boolean }) {

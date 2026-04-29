@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Container } from "react-bootstrap";
 import { VirtuosoGrid } from "react-virtuoso";
 
@@ -20,8 +20,6 @@ function getInitialGridCount(albumsLength: number) {
   return Math.min(cols * rows, albumsLength);
 }
 
-let hasLoadingClass = true;
-
 function removeLoadingClass() {
   document.body.classList.remove("loading");
   if (IS_DEBUG) console.log(getTimestamp(), "removeLoadingClass");
@@ -34,6 +32,7 @@ export function App() {
   const isTouch = useIsTouch();
   const { virtuosoRef } = useResilientScroll(filteredAlbums, isTouch);
   const [isReady, setIsReady] = useState(false);
+  const hasLoadingClass = useRef(true);
   const initialItemCount = getInitialGridCount(filteredAlbums.length);
 
   // scroll to top on reload, do not break bfcache
@@ -67,7 +66,7 @@ export function App() {
           initialItemCount={initialItemCount}
           readyStateChanged={(r) => {
             if (r && hasLoadingClass) {
-              hasLoadingClass = false;
+              hasLoadingClass.current = false;
               setTimeout(() => {
                 removeLoadingClass();
               }, 100);

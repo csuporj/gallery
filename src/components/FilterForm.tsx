@@ -5,12 +5,6 @@ import { Row, Col, Form } from "react-bootstrap";
 
 import { FilterDateSelects } from "./FilterDateSelects";
 
-window.onkeydown = (e) => {
-  if (e.altKey && ["KeyS", "KeyY", "KeyM"].includes(e.code)) {
-    window.scrollTo({ top: 0, behavior: "instant" });
-  }
-};
-
 export function FilterForm({
   filter,
   setS,
@@ -19,6 +13,17 @@ export function FilterForm({
   setD,
 }: FilterFormProps) {
   const [localS, setLocalS] = useState(filter.s);
+
+  useEffect(() => {
+    function scrollToTopOnShortcut(e: KeyboardEvent) {
+      if (e.altKey && ["KeyS", "KeyY", "KeyM"].includes(e.code)) {
+        window.scrollTo({ top: 0, behavior: "instant" });
+      }
+    }
+
+    window.addEventListener("keydown", scrollToTopOnShortcut);
+    return () => window.removeEventListener("keydown", scrollToTopOnShortcut);
+  }, []);
 
   useEffect(() => {
     const typingTimeout = setTimeout(() => setS(localS), 500);
