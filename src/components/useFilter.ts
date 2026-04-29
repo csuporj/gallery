@@ -1,6 +1,6 @@
 import { IS_DEBUG, getTimestamp } from "./debug";
 import type { Filter } from "./types";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 
 function urlToFilter(params: URLSearchParams): Filter {
   return {
@@ -29,12 +29,11 @@ function replaceUrl(filter: Filter) {
 }
 
 export function useFilter() {
-  const initialFilter = urlToFilter(
-    new URLSearchParams(window.location.search),
+  const [filter, setFilter] = useState(() =>
+    urlToFilter(new URLSearchParams(window.location.search)),
   );
-  const [filter, setFilter] = useState(initialFilter);
 
-  function setS(s: string) {
+  const setS = useCallback((s: string) => {
     setFilter((oldFilter) => {
       if (oldFilter.s === s) {
         return oldFilter;
@@ -47,9 +46,9 @@ export function useFilter() {
 
       return newFilter;
     });
-  }
+  }, []);
 
-  function setY(y: string) {
+  const setY = useCallback((y: string) => {
     setFilter((oldFilter) => {
       if (oldFilter.y === y) {
         return oldFilter;
@@ -61,9 +60,9 @@ export function useFilter() {
 
       return newFilter;
     });
-  }
+  }, []);
 
-  function setM(m: string) {
+  const setM = useCallback((m: string) => {
     setFilter((oldFilter) => {
       if (oldFilter.m === m) {
         return oldFilter;
@@ -74,9 +73,9 @@ export function useFilter() {
 
       return newFilter;
     });
-  }
+  }, []);
 
-  function setD(d: string) {
+  const setD = useCallback((d: string) => {
     setFilter((oldFilter) => {
       if (oldFilter.d === d) {
         return oldFilter;
@@ -88,7 +87,7 @@ export function useFilter() {
 
       return newFilter;
     });
-  }
+  }, []);
 
   return {
     filter,
