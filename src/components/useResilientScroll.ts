@@ -65,33 +65,35 @@ export const useResilientScroll = (
       // waiting for all automatic resize handling to finish, including the browser's own scroll restoration
       await new Promise((resolve) => setTimeout(resolve, 50));
 
-      const targetIndex = filteredAlbums.findIndex(
-        (a) => a.AlbumUrl === anchorUrl.current,
-      );
+      try {
+        const targetIndex = filteredAlbums.findIndex(
+          (a) => a.AlbumUrl === anchorUrl.current,
+        );
 
-      if (targetIndex !== -1) {
-        virtuosoRef.current?.scrollToIndex({
-          index: targetIndex,
-          align: "start",
-          behavior: "auto",
-        });
+        if (targetIndex !== -1) {
+          virtuosoRef.current?.scrollToIndex({
+            index: targetIndex,
+            align: "start",
+            behavior: "auto",
+          });
 
-        if (IS_DEBUG)
-          console.log(
-            getTimestamp(),
-            `onResize restored to ${anchorDate.current}`,
-          );
-      } else {
-        if (IS_DEBUG)
-          console.log(
-            getTimestamp(),
-            `onResize found no index of ${anchorDate.current}`,
-          );
+          if (IS_DEBUG)
+            console.log(
+              getTimestamp(),
+              `onResize restored to ${anchorDate.current}`,
+            );
+        } else {
+          if (IS_DEBUG)
+            console.log(
+              getTimestamp(),
+              `onResize found no index of ${anchorDate.current}`,
+            );
+        }
+      } finally {
+        // waiting for scrollToIndex to finish, to don't change the anchor
+        await new Promise((resolve) => setTimeout(resolve, 50));
+        resizesInProgress.current--;
       }
-
-      // waiting for scrollToIndex to finish, to don't change the anchor
-      await new Promise((resolve) => setTimeout(resolve, 50));
-      resizesInProgress.current--;
     }
 
     window.addEventListener("scroll", onScroll, { passive: true });
