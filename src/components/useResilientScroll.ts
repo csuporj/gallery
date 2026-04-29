@@ -10,12 +10,14 @@ export const useResilientScroll = (
   const virtuosoRef = useRef<VirtuosoGridHandle>(null);
   const anchorUrl = useRef<string | null>(null);
   const anchorDate = useRef<string | null>(null);
-  const isResizing = useRef(false);
+  const resizesInProgress = useRef(0);
 
   useEffect(() => {
     function onScroll() {
-      if (isResizing.current) return;
+      if (resizesInProgress.current > 0) return;
 
+      // delaying until after the resize event has set in progress,
+      // in case it is a camp scroll caused by the browser trying to restore scroll position after a resize
       requestAnimationFrame(() => {
         if (window.scrollY < 42) {
           if (anchorUrl.current !== null) {
@@ -59,31 +61,37 @@ export const useResilientScroll = (
         return;
       }
 
+      resizesInProgress.current++;
+      // waiting for all automatic resize handling to finish, including the browser's own scroll restoration
+      await new Promise((resolve) => setTimeout(resolve, 50));
+
       const targetIndex = filteredAlbums.findIndex(
         (a) => a.AlbumUrl === anchorUrl.current,
       );
 
       if (targetIndex !== -1) {
-        isResizing.current = true;
-
-        if (IS_DEBUG)
-          console.log(
-            getTimestamp(),
-            `onResize restoring to ${anchorDate.current}`,
-          );
-
-        await new Promise(requestAnimationFrame);
-        await new Promise(requestAnimationFrame);
-        await new Promise((resolve) => setTimeout(resolve, 50));
         virtuosoRef.current?.scrollToIndex({
           index: targetIndex,
           align: "start",
           behavior: "auto",
         });
 
-        await new Promise((resolve) => setTimeout(resolve, 50));
-        isResizing.current = false;
+        if (IS_DEBUG)
+          console.log(
+            getTimestamp(),
+            `onResize restored to ${anchorDate.current}`,
+          );
+      } else {
+        if (IS_DEBUG)
+          console.log(
+            getTimestamp(),
+            `onResize found no index of ${anchorDate.current}`,
+          );
       }
+
+      // waiting for scrollToIndex to finish, to don't change the anchor
+      await new Promise((resolve) => setTimeout(resolve, 50));
+      resizesInProgress.current--;
     }
 
     window.addEventListener("scroll", onScroll, { passive: true });

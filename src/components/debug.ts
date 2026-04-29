@@ -2,5 +2,8 @@ export const IS_DEBUG = true;
 
 export function getTimestamp(): string {
   const now = new Date();
-  return `[${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}.${now.getMilliseconds()}]`;
+  return (
+    `[${now.getHours().toString().padStart(2, "0")}:${now.getMinutes().toString().padStart(2, "0")}:` +
+    `${now.getSeconds().toString().padStart(2, "0")}.${now.getMilliseconds().toString().padStart(3, "0")}]`
+  );
 }
