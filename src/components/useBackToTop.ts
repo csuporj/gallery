@@ -12,17 +12,17 @@ export function useBackToTop(isTouch: boolean) {
   const lastScrollY = useRef(0);
   const isMovingRef = useRef(false);
   const wasScrollingUpRef = useRef(false);
-  const lastShouldShowRef = useRef(false);
+  const lastShowRef = useRef(false);
 
   useEffect(() => {
     function updateShow() {
       const newShow =
         wasScrollingUpRef.current && (!isMovingRef.current || !isTouch);
-      if (newShow === lastShouldShowRef.current) {
+      if (newShow === lastShowRef.current) {
         return;
       }
 
-      lastShouldShowRef.current = newShow;
+      lastShowRef.current = newShow;
       setShow(newShow);
 
       if (IS_DEBUG) console.log(getTimestamp(), `useBackToTop ${newShow}`);
