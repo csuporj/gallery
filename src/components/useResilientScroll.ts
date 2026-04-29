@@ -19,12 +19,17 @@ export const useResilientScroll = (
       // delaying until after the resize event has set in progress,
       // in case it is a camp scroll caused by the browser trying to restore scroll position after a resize
       requestAnimationFrame(() => {
+        if (resizesInProgress.current > 0) {
+          return;
+        }
+
         if (window.scrollY < 42) {
           if (anchorUrl.current !== null) {
             anchorUrl.current = null;
             anchorDate.current = null;
             if (IS_DEBUG) console.log(getTimestamp(), "updateAnchor null");
           }
+
           return;
         }
 
