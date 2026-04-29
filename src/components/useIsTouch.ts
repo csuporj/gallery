@@ -2,20 +2,18 @@ import { useState, useEffect } from "react";
 import { getTimestamp, IS_DEBUG } from "./debug";
 
 export function useIsTouch() {
-  const [isTouch, setIsTouch] = useState(false);
+  const [monitor] = useState(() => window.matchMedia("(pointer: coarse)"));
+  const [isTouch, setIsTouch] = useState(monitor.matches);
 
   useEffect(() => {
-    function updateIsTouch() {
-      const m = monitor.matches;
-      setIsTouch(m);
-      if (IS_DEBUG) console.log(getTimestamp(), `updateIsTouch ${m}`);
+    function updateIsTouch(e: MediaQueryListEvent) {
+      setIsTouch(e.matches);
+      if (IS_DEBUG) console.log(getTimestamp(), `updateIsTouch ${e.matches}`);
     }
 
-    const monitor = window.matchMedia("(pointer: coarse)");
     monitor.addEventListener("change", updateIsTouch);
-    updateIsTouch();
     return () => monitor.removeEventListener("change", updateIsTouch);
-  }, []);
+  }, [monitor]);
 
   return isTouch;
 }
