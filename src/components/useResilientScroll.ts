@@ -58,19 +58,7 @@ export const useResilientScroll = (
     }
 
     async function onResize() {
-      if (isTouch) return;
-
-      if (!virtuosoRef.current || !anchorUrl.current) {
-        if (IS_DEBUG)
-          console.log(getTimestamp(), "onResize no anchor to restore");
-        return;
-      }
-
-      resizesInProgress.current++;
-      // waiting for all automatic resize handling to finish, including the browser's own scroll restoration
-      await new Promise((resolve) => setTimeout(resolve, 50));
-
-      try {
+      function scrollToAnchor() {
         const targetIndex = filteredAlbums.findIndex(
           (a) => a.AlbumUrl === anchorUrl.current,
         );
@@ -94,6 +82,23 @@ export const useResilientScroll = (
               `onResize found no index of ${anchorDate.current}`,
             );
         }
+      }
+
+      if (isTouch) return;
+
+      if (!virtuosoRef.current || !anchorUrl.current) {
+        if (IS_DEBUG)
+          console.log(getTimestamp(), "onResize no anchor to restore");
+        return;
+      }
+
+      resizesInProgress.current++;
+
+      try {
+        scrollToAnchor();
+        // waiting for all automatic resize handling to finish, including the browser's own scroll restoration
+        await new Promise((resolve) => setTimeout(resolve, 50));
+        scrollToAnchor();
       } finally {
         // waiting for scrollToIndex to finish, to don't change the anchor
         await new Promise((resolve) => setTimeout(resolve, 50));
