@@ -50,7 +50,7 @@ export const useResilientScroll = (
       });
     }
 
-    function onResize() {
+    async function onResize() {
       if (isTouch) return;
 
       if (!virtuosoRef.current || !anchorUrl.current) {
@@ -72,21 +72,17 @@ export const useResilientScroll = (
             `onResize restoring to ${anchorDate.current}`,
           );
 
-        requestAnimationFrame(() => {
-          requestAnimationFrame(() => {
-            setTimeout(() => {
-              virtuosoRef.current?.scrollToIndex({
-                index: targetIndex,
-                align: "start",
-                behavior: "auto",
-              });
-
-              setTimeout(() => {
-                isResizing.current = false;
-              }, 50);
-            }, 50);
-          });
+        await new Promise(requestAnimationFrame);
+        await new Promise(requestAnimationFrame);
+        await new Promise((resolve) => setTimeout(resolve, 50));
+        virtuosoRef.current?.scrollToIndex({
+          index: targetIndex,
+          align: "start",
+          behavior: "auto",
         });
+
+        await new Promise((resolve) => setTimeout(resolve, 50));
+        isResizing.current = false;
       }
     }
 

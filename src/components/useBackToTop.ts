@@ -46,7 +46,7 @@ export function useBackToTop(isTouch: boolean) {
       lastScrollY.current = currentY;
       updateShow();
 
-      // avoid using onScrollEnd as it is supported on safari just from Dec 2025
+      // not using onScrollEnd as it is supported on safari just from Dec 2025
       clearTimeout(stopTimer);
       stopTimer = setTimeout(() => {
         isMovingRef.current = false;
