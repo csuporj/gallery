@@ -15,6 +15,8 @@ export function useBackToTop(isTouch: boolean) {
   const lastShowRef = useRef(false);
 
   useEffect(() => {
+    let stopTimer = 0;
+
     function updateShow() {
       const newShow =
         wasScrollingUpRef.current && (!isMovingRef.current || !isTouch);
@@ -43,19 +45,20 @@ export function useBackToTop(isTouch: boolean) {
 
       lastScrollY.current = currentY;
       updateShow();
-    }
 
-    function onScrollEnd() {
-      isMovingRef.current = false;
-      updateShow();
+      // avoid using onScrollEnd as it is supported on safari just from Dec 2025
+      clearTimeout(stopTimer);
+      stopTimer = setTimeout(() => {
+        isMovingRef.current = false;
+        updateShow();
+      }, 100);
     }
 
     window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("scrollend", onScrollEnd);
 
     return () => {
       window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("scrollend", onScrollEnd);
+      clearTimeout(stopTimer);
     };
   }, [isTouch]);
 
