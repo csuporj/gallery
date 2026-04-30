@@ -8,16 +8,18 @@ export const useResilientScroll = (
   isTouch: boolean,
 ) => {
   const virtuosoRef = useRef<VirtuosoGridHandle>(null);
+  const gridWrapperRef = useRef<HTMLDivElement>(null);
   const anchorUrl = useRef<string | null>(null);
   const anchorDate = useRef<string | null>(null);
   const resizesInProgress = useRef(0);
+  const lastWidth = useRef(window.innerWidth);
 
   useEffect(() => {
     function onScroll() {
       if (resizesInProgress.current > 0) return;
 
       // delaying until after the resize event has set in progress,
-      // in case it is a camp scroll caused by the browser trying to restore scroll position after a resize
+      // in case it is a clamp scroll caused by the browser trying to restore scroll position after a resize
       requestAnimationFrame(() => {
         if (resizesInProgress.current > 0) {
           return;
@@ -39,7 +41,8 @@ export const useResilientScroll = (
         for (const albumLink of albumLinks) {
           const rect = albumLink.getBoundingClientRect();
 
-          if (rect.height > 0 && rect.top >= 0 && rect.top < viewportHeight) {
+          // allow for a small error due to scrollToIndex accumulating rounding errors on some zoom levels
+          if (rect.height > 0 && rect.top >= -4 && rect.top < viewportHeight) {
             const url = albumLink.getAttribute("href");
             const albumInfo = albumLink.getAttribute("data-album-info");
 
@@ -84,6 +87,11 @@ export const useResilientScroll = (
         }
       }
 
+      const lastW = lastWidth.current;
+      const currentWidth = window.innerWidth;
+      lastWidth.current = currentWidth;
+      if (currentWidth === lastW) return;
+
       if (isTouch) return;
 
       if (!virtuosoRef.current || !anchorUrl.current) {
@@ -93,15 +101,21 @@ export const useResilientScroll = (
       }
 
       resizesInProgress.current++;
+      if (resizesInProgress.current === 1) {
+        gridWrapperRef.current?.classList.add("resizing");
+      }
 
       try {
-        scrollToAnchor();
         // waiting for all automatic resize handling to finish, including the browser's own scroll restoration
-        await new Promise((resolve) => setTimeout(resolve, 50));
+        await new Promise(requestAnimationFrame);
         scrollToAnchor();
       } finally {
         // waiting for scrollToIndex to finish, to don't change the anchor
-        await new Promise((resolve) => setTimeout(resolve, 50));
+        await new Promise(requestAnimationFrame);
+        await new Promise(requestAnimationFrame);
+        if (resizesInProgress.current === 1) {
+          gridWrapperRef.current?.classList.remove("resizing");
+        }
         resizesInProgress.current--;
       }
     }
@@ -115,5 +129,5 @@ export const useResilientScroll = (
     };
   }, [filteredAlbums, isTouch]);
 
-  return { virtuosoRef };
+  return { virtuosoRef, gridWrapperRef };
 };

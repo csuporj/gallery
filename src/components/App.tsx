@@ -30,7 +30,10 @@ export function App() {
   useTitle(filter);
   const filteredAlbums = useFilteredAlbums(filter);
   const isTouch = useIsTouch();
-  const { virtuosoRef } = useResilientScroll(filteredAlbums, isTouch);
+  const { virtuosoRef, gridWrapperRef } = useResilientScroll(
+    filteredAlbums,
+    isTouch,
+  );
   const [isReady, setIsReady] = useState(false);
   const hasLoadingClass = useRef(true);
   const initialItemCount = getInitialGridCount(filteredAlbums.length);
@@ -54,25 +57,27 @@ export function App() {
       {!isReady ? null : filteredAlbums?.length === 0 ? (
         <div className="mt-1 text-center">No results found.</div>
       ) : (
-        <VirtuosoGrid
-          ref={virtuosoRef}
-          useWindowScroll
-          increaseViewportBy={1000}
-          components={gridComponents}
-          data={filteredAlbums}
-          itemContent={(_, album) => (
-            <AlbumCard album={album} key={album.AlbumUrl} />
-          )}
-          initialItemCount={initialItemCount}
-          readyStateChanged={(r) => {
-            if (r && hasLoadingClass) {
-              hasLoadingClass.current = false;
-              setTimeout(() => {
-                removeLoadingClass();
-              }, 100);
-            }
-          }}
-        />
+        <div ref={gridWrapperRef} className="grid-wrapper">
+          <VirtuosoGrid
+            ref={virtuosoRef}
+            useWindowScroll
+            increaseViewportBy={1000}
+            components={gridComponents}
+            data={filteredAlbums}
+            itemContent={(_, album) => (
+              <AlbumCard album={album} key={album.AlbumUrl} />
+            )}
+            initialItemCount={initialItemCount}
+            readyStateChanged={(r) => {
+              if (r && hasLoadingClass) {
+                hasLoadingClass.current = false;
+                setTimeout(() => {
+                  removeLoadingClass();
+                }, 100);
+              }
+            }}
+          />
+        </div>
       )}
 
       <BackToTop isTouch={isTouch} />

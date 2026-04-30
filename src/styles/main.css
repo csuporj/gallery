@@ -17,6 +17,10 @@ body.loading {
   overflow-y: hidden;
 }
 
+#grid-wrapper.resizing {
+  opacity: 0;
+}
+
 .filter-form-width {
   width: 600px;
   max-width: calc(100vw - 8px);
