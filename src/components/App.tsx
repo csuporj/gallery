@@ -57,7 +57,7 @@ export function App() {
       {!isReady ? null : filteredAlbums?.length === 0 ? (
         <div className="mt-1 text-center">No results found.</div>
       ) : (
-        <div ref={gridWrapperRef} className="grid-wrapper">
+        <div ref={gridWrapperRef}>
           <VirtuosoGrid
             ref={virtuosoRef}
             useWindowScroll

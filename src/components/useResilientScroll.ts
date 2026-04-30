@@ -41,8 +41,8 @@ export const useResilientScroll = (
         for (const albumLink of albumLinks) {
           const rect = albumLink.getBoundingClientRect();
 
-          // allow for a small error due to scrollToIndex accumulating rounding errors on some zoom levels
-          if (rect.height > 0 && rect.top >= -4 && rect.top < viewportHeight) {
+          // allows for a small error due to scrollToIndex accumulating rounding errors on some zoom levels
+          if (rect.height > 0 && rect.top >= -16 && rect.top < viewportHeight) {
             const url = albumLink.getAttribute("href");
             const albumInfo = albumLink.getAttribute("data-album-info");
 
@@ -87,10 +87,9 @@ export const useResilientScroll = (
         }
       }
 
-      const lastW = lastWidth.current;
       const currentWidth = window.innerWidth;
+      if (currentWidth === lastWidth.current) return;
       lastWidth.current = currentWidth;
-      if (currentWidth === lastW) return;
 
       if (isTouch) return;
 
@@ -101,21 +100,31 @@ export const useResilientScroll = (
       }
 
       resizesInProgress.current++;
+
       if (resizesInProgress.current === 1) {
-        gridWrapperRef.current?.classList.add("resizing");
+        document.documentElement.classList.add("scrollbar-resizing");
+        gridWrapperRef.current?.classList.add("grid-resizing");
       }
 
       try {
-        // waiting for all automatic resize handling to finish, including the browser's own scroll restoration
+        scrollToAnchor();
+        // waiting for all automatic resize handling to finish,
+        // including the browser's own scroll restoration,
+        // and the virtuoso card size calculation
         await new Promise(requestAnimationFrame);
+        await new Promise(requestAnimationFrame);
+
         scrollToAnchor();
       } finally {
         // waiting for scrollToIndex to finish, to don't change the anchor
         await new Promise(requestAnimationFrame);
         await new Promise(requestAnimationFrame);
+
         if (resizesInProgress.current === 1) {
-          gridWrapperRef.current?.classList.remove("resizing");
+          document.documentElement.classList.remove("scrollbar-resizing");
+          gridWrapperRef.current?.classList.remove("grid-resizing");
         }
+
         resizesInProgress.current--;
       }
     }

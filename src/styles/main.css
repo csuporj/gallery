@@ -9,15 +9,15 @@ html {
   scroll-padding-bottom: 8px;
 }
 
-body {
-  overflow-x: hidden;
-}
-
 body.loading {
-  overflow-y: hidden;
+  overflow-y: hidden !important;
 }
 
-#grid-wrapper.resizing {
+html.scrollbar-resizing {
+  scrollbar-color: transparent transparent;
+}
+
+.grid-resizing {
   opacity: 0;
 }
 
