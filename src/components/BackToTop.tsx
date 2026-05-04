@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { useBackToTop } from "./useBackToTop";
 
 import { Button } from "react-bootstrap";
@@ -11,7 +12,7 @@ function scrollToTop(isTouch: boolean) {
   else scroll();
 }
 
-export function BackToTop({
+function BackToTop({
   isTouch,
   isResizing,
 }: {
@@ -43,3 +44,5 @@ export function BackToTop({
     </Button>
   );
 }
+
+export const MemoBackToTop = memo(BackToTop);

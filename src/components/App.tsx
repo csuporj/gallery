@@ -1,39 +1,14 @@
-import type { Album } from "./types";
-
-import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Container } from "react-bootstrap";
-import { VirtuosoGrid } from "react-virtuoso";
 
-import { getTimestamp, IS_DEBUG } from "./debug";
 import { useFilter } from "./useFilter";
 import { useTitle } from "./useTitle";
 import { useFilteredAlbums } from "./useFilteredAlbums";
 import { useIsTouch } from "./useIsTouch";
 import { useResilientScroll } from "./useResilientScroll";
-import { gridComponents } from "./gridComponents";
 
-import { AlbumCard } from "./AlbumCard";
-import { FilterForm } from "./FilterForm";
-import { BackToTop } from "./BackToTop";
-
-function getInitialGridCount(albumsLength: number) {
-  const cols = Math.max(1, Math.floor(window.innerWidth / 608));
-  const rows = Math.ceil(window.innerHeight / 456);
-  return Math.min(cols * rows, albumsLength);
-}
-
-function removeLoadingClass() {
-  document.body.classList.remove("loading");
-  if (IS_DEBUG) console.log(getTimestamp(), "removeLoadingClass");
-}
-
-function renderAlbum(_index: number, album: Album) {
-  return <MemoAlbumCard album={album} />;
-}
-
-const MemoFilterForm = memo(FilterForm);
-const MemoAlbumCard = memo(AlbumCard);
-const MemoBackToTop = memo(BackToTop);
+import { MemoFilterForm } from "./FilterForm";
+import { MemoAlbumGrid } from "./AlbumGrid";
+import { MemoBackToTop } from "./BackToTop";
 
 export function App() {
   const { filter, setS, setY, setM, setD } = useFilter();
@@ -44,25 +19,6 @@ export function App() {
     filteredAlbums,
     isTouch,
   );
-  const [isReady, setIsReady] = useState(false);
-  const hasLoadingClass = useRef(true);
-  const initialItemCount = useMemo(
-    () => getInitialGridCount(filteredAlbums.length),
-    [filteredAlbums.length],
-  );
-
-  // scroll to top on reload, do not break bfcache
-  useEffect(() => {
-    const isReadyTimer = setTimeout(() => setIsReady(true), 100);
-    return () => clearTimeout(isReadyTimer);
-  }, []);
-
-  const onReadyStateChanged = useCallback((ready: boolean) => {
-    if (ready && hasLoadingClass.current) {
-      hasLoadingClass.current = false;
-      setTimeout(removeLoadingClass, 100);
-    }
-  }, []);
 
   return (
     <Container fluid className="px-0 pt-0 pb-1">
@@ -74,22 +30,11 @@ export function App() {
         setD={setD}
       />
 
-      {!isReady ? null : filteredAlbums?.length === 0 ? (
-        <div className="mt-1 text-center">No results found.</div>
-      ) : (
-        <div ref={gridWrapperRef}>
-          <VirtuosoGrid
-            ref={virtuosoRef}
-            useWindowScroll
-            increaseViewportBy={1000}
-            components={gridComponents}
-            data={filteredAlbums}
-            itemContent={renderAlbum}
-            initialItemCount={initialItemCount}
-            readyStateChanged={onReadyStateChanged}
-          />
-        </div>
-      )}
+      <MemoAlbumGrid
+        filteredAlbums={filteredAlbums}
+        virtuosoRef={virtuosoRef}
+        gridWrapperRef={gridWrapperRef}
+      />
 
       <MemoBackToTop isTouch={isTouch} isResizing={isResizing} />
     </Container>

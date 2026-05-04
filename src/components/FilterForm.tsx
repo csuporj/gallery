@@ -1,17 +1,11 @@
 import type { FilterFormProps } from "./types";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, memo } from "react";
 import { Row, Col, Form } from "react-bootstrap";
 
 import { FilterDateSelects } from "./FilterDateSelects";
 
-export function FilterForm({
-  filter,
-  setS,
-  setY,
-  setM,
-  setD,
-}: FilterFormProps) {
+function FilterForm({ filter, setS, setY, setM, setD }: FilterFormProps) {
   const [localS, setLocalS] = useState(filter.s);
 
   useEffect(() => {
@@ -56,3 +50,5 @@ export function FilterForm({
     </div>
   );
 }
+
+export const MemoFilterForm = memo(FilterForm);
