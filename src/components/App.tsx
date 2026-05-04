@@ -1,4 +1,6 @@
-import { useEffect, useRef, useState } from "react";
+import type { Album } from "./types";
+
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Container } from "react-bootstrap";
 import { VirtuosoGrid } from "react-virtuoso";
 
@@ -25,6 +27,14 @@ function removeLoadingClass() {
   if (IS_DEBUG) console.log(getTimestamp(), "removeLoadingClass");
 }
 
+function computeItemKey(_index: number, album: Album) {
+  return album.AlbumUrl;
+}
+
+function renderAlbum(_index: number, album: Album) {
+  return <AlbumCard album={album} />;
+}
+
 export function App() {
   const { filter, setS, setY, setM, setD } = useFilter();
   useTitle(filter);
@@ -42,6 +52,13 @@ export function App() {
   useEffect(() => {
     const isReadyTimer = setTimeout(() => setIsReady(true), 100);
     return () => clearTimeout(isReadyTimer);
+  }, []);
+
+  const onReadyStateChanged = useCallback((ready: boolean) => {
+    if (ready && hasLoadingClass.current) {
+      hasLoadingClass.current = false;
+      setTimeout(removeLoadingClass, 100);
+    }
   }, []);
 
   return (
@@ -64,18 +81,10 @@ export function App() {
             increaseViewportBy={1000}
             components={gridComponents}
             data={filteredAlbums}
-            itemContent={(_, album) => (
-              <AlbumCard album={album} key={album.AlbumUrl} />
-            )}
+            computeItemKey={computeItemKey}
+            itemContent={renderAlbum}
             initialItemCount={initialItemCount}
-            readyStateChanged={(r) => {
-              if (r && hasLoadingClass) {
-                hasLoadingClass.current = false;
-                setTimeout(() => {
-                  removeLoadingClass();
-                }, 100);
-              }
-            }}
+            readyStateChanged={onReadyStateChanged}
           />
         </div>
       )}
