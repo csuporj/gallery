@@ -15,8 +15,6 @@ export function useBackToTop(isTouch: boolean, isResizing: boolean) {
   const lastShowRef = useRef(false);
 
   useEffect(() => {
-    let stopTimer = 0;
-
     function updateShow() {
       let newShow = wasScrollingUpRef.current;
       if (isMovingRef.current && isTouch) {
@@ -62,6 +60,12 @@ export function useBackToTop(isTouch: boolean, isResizing: boolean) {
       }, 100);
     }
 
+    let stopTimer = 0;
+    if (isResizing) {
+      wasScrollingUpRef.current = false;
+      lastScrollY.current = window.scrollY;
+      updateShow();
+    }
     window.addEventListener("scroll", onScroll, { passive: true });
 
     return () => {
