@@ -27,10 +27,6 @@ function removeLoadingClass() {
   if (IS_DEBUG) console.log(getTimestamp(), "removeLoadingClass");
 }
 
-function computeItemKey(_index: number, album: Album) {
-  return album.AlbumUrl;
-}
-
 function renderAlbum(_index: number, album: Album) {
   return <AlbumCard album={album} />;
 }
@@ -81,7 +77,6 @@ export function App() {
             increaseViewportBy={1000}
             components={gridComponents}
             data={filteredAlbums}
-            computeItemKey={computeItemKey}
             itemContent={renderAlbum}
             initialItemCount={initialItemCount}
             readyStateChanged={onReadyStateChanged}
