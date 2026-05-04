@@ -1,6 +1,6 @@
 import type { Album } from "./types";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Container } from "react-bootstrap";
 import { VirtuosoGrid } from "react-virtuoso";
 
@@ -28,8 +28,12 @@ function removeLoadingClass() {
 }
 
 function renderAlbum(_index: number, album: Album) {
-  return <AlbumCard album={album} />;
+  return <MemoAlbumCard album={album} />;
 }
+
+const MemoFilterForm = memo(FilterForm);
+const MemoAlbumCard = memo(AlbumCard);
+const MemoBackToTop = memo(BackToTop);
 
 export function App() {
   const { filter, setS, setY, setM, setD } = useFilter();
@@ -42,7 +46,10 @@ export function App() {
   );
   const [isReady, setIsReady] = useState(false);
   const hasLoadingClass = useRef(true);
-  const initialItemCount = getInitialGridCount(filteredAlbums.length);
+  const initialItemCount = useMemo(
+    () => getInitialGridCount(filteredAlbums.length),
+    [filteredAlbums.length],
+  );
 
   // scroll to top on reload, do not break bfcache
   useEffect(() => {
@@ -59,7 +66,7 @@ export function App() {
 
   return (
     <Container fluid className="px-0 pt-0 pb-1">
-      <FilterForm
+      <MemoFilterForm
         filter={filter}
         setS={setS}
         setY={setY}
@@ -84,7 +91,7 @@ export function App() {
         </div>
       )}
 
-      <BackToTop isTouch={isTouch} isResizing={isResizing} />
+      <MemoBackToTop isTouch={isTouch} isResizing={isResizing} />
     </Container>
   );
 }
