@@ -30,7 +30,7 @@ export function App() {
   useTitle(filter);
   const filteredAlbums = useFilteredAlbums(filter);
   const isTouch = useIsTouch();
-  const { virtuosoRef, gridWrapperRef } = useResilientScroll(
+  const { virtuosoRef, gridWrapperRef, isResizing } = useResilientScroll(
     filteredAlbums,
     isTouch,
   );
@@ -80,7 +80,7 @@ export function App() {
         </div>
       )}
 
-      <BackToTop isTouch={isTouch} />
+      <BackToTop isTouch={isTouch} isResizing={isResizing} />
     </Container>
   );
 }

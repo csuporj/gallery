@@ -6,7 +6,7 @@ const MIN_SCROLL_DEPTH = 400;
 const SCROLL_DELTA_UP = 5;
 const SCROLL_DELTA_DOWN = 1;
 
-export function useBackToTop(isTouch: boolean) {
+export function useBackToTop(isTouch: boolean, isResizing: boolean) {
   const [show, setShow] = useState(false);
 
   const lastScrollY = useRef(0);
@@ -18,8 +18,10 @@ export function useBackToTop(isTouch: boolean) {
     let stopTimer = 0;
 
     function updateShow() {
-      const newShow =
-        wasScrollingUpRef.current && (!isMovingRef.current || !isTouch);
+      let newShow = wasScrollingUpRef.current;
+      if (isMovingRef.current && isTouch) {
+        newShow = false;
+      }
       if (newShow === lastShowRef.current) {
         return;
       }
@@ -33,14 +35,20 @@ export function useBackToTop(isTouch: boolean) {
     function onScroll() {
       isMovingRef.current = true;
       const currentY = window.scrollY;
-      const lastY = lastScrollY.current;
 
-      if (currentY < MIN_SCROLL_DEPTH) {
+      if (isResizing) {
+        // zooming out moves the scroll position up,
+        // don't want to show the button from that
         wasScrollingUpRef.current = false;
-      } else if (currentY <= lastY - SCROLL_DELTA_UP) {
-        wasScrollingUpRef.current = true;
-      } else if (currentY >= lastY + SCROLL_DELTA_DOWN) {
-        wasScrollingUpRef.current = false;
+      } else {
+        const lastY = lastScrollY.current;
+        if (currentY < MIN_SCROLL_DEPTH) {
+          wasScrollingUpRef.current = false;
+        } else if (currentY <= lastY - SCROLL_DELTA_UP) {
+          wasScrollingUpRef.current = true;
+        } else if (currentY >= lastY + SCROLL_DELTA_DOWN) {
+          wasScrollingUpRef.current = false;
+        }
       }
 
       lastScrollY.current = currentY;
@@ -60,7 +68,7 @@ export function useBackToTop(isTouch: boolean) {
       window.removeEventListener("scroll", onScroll);
       clearTimeout(stopTimer);
     };
-  }, [isTouch]);
+  }, [isTouch, isResizing]);
 
   return show;
 }

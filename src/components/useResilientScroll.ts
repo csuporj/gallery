@@ -1,12 +1,15 @@
-import { useRef, useEffect } from "react";
 import type { VirtuosoGridHandle } from "react-virtuoso";
 import type { Album } from "./types";
+
+import { useRef, useEffect, useState } from "react";
+
 import { getTimestamp, IS_DEBUG } from "./debug";
 
 export const useResilientScroll = (
   filteredAlbums: Album[],
   isTouch: boolean,
 ) => {
+  const [isResizing, setIsResizing] = useState(false);
   const virtuosoRef = useRef<VirtuosoGridHandle>(null);
   const gridWrapperRef = useRef<HTMLDivElement>(null);
   const anchorUrl = useRef<string | null>(null);
@@ -19,7 +22,7 @@ export const useResilientScroll = (
       if (resizesInProgress.current > 0) return;
 
       // delaying until after the resize event has set in progress,
-      // in case it is a clamp scroll caused by the browser trying to restore scroll position after a resize
+      // in case it is a clamping scroll caused by the browser trying to restore scroll position after a resize
       requestAnimationFrame(() => {
         if (resizesInProgress.current > 0) {
           return;
@@ -102,6 +105,7 @@ export const useResilientScroll = (
       resizesInProgress.current++;
 
       if (resizesInProgress.current === 1) {
+        setIsResizing(true);
         document.documentElement.classList.add("scrollbar-resizing");
         gridWrapperRef.current?.classList.add("grid-resizing");
       }
@@ -123,8 +127,8 @@ export const useResilientScroll = (
         if (resizesInProgress.current === 1) {
           document.documentElement.classList.remove("scrollbar-resizing");
           gridWrapperRef.current?.classList.remove("grid-resizing");
+          setIsResizing(false);
         }
-
         resizesInProgress.current--;
       }
     }
@@ -136,7 +140,7 @@ export const useResilientScroll = (
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onResize);
     };
-  }, [filteredAlbums, isTouch]);
+  }, [filteredAlbums, isTouch, setIsResizing]);
 
-  return { virtuosoRef, gridWrapperRef };
+  return { virtuosoRef, gridWrapperRef, isResizing };
 };
