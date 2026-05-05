@@ -53,24 +53,27 @@ function scrollToAnchor(
     (album) => album.AlbumUrl === anchorUrl.current,
   );
 
-  if (targetIndex !== -1) {
-    virtuosoRef.current?.scrollToIndex({
-      index: targetIndex,
-      align: "start",
-      behavior: "auto",
-    });
-
-    if (IS_DEBUG)
-      console.log(
-        getTimestamp(),
-        `scrollToAnchor restored to ${anchorDate.current}`,
-      );
-  } else {
-    if (IS_DEBUG)
+  if (targetIndex === -1) {
+    if (IS_DEBUG) {
       console.log(
         getTimestamp(),
         `scrollToAnchor found no index of ${anchorDate.current}`,
       );
+    }
+    return;
+  }
+
+  virtuosoRef.current?.scrollToIndex({
+    index: targetIndex,
+    align: "start",
+    behavior: "auto",
+  });
+
+  if (IS_DEBUG) {
+    console.log(
+      getTimestamp(),
+      `scrollToAnchor restored to ${anchorDate.current}`,
+    );
   }
 }
 
@@ -99,6 +102,7 @@ async function guardedScrollToAnchor(
 
   try {
     scrollToAnchor(filteredAlbums, virtuosoRef, anchorUrl, anchorDate);
+    
     // waiting for all automatic resize handling to finish,
     // including the browser's own scroll restoration,
     // and the virtuoso card size calculation
@@ -107,6 +111,7 @@ async function guardedScrollToAnchor(
 
     scrollToAnchor(filteredAlbums, virtuosoRef, anchorUrl, anchorDate);
   } finally {
+    
     // waiting for scrollToIndex to finish, to don't change the anchor
     await new Promise(requestAnimationFrame);
     await new Promise(requestAnimationFrame);
