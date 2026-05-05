@@ -35,7 +35,7 @@ function AlbumGrid({
   virtuosoRef,
   gridWrapperRef,
 }: AlbumGridProps) {
-  const [isReady, setIsReady] = useState(false);
+  const [isDelayReady, setIsDelayReady] = useState(false);
   const hasLoadingClass = useRef(true);
 
   const initialItemCount = useMemo(
@@ -44,8 +44,8 @@ function AlbumGrid({
   );
 
   useEffect(() => {
-    const isReadyTimer = setTimeout(() => setIsReady(true), 100);
-    return () => clearTimeout(isReadyTimer);
+    const isDelayReadyTimer = setTimeout(() => setIsDelayReady(true), 100);
+    return () => clearTimeout(isDelayReadyTimer);
   }, []);
 
   const onReadyStateChanged = useCallback((ready: boolean) => {
@@ -55,7 +55,10 @@ function AlbumGrid({
     }
   }, []);
 
-  if (!isReady) return null;
+  // Waits for the browser's automatic scroll restoration to finish.
+  // Needed because the browser's scroll restoration sometimes happens just after loading the initial items,
+  // thus the scrollbar gets almost to the top.
+  if (!isDelayReady) return null;
 
   if (filteredAlbums.length === 0) {
     return <div className="mt-1 text-center">No results found.</div>;
