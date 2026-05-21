@@ -17,7 +17,7 @@ export function AlbumCardFooter({ album }: { album: Album }) {
           minWidth: 0,
         }}
       >
-        {/* the margin before the title, shrinks after the title disapeared */}
+        {/* the margin before the title, shrinks after the title disappeared */}
         <div
           className="d-inline-block"
           style={{ width: "8px", height: "8px" }}
@@ -30,7 +30,7 @@ export function AlbumCardFooter({ album }: { album: Album }) {
         className="d-flex align-items-center overflow-hidden"
         style={{ minWidth: 0 }}
       >
-        {/* half of the gap after the title, shrinks after the title disapeared */}
+        {/* half of the gap after the title, shrinks after the title disappeared */}
         <div
           className="d-inline-block"
           style={{
